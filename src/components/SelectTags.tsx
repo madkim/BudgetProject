@@ -1,26 +1,13 @@
 import {
-  IonRow,
-  IonCol,
-  IonIcon,
-  IonPage,
-  IonCard,
   IonList,
   IonItem,
-  IonTitle,
   IonLabel,
-  IonModal,
-  IonInput,
-  IonHeader,
-  IonButton,
-  IonToolbar,
   IonCheckbox,
   IonSearchbar,
-  IonCardContent,
 } from "@ionic/react";
 
 import React from "react";
 import { useState } from "react";
-import { addOutline } from "ionicons/icons";
 
 type Tag = {
   val: string;
@@ -28,16 +15,13 @@ type Tag = {
 };
 
 type Props = {
-  show: boolean;
   tagOptions: Tag[];
-
-  hide: () => void;
   addTags: (tagOptions: Tag[]) => void;
   setTagOptions: (value: Tag[]) => void;
 };
 
 const SelectTags: React.FC<Props> = (props: Props) => {
-  const { show, hide, tagOptions, setTagOptions } = props;
+  const { tagOptions, setTagOptions } = props;
   const [search, setSearch] = useState("");
   const [newTag, setNewTag] = useState("");
 
@@ -67,72 +51,30 @@ const SelectTags: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <IonModal isOpen={show}>
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle size="large" className="ion-text-center">
-              Tags
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
+    <>
+      <IonSearchbar
+        value={search}
+        className="ion-margin-start"
+        placeholder="Search Tags"
+        onIonChange={(e) => setSearch(e.detail.value!)}
+      ></IonSearchbar>
 
-        <IonCard>
-          <IonCardContent>
-            <IonSearchbar
-              animated
-              value={search}
-              placeholder="Search Tags"
-              onIonChange={(e) => setSearch(e.detail.value!)}
-            ></IonSearchbar>
-            <IonList>
-              {filterTags().map(({ val, isChecked }, i) => (
-                <IonItem key={i}>
-                  <IonLabel>{val}</IonLabel>
-                  <IonCheckbox
-                    slot="end"
-                    value={val}
-                    checked={isChecked}
-                    onIonChange={(e) => selectTag(e.detail.value!)}
-                  />
-                </IonItem>
-              ))}
-            </IonList>
-            <br />
+      <IonList className="ion-padding-start">
+        {filterTags().map(({ val, isChecked }, i) => (
+          <IonItem key={i}>
+            <IonLabel>{val}</IonLabel>
+            <IonCheckbox
+              slot="start"
+              value={val}
+              checked={isChecked}
+              onIonChange={(e) => selectTag(e.detail.value!)}
+            />
+          </IonItem>
+        ))}
+      </IonList>
 
-            <IonItem>
-              <IonInput
-                value={newTag}
-                placeholder="Tag Name"
-                onIonChange={(e) => setNewTag(e.detail.value!)}
-              ></IonInput>
-              <IonButton onClick={addTag} size="default" fill="outline">
-                <IonIcon icon={addOutline} />
-              </IonButton>
-            </IonItem>
-          </IonCardContent>
-        </IonCard>
-
-        <IonRow>
-          <IonCol size="6">
-            <IonButton fill="outline" expand="block" onClick={hide}>
-              Close
-            </IonButton>
-          </IonCol>
-          <IonCol size="6">
-            <IonButton
-              expand="block"
-              onClick={() => {
-                props.addTags(tagOptions);
-                hide();
-              }}
-            >
-              Add
-            </IonButton>
-          </IonCol>
-        </IonRow>
-      </IonPage>
-    </IonModal>
+      <br />
+    </>
   );
 };
 
