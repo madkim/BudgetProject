@@ -14,6 +14,7 @@ import {
   IonToolbar,
   IonDatetime,
   IonItemGroup,
+  IonItemDivider,
 } from "@ionic/react";
 
 import React, { useState } from "react";
@@ -72,9 +73,9 @@ const AddForm: React.FC<Props> = (props: Props) => {
       <IonContent className="ion-padding-end ion-padding-top">
         <IonGrid>
           <IonRow>
-            <IonCol>
+            <IonCol style={{ marginTop: "5px" }}>
               <IonItem>
-                <IonLabel position="floating">Date</IonLabel>
+                <IonLabel position="stacked">Date</IonLabel>
                 <IonDatetime
                   value={date}
                   onIonChange={(e) => setDate(e.detail.value!)}
@@ -86,18 +87,18 @@ const AddForm: React.FC<Props> = (props: Props) => {
               <IonItem>
                 <IonLabel position="stacked">Price</IonLabel>
                 <IonRow>
-                  {/* <IonCol size="auto" style={{ marginTop: "0px" }}>
+                  <IonCol size="auto" style={{ marginTop: "8px" }}>
                     $
                   </IonCol>
-                  <IonCol> */}
-                  <IonInput
-                    autofocus
-                    type="number"
-                    value={price}
-                    placeholder="Enter Price"
-                    onIonChange={(e) => setPrice(+e.detail.value!)}
-                  ></IonInput>
-                  {/* </IonCol> */}
+                  <IonCol>
+                    <IonInput
+                      autofocus
+                      type="number"
+                      value={price}
+                      placeholder="Enter Price"
+                      onIonChange={(e) => setPrice(+e.detail.value!)}
+                    ></IonInput>
+                  </IonCol>
                 </IonRow>
               </IonItem>
             </IonCol>

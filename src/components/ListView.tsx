@@ -37,11 +37,17 @@ const ListView: React.FC<Props> = (props: Props) => {
                     <IonItem key={receipt.id}>
                       <IonLabel>
                         <IonRow>
-                          <IonCol>{moment(receipt.date).format("L")}</IonCol>
+                          <IonCol>
+                            {moment(receipt.date).format("dddd, Do")}
+                          </IonCol>
                           <IonCol size="2">${receipt.price}</IonCol>
                           <IonCol size="3">
                             {receipt.tags.map((tag, index) => {
-                              return <IonCol key={index}>{tag}</IonCol>;
+                              return (
+                                <IonLabel key={index} text-wrap>
+                                  {tag}
+                                </IonLabel>
+                              );
                             })}
                           </IonCol>
                           <IonCol size="1">
