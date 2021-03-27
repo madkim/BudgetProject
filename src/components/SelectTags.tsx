@@ -48,7 +48,7 @@ const SelectTags: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <IonItemGroup className="ion-padding-horizontal">
+    <IonItemGroup className="ion-padding">
       <IonItem>
         <IonLabel position="fixed">Tags:</IonLabel>
         <IonGrid>
@@ -92,29 +92,6 @@ const SelectTags: React.FC<Props> = (props: Props) => {
           </IonItem>
         ))}
       </IonList>
-
-      {/* <IonGrid>
-        <IonRow>
-          <IonCol offset="2" className="ion-no-padding">
-            <IonItem>
-              <IonInput
-                type="text"
-                value={newTag}
-                placeholder="Add New Tag"
-                onIonChange={(e) => setNewTag(e.detail.value!)}
-              ></IonInput>
-            </IonItem>
-          </IonCol>
-          {newTag && (
-            <IonCol size="auto" className="ion-no-padding ion-margin-start">
-              <IonButton size="default" color="success" onClick={addTag}>
-                <IonIcon icon={addOutline} />
-              </IonButton>
-            </IonCol>
-          )}
-        </IonRow>
-      </IonGrid> */}
-
       <br />
     </IonItemGroup>
   );

@@ -135,7 +135,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
               routerLink="/"
               routerDirection="back"
             >
-              Cancel
+              Delete
             </IonButton>
           </IonCol>
         </IonRow>
