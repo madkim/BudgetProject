@@ -2,7 +2,6 @@ import {
   IonRow,
   IonCol,
   IonItem,
-  IonCard,
   IonPage,
   IonIcon,
   IonGrid,
@@ -15,44 +14,49 @@ import {
   IonToolbar,
   IonDatetime,
   IonItemGroup,
-  IonCardContent,
 } from "@ionic/react";
 
 import React, { useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { receiptsActions } from "../actions/receiptsActions";
+import { Receipts, Tag } from "../helpers/types";
+
 import SelectTags from "./SelectTags";
 import moment from "moment";
 
-import { addOutline } from "ionicons/icons";
-
 interface Props {
-  showModal: boolean;
-  saveItem: (date: string, price: number | null) => void;
+  receipts: Receipts;
+  tagOptions: Tag[];
 }
 
 const AddForm: React.FC<Props> = (props: Props) => {
-  const initTagOptions = [
-    { val: "Target", isChecked: false },
-    { val: "Walmart", isChecked: false },
-    { val: "Stater Bros", isChecked: false },
-  ];
-
-  const setInitState = () => {
-    setPrice(0);
-    setDate(moment(new Date()).format());
-    setTags([""]);
-    setTagOptions(initTagOptions);
-  };
+  const dispatch = useDispatch();
 
   const [date, setDate] = useState(moment(new Date()).format());
   const [price, setPrice] = useState<number | null>(null);
-
   const [tags, setTags] = useState([""]);
-  const [newTag, setNewTag] = useState("");
-  const [tagOptions, setTagOptions] = useState(initTagOptions);
+  const [tagOptions, setTagOptions] = useState(props.tagOptions);
 
   const addTags = (tags: Array<{ val: string; isChecked: boolean }>) => {
     const selectedTags = tags.filter((tag) => tag.isChecked === true);
     setTags(selectedTags.map((a) => a.val));
+  };
+
+  const selectTag = (value: string) => {
+    const updatedTags = [];
+    for (let tag of tagOptions) {
+      if (tag.val.toLowerCase() === value.toLowerCase()) {
+        updatedTags.push({ val: value, isChecked: !tag.isChecked });
+      } else {
+        updatedTags.push(tag);
+      }
+    }
+    addTags(updatedTags);
+    setTagOptions(updatedTags);
+  };
+
+  const addReceipt = () => {
+    dispatch(receiptsActions.addNewReceipt(date, price, tags, props.receipts));
   };
 
   return (
@@ -66,77 +70,58 @@ const AddForm: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent className="ion-padding-end ion-padding-top">
-        <IonItem>
-          <IonLabel position="floating">Date</IonLabel>
-          <IonDatetime
-            value={date}
-            onIonChange={(e) => setDate(e.detail.value!)}
-            display-timezone="utc"
-          ></IonDatetime>
-        </IonItem>
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="floating">Date</IonLabel>
+                <IonDatetime
+                  value={date}
+                  onIonChange={(e) => setDate(e.detail.value!)}
+                  display-timezone="utc"
+                ></IonDatetime>
+              </IonItem>
+            </IonCol>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="stacked">Price</IonLabel>
+                <IonRow>
+                  {/* <IonCol size="auto" style={{ marginTop: "0px" }}>
+                    $
+                  </IonCol>
+                  <IonCol> */}
+                  <IonInput
+                    autofocus
+                    type="number"
+                    value={price}
+                    placeholder="Enter Price"
+                    onIonChange={(e) => setPrice(+e.detail.value!)}
+                  ></IonInput>
+                  {/* </IonCol> */}
+                </IonRow>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
 
         <br />
 
-        <IonItem>
-          <IonLabel position="stacked">Price</IonLabel>
-          <IonRow>
-            <IonCol size="auto" style={{ marginTop: "7px" }}>
-              $
-            </IonCol>
-            <IonCol>
-              <IonInput
-                autofocus
-                type="number"
-                value={price}
-                placeholder="Enter Price"
-                onIonChange={(e) => setPrice(+e.detail.value!)}
-              ></IonInput>
-            </IonCol>
-          </IonRow>
-        </IonItem>
-
-        <IonItemGroup>
-          <IonItem>
-            <IonLabel position="floating">Tags:</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonGrid>
-              <IonRow>
-                <IonCol>
-                  <IonInput
-                    type="text"
-                    value={newTag}
-                    placeholder="Add New Tag"
-                    onIonChange={(e) => setNewTag(e.detail.value!)}
-                  ></IonInput>
-                </IonCol>
-
-                <IonCol size="auto">
-                  {newTag && (
-                    <IonButton size="default" color="success">
-                      <IonIcon icon={addOutline} />
-                    </IonButton>
-                  )}
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-          </IonItem>
-        </IonItemGroup>
-
         <SelectTags
-          addTags={(tags) => addTags(tags)}
-          tagOptions={tagOptions}
+          selectTag={(tag) => selectTag(tag)}
           setTagOptions={setTagOptions}
+          tagOptions={tagOptions}
         />
+
+        <br />
 
         <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
             <IonButton
               color="success"
               expand="block"
-              onClick={() => {
-                props.saveItem(date, price);
-              }}
+              onClick={addReceipt}
+              routerLink="/"
+              routerDirection="back"
             >
               Save
             </IonButton>
@@ -153,9 +138,19 @@ const AddForm: React.FC<Props> = (props: Props) => {
             </IonButton>
           </IonCol>
         </IonRow>
+        <br />
       </IonContent>
     </IonPage>
   );
 };
 
-export default AddForm;
+const mapStateToProps = (state: {
+  receiptsReducer: { receipts: Receipts; tagOptions: Tag[] };
+}) => {
+  return {
+    receipts: state.receiptsReducer.receipts,
+    tagOptions: state.receiptsReducer.tagOptions,
+  };
+};
+
+export default connect(mapStateToProps)(AddForm);

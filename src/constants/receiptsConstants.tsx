@@ -1,0 +1,6 @@
+export const receiptsConstants = {
+  GET_ALL_RECEIPTS: "GET_ALL_RECEIPTS",
+  ADD_NEW_RECEIPT: "ADD_NEW_RECEIPT",
+  GET_ALL_TAGS: "GET_ALL_TAGS",
+  ADD_NEW_TAG: "ADD_NEW_TAG",
+};

@@ -1,32 +1,41 @@
 import {
+  IonRow,
+  IonCol,
+  IonGrid,
   IonList,
   IonItem,
+  IonIcon,
   IonLabel,
+  IonInput,
+  IonButton,
   IonCheckbox,
   IonSearchbar,
+  IonItemGroup,
 } from "@ionic/react";
 
 import React from "react";
+import { Tag } from "../helpers/types";
 import { useState } from "react";
-
-type Tag = {
-  val: string;
-  isChecked: boolean;
-};
+import { addOutline } from "ionicons/icons";
+import { useDispatch } from "react-redux";
+import { receiptsActions } from "../actions/receiptsActions";
 
 type Props = {
-  tagOptions: Tag[];
-  addTags: (tagOptions: Tag[]) => void;
+  selectTag: (tag: string) => void;
   setTagOptions: (value: Tag[]) => void;
+  tagOptions: Tag[];
 };
 
 const SelectTags: React.FC<Props> = (props: Props) => {
-  const { tagOptions, setTagOptions } = props;
+  const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [newTag, setNewTag] = useState("");
 
+  const { tagOptions, setTagOptions } = props;
+
   const addTag = () => {
     if (newTag) {
+      dispatch(receiptsActions.addNewTag(newTag, tagOptions));
       setTagOptions([...tagOptions, { val: newTag, isChecked: false }]);
       setNewTag("");
     }
@@ -38,26 +47,37 @@ const SelectTags: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const selectTag = (value: string) => {
-    const updatedTags = [];
-    for (let tag of tagOptions) {
-      if (tag.val.toLowerCase() === value.toLowerCase()) {
-        updatedTags.push({ val: value, isChecked: !tag.isChecked });
-      } else {
-        updatedTags.push(tag);
-      }
-    }
-    setTagOptions(updatedTags);
-  };
-
   return (
-    <>
-      <IonSearchbar
+    <IonItemGroup className="ion-padding-horizontal">
+      <IonItem>
+        <IonLabel position="fixed">Tags:</IonLabel>
+        <IonGrid>
+          <IonRow>
+            <IonCol className="ion-no-padding">
+              <IonInput
+                type="text"
+                value={newTag}
+                placeholder="Add New Tag"
+                onIonChange={(e) => setNewTag(e.detail.value!)}
+              ></IonInput>
+            </IonCol>
+            {newTag && (
+              <IonCol size="auto" className="ion-no-padding ion-margin-start">
+                <IonButton color="success" onClick={addTag}>
+                  <IonIcon icon={addOutline} />
+                </IonButton>
+              </IonCol>
+            )}
+          </IonRow>
+        </IonGrid>
+      </IonItem>
+
+      {/* <IonSearchbar
         value={search}
         className="ion-margin-start"
         placeholder="Search Tags"
         onIonChange={(e) => setSearch(e.detail.value!)}
-      ></IonSearchbar>
+      ></IonSearchbar> */}
 
       <IonList className="ion-padding-start">
         {filterTags().map(({ val, isChecked }, i) => (
@@ -67,14 +87,36 @@ const SelectTags: React.FC<Props> = (props: Props) => {
               slot="start"
               value={val}
               checked={isChecked}
-              onIonChange={(e) => selectTag(e.detail.value!)}
+              onIonChange={(e) => props.selectTag(e.detail.value!)}
             />
           </IonItem>
         ))}
       </IonList>
 
+      {/* <IonGrid>
+        <IonRow>
+          <IonCol offset="2" className="ion-no-padding">
+            <IonItem>
+              <IonInput
+                type="text"
+                value={newTag}
+                placeholder="Add New Tag"
+                onIonChange={(e) => setNewTag(e.detail.value!)}
+              ></IonInput>
+            </IonItem>
+          </IonCol>
+          {newTag && (
+            <IonCol size="auto" className="ion-no-padding ion-margin-start">
+              <IonButton size="default" color="success" onClick={addTag}>
+                <IonIcon icon={addOutline} />
+              </IonButton>
+            </IonCol>
+          )}
+        </IonRow>
+      </IonGrid> */}
+
       <br />
-    </>
+    </IonItemGroup>
   );
 };
 
