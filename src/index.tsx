@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
+// import "bootstrap/dist/css/bootstrap.css";
 
 import store from "./helpers/store";
 import { Provider } from "react-redux";

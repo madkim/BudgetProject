@@ -114,7 +114,11 @@ const AddForm: React.FC<Props> = (props: Props) => {
           tagOptions={tagOptions}
         /> */}
 
-        <Tags />
+        <Tags
+          selectTag={(tag) => selectTag(tag)}
+          setTagOptions={setTagOptions}
+          tagOptions={tagOptions}
+        />
 
         <br />
 
