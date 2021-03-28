@@ -21,6 +21,7 @@ import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { receiptsActions } from "../actions/receiptsActions";
 import { Receipts, Tag } from "../helpers/types";
+import { Tags } from "./Tags/Tags";
 
 import SelectTags from "./SelectTags";
 import moment from "moment";
@@ -107,11 +108,13 @@ const AddForm: React.FC<Props> = (props: Props) => {
 
         <br />
 
-        <SelectTags
+        {/* <SelectTags
           selectTag={(tag) => selectTag(tag)}
           setTagOptions={setTagOptions}
           tagOptions={tagOptions}
-        />
+        /> */}
+
+        <Tags />
 
         <br />
 
