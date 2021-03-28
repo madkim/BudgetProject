@@ -20,8 +20,9 @@ import { receiptsActions } from "../actions/receiptsActions";
 import { Receipts, Tag } from "../helpers/types";
 import { Tags } from "./Tags/Tags";
 
-import SelectTags from "./SelectTags";
 import moment from "moment";
+import momentTZ from "moment-timezone";
+import SelectTags from "./SelectTags";
 
 interface Props {
   receipts: Receipts;
@@ -30,10 +31,12 @@ interface Props {
 
 const AddForm: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const timezone = momentTZ.tz.guess();
 
   const [date, setDate] = useState(moment(new Date()).format());
-  const [price, setPrice] = useState<number | null>(null);
+  const [time, setTime] = useState(moment(new Date()).format());
   const [tags, setTags] = useState([""]);
+  const [price, setPrice] = useState<number | null>(null);
   const [tagOptions, setTagOptions] = useState(props.tagOptions);
 
   const addTags = (tags: Array<{ val: string; isChecked: boolean }>) => {
@@ -55,7 +58,24 @@ const AddForm: React.FC<Props> = (props: Props) => {
   };
 
   const addReceipt = () => {
-    dispatch(receiptsActions.addNewReceipt(date, price, tags, props.receipts));
+    const this_date = moment(date);
+    const this_time = moment(time);
+
+    const dateTime = this_date.set({
+      hour: this_time.get("hour"),
+      minute: this_time.get("minute"),
+      second: 0,
+      millisecond: 0,
+    });
+
+    dispatch(
+      receiptsActions.addNewReceipt(
+        dateTime.format(),
+        price,
+        tags,
+        props.receipts
+      )
+    );
   };
 
   return (
@@ -71,16 +91,29 @@ const AddForm: React.FC<Props> = (props: Props) => {
       <IonContent className="ion-padding-end ion-padding-top">
         <IonGrid>
           <IonRow>
-            <IonCol style={{ marginTop: "5px" }}>
+            <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Date</IonLabel>
                 <IonDatetime
                   value={date}
                   onIonChange={(e) => setDate(e.detail.value!)}
-                  display-timezone="utc"
+                  display-timezone={timezone}
                 ></IonDatetime>
               </IonItem>
             </IonCol>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="stacked">Time</IonLabel>
+                <IonDatetime
+                  value={time}
+                  displayFormat="h:mm A"
+                  onIonChange={(e) => setTime(e.detail.value!)}
+                  display-timezone={timezone}
+                ></IonDatetime>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+          <IonRow>
             <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Price</IonLabel>

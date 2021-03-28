@@ -38,7 +38,9 @@ const ListView: React.FC<Props> = (props: Props) => {
                       <IonLabel>
                         <IonRow>
                           <IonCol>
+                            {/* <IonLabel text-wrap> */}
                             {moment(receipt.date).format("dddd, Do")}
+                            {/* </IonLabel> */}
                           </IonCol>
                           <IonCol size="2">${receipt.price}</IonCol>
                           <IonCol size="3">
