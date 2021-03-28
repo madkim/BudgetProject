@@ -10,7 +10,7 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/react";
-// import "./Tags.css";
+import "./Tags.css";
 
 import React, { useEffect, useState, useRef } from "react";
 
