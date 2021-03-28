@@ -94,7 +94,6 @@ export const Tags: React.FC<Props> = (props: Props) => {
   };
 
   const handlePan = (e: any) => {
-    console.log("pan");
     const X = e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
     const Y = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
     const realTarget = document.elementFromPoint(X, Y);
@@ -108,79 +107,87 @@ export const Tags: React.FC<Props> = (props: Props) => {
 
   const alphaList = document.getElementById("alphaList");
   const listHeight = alphaList ? alphaList.offsetHeight : "inherit";
+  const minListHeight = window.innerHeight / 3;
 
   return (
-    <>
-      <div className="wrapper ion-padding-start ">
-        <IonItem lines="none">
-          <IonLabel position="fixed">Tags:</IonLabel>
-          {/* <IonGrid>
-            <IonRow>
-              <IonCol className="ion-no-padding">
-                <IonInput
-                  type="text"
-                  value={newTag}
-                  placeholder="Add New Tag"
-                  onIonChange={(e) => setNewTag(e.detail.value!)}
-                ></IonInput>
+    <div className="wrapper">
+      <IonItem>
+        <IonGrid className="ion-margin-end">
+          <IonRow>
+            <IonCol size="3">
+              <IonLabel position="fixed">Tags:</IonLabel>
+            </IonCol>
+            <IonCol className="ion-no-padding">
+              <IonInput
+                type="text"
+                value={newTag}
+                placeholder="Add New Tag"
+                onIonChange={(e) => setNewTag(e.detail.value!)}
+              ></IonInput>
+            </IonCol>
+            {newTag && (
+              <IonCol size="auto" className="ion-no-padding">
+                <IonButton color="success" onClick={addTag}>
+                  <IonIcon icon={addOutline} />
+                </IonButton>
               </IonCol>
-              {newTag && (
-                <IonCol size="auto" className="ion-no-padding">
-                  <IonButton color="success" onClick={addTag}>
-                    <IonIcon icon={addOutline} />
-                  </IonButton>
-                </IonCol>
-              )}
-            </IonRow>
-          </IonGrid> */}
-        </IonItem>
-        <div className="container js-abc">
-          <div style={{ touchAction: "none" }}>
-            <ul
-              id="alphaList"
-              onTouchMove={handlePan}
-              className="abc js-abc-nav"
-            >
-              {Object.keys(alpha).map((letter) => {
-                if (getLetters().includes(letter)) {
-                  return (
-                    <small>
-                      <li key={letter}>{letter}</li>
-                    </small>
-                  );
-                }
-              })}
-            </ul>
-          </div>
-
-          <IonList style={{ height: listHeight, overflowY: "scroll" }}>
-            {tagOptions.map(({ val, isChecked }, i) => {
-              let letter = val.charAt(0).toUpperCase();
-              let prevLetter = tagOptions[i - 1]
-                ? tagOptions[i - 1].val.charAt(0).toUpperCase()
-                : "";
-              return (
-                <div className="ion-padding-start">
-                  {letter !== prevLetter && (
-                    <div className="text" ref={alpha[letter]}>
-                      {letter}
-                    </div>
-                  )}
-                  <IonItem lines="none" key={i}>
-                    <IonLabel>{val}</IonLabel>
-                    <IonCheckbox
-                      slot="start"
-                      value={val}
-                      checked={isChecked}
-                      onIonChange={(e) => props.selectTag(e.detail.value!)}
-                    />
-                  </IonItem>
-                </div>
-              );
+            )}
+          </IonRow>
+        </IonGrid>
+      </IonItem>
+      <div className="container js-abc ion-padding-start">
+        <div style={{ touchAction: "none" }}>
+          <ul
+            id="alphaList"
+            onTouchMove={handlePan}
+            className="abc js-abc-nav"
+            style={{ minHeight: minListHeight }}
+          >
+            {Object.keys(alpha).map((letter) => {
+              if (getLetters().includes(letter)) {
+                return (
+                  <small key={letter}>
+                    <li>{letter}</li>
+                  </small>
+                );
+              }
             })}
-          </IonList>
+          </ul>
         </div>
+
+        <IonList
+          style={{
+            maxHeight: listHeight,
+            minHeight: minListHeight,
+            overflowY: "scroll",
+          }}
+        >
+          {tagOptions.map(({ val, isChecked }, i) => {
+            let letter = val.charAt(0).toUpperCase();
+            let prevLetter = tagOptions[i - 1]
+              ? tagOptions[i - 1].val.charAt(0).toUpperCase()
+              : "";
+            return (
+              <div key={i} className="ion-padding-start">
+                {letter !== prevLetter && (
+                  <div className="text" ref={alpha[letter]}>
+                    {letter}
+                  </div>
+                )}
+                <IonItem lines="none" key={i}>
+                  <IonLabel>{val}</IonLabel>
+                  <IonCheckbox
+                    slot="start"
+                    value={val}
+                    checked={isChecked}
+                    onIonChange={(e) => props.selectTag(e.detail.value!)}
+                  />
+                </IonItem>
+              </div>
+            );
+          })}
+        </IonList>
       </div>
-    </>
+    </div>
   );
 };
