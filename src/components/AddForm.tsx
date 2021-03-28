@@ -93,7 +93,6 @@ const AddForm: React.FC<Props> = (props: Props) => {
                   </IonCol>
                   <IonCol>
                     <IonInput
-                      autofocus
                       type="number"
                       value={price}
                       placeholder="Enter Price"
