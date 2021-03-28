@@ -8,6 +8,7 @@ import {
   IonContent,
   IonItemGroup,
   IonItemDivider,
+  IonBadge,
 } from "@ionic/react";
 import moment from "moment";
 
@@ -20,6 +21,21 @@ interface Props {
 
 const ListView: React.FC<Props> = (props: Props) => {
   const { receipts } = props;
+
+  const getBadgeColor = (price: number | null) => {
+    if (price !== null) {
+      if (price < 30) {
+        return "success";
+      }
+      if (price > 30 && price < 80) {
+        return "warning";
+      }
+      if (price > 80) {
+        return "danger";
+      }
+    }
+  };
+
   return (
     <IonContent>
       <IonList>
@@ -37,13 +53,15 @@ const ListView: React.FC<Props> = (props: Props) => {
                     <IonItem key={receipt.id}>
                       <IonLabel>
                         <IonRow>
-                          <IonCol>
-                            {/* <IonLabel text-wrap> */}
-                            {moment(receipt.date).format("dddd, Do")}
-                            {/* </IonLabel> */}
+                          <IonCol size="auto">
+                            {moment(receipt.date).format("ddd, Do")}
                           </IonCol>
-                          <IonCol size="2">${receipt.price}</IonCol>
-                          <IonCol size="3">
+                          <IonCol className="ion-text-center">
+                            <IonBadge color={getBadgeColor(receipt.price)}>
+                              ${receipt.price}
+                            </IonBadge>
+                          </IonCol>
+                          <IonCol size="4">
                             {receipt.tags.map((tag, index) => {
                               return (
                                 <IonLabel key={index} text-wrap>

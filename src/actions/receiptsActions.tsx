@@ -1,5 +1,8 @@
 import { receiptsConstants } from "../constants/receiptsConstants";
 import { Receipts, Tag } from "../helpers/types";
+import { Dispatch } from "react";
+import { Action } from "../helpers/types";
+import { db } from "../helpers/firebase";
 import moment from "moment";
 
 export const receiptsActions = {
@@ -10,40 +13,34 @@ export const receiptsActions = {
 };
 
 function getAllReceipts() {
-  //do some fetching
-  const data = {};
-
-  // const data = {
-  //   "2021-02": [
-  //     {
-  //       id: "2021-02_0",
-  //       date: "2021-03-25T10:00:00-00:00",
-  //       price: 14,
-  //       tags: ["target"],
-  //     },
-  //   ],
-  //   "2021-01": [
-  //     {
-  //       id: "2021-01_0",
-  //       date: "2021-03-25T10:00:00-00:00",
-  //       price: 14,
-  //       tags: ["target"],
-  //     },
-  //     {
-  //       id: "2021-01_1",
-  //       date: "2021-03-25T10:00:00-00:00",
-  //       price: 14,
-  //       tags: ["target"],
-  //     },
-  //     {
-  //       id: "2021-01_2",
-  //       date: "2021-03-25T10:00:00-00:00",
-  //       price: 14,
-  //       tags: ["target"],
-  //     },
-  //   ],
-  // };
-  return { type: receiptsConstants.GET_ALL_RECEIPTS, payload: data };
+  return (dispatch: Dispatch<Action>) => {
+    db.collection("receipts")
+      .doc("2021")
+      .collection("02")
+      .get()
+      .then((receipts) => {
+        let data: Receipts = {
+          "2021-02": [],
+        };
+        receipts.docs.map((doc, index) => {
+          const receipt = doc.data();
+          const date = moment(receipt.date.toDate());
+          data["2021-02"].push({
+            id: date.format(`YYYY[-]MM[_]${index}`),
+            date: date.format(),
+            price: receipt.price,
+            tags: receipt.tags,
+          });
+        });
+        dispatch(success(data));
+      });
+    function success(receipts: Receipts) {
+      return {
+        type: receiptsConstants.GET_ALL_RECEIPTS,
+        payload: receipts,
+      };
+    }
+  };
 }
 
 function addNewReceipt(
@@ -64,6 +61,23 @@ function addNewReceipt(
     newReceipt.id = `${month}_${0}`;
     updatedReceipts[month] = [newReceipt];
   }
+
+  db.collection("receipts")
+    .doc("2021")
+    .collection("02")
+    .doc(date)
+    .set({
+      date: new Date(date),
+      price: price,
+      tags: tags,
+    })
+    .then(() => {
+      console.log("Document successfully written!");
+    })
+    .catch((error: Error) => {
+      console.error("Error writing document: ", error);
+    });
+
   return { type: receiptsConstants.ADD_NEW_RECEIPT, payload: updatedReceipts };
 }
 

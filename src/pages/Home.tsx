@@ -8,6 +8,7 @@ import {
   IonToolbar,
   IonFabButton,
   IonButton,
+  IonLoading,
 } from "@ionic/react";
 import ListView from "../components/ListView";
 
@@ -52,6 +53,11 @@ const Home: React.FC<Props> = (props: { receipts: Receipts }) => {
             <IonIcon icon={add} />
           </IonFabButton>
         </IonFab>
+
+        <IonLoading
+          isOpen={Object.keys(props.receipts).length === 0}
+          message={"Please wait..."}
+        />
 
         <ListView receipts={props.receipts} />
       </IonContent>
