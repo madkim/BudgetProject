@@ -3,7 +3,6 @@ import {
   IonCol,
   IonItem,
   IonPage,
-  IonIcon,
   IonGrid,
   IonInput,
   IonLabel,
@@ -13,8 +12,6 @@ import {
   IonContent,
   IonToolbar,
   IonDatetime,
-  IonItemGroup,
-  IonItemDivider,
 } from "@ionic/react";
 
 import React, { useState } from "react";
