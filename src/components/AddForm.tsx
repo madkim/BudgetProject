@@ -3,7 +3,6 @@ import {
   IonCol,
   IonItem,
   IonPage,
-  IonIcon,
   IonGrid,
   IonInput,
   IonLabel,
@@ -13,8 +12,6 @@ import {
   IonContent,
   IonToolbar,
   IonDatetime,
-  IonItemGroup,
-  IonItemDivider,
 } from "@ionic/react";
 
 import React, { useState } from "react";
@@ -93,7 +90,6 @@ const AddForm: React.FC<Props> = (props: Props) => {
                   </IonCol>
                   <IonCol>
                     <IonInput
-                      autofocus
                       type="number"
                       value={price}
                       placeholder="Enter Price"

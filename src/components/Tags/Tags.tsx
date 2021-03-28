@@ -56,7 +56,6 @@ export const Tags: React.FC<Props> = (props: Props) => {
   };
 
   const dispatch = useDispatch();
-  const [search, setSearch] = useState("");
   const [newTag, setNewTag] = useState("");
   const { tagOptions, setTagOptions } = props;
 
