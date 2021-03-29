@@ -8,10 +8,15 @@ import {
   IonBadge,
   IonContent,
   IonItemGroup,
+  IonItemOption,
   IonItemDivider,
+  IonItemSliding,
+  IonItemOptions,
 } from "@ionic/react";
 import moment from "moment";
 
+import { useDispatch } from "react-redux";
+import { receiptsActions } from "../actions/receiptsActions";
 import { Receipt, Receipts } from "../helpers/types";
 import { useEffect, useState } from "react";
 import { chevronForwardOutline } from "ionicons/icons";
@@ -21,7 +26,18 @@ interface Props {
 }
 
 const ListView: React.FC<Props> = (props: Props) => {
+  const dispatch = useDispatch();
   const [receipts, setReceipts] = useState<Receipts>({});
+
+  const deleteReceipt = (receiptId: string) => {
+    let answer = window.confirm(
+      "Are you sure you want to delete this receipt?"
+    );
+
+    if (answer) {
+      dispatch(receiptsActions.deleteReceipt(receiptId));
+    }
+  };
 
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
@@ -48,6 +64,7 @@ const ListView: React.FC<Props> = (props: Props) => {
           receipts[date] = [receipt];
         }
       });
+      console.log(receipts);
       setReceipts(receipts);
     }
   };
@@ -71,39 +88,51 @@ const ListView: React.FC<Props> = (props: Props) => {
                 </IonItemDivider>
                 {receipts[month].map((receipt, index) => {
                   return (
-                    <IonItem key={index}>
-                      <IonLabel>
-                        <IonRow>
-                          <IonCol size="auto">
-                            {moment(receipt.date).format("ddd, Do")}
-                          </IonCol>
-                          <IonCol className="ion-text-center">
-                            <IonBadge color={getBadgeColor(receipt.price)}>
-                              ${receipt.price}
-                            </IonBadge>
-                          </IonCol>
-                          <IonCol size="4">
-                            {receipt.tags.map((tag, index) => {
-                              return (
-                                <IonLabel
-                                  key={index}
-                                  text-wrap
-                                  className="ion-text-capitalize"
-                                >
-                                  {tag}
-                                </IonLabel>
-                              );
-                            })}
-                          </IonCol>
-                          <IonCol size="1">
-                            <IonIcon
-                              color="medium"
-                              icon={chevronForwardOutline}
-                            />
-                          </IonCol>
-                        </IonRow>
-                      </IonLabel>
-                    </IonItem>
+                    <IonItemSliding key={receipt.id}>
+                      <IonItemOptions side="start">
+                        <IonItemOption
+                          color="danger"
+                          onClick={() => deleteReceipt(receipt.id)}
+                          expandable
+                        >
+                          Delete
+                        </IonItemOption>
+                      </IonItemOptions>
+                      <IonItem>
+                        <IonLabel>
+                          <IonRow>
+                            <IonCol size="auto">
+                              {moment(receipt.date).format("ddd, Do")}
+                            </IonCol>
+                            <IonCol className="ion-text-center">
+                              <IonBadge color={getBadgeColor(receipt.price)}>
+                                ${receipt.price}
+                              </IonBadge>
+                            </IonCol>
+                            <IonCol size="4">
+                              {receipt.tags &&
+                                receipt.tags.map((tag, index) => {
+                                  return (
+                                    <IonLabel
+                                      key={index}
+                                      text-wrap
+                                      className="ion-text-capitalize"
+                                    >
+                                      {tag}
+                                    </IonLabel>
+                                  );
+                                })}
+                            </IonCol>
+                            <IonCol size="1">
+                              <IonIcon
+                                color="medium"
+                                icon={chevronForwardOutline}
+                              />
+                            </IonCol>
+                          </IonRow>
+                        </IonLabel>
+                      </IonItem>
+                    </IonItemSliding>
                   );
                 })}
               </IonItemGroup>

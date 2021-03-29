@@ -1,4 +1,5 @@
 export interface Receipt {
+  id: string;
   date: Date;
   price: number | null;
   tags: string[];

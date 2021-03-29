@@ -1,20 +1,20 @@
 import {
-  IonList,
-  IonItem,
-  IonLabel,
-  IonCheckbox,
-  IonGrid,
   IonRow,
   IonCol,
+  IonList,
+  IonItem,
+  IonGrid,
+  IonIcon,
+  IonLabel,
   IonInput,
   IonButton,
-  IonIcon,
+  IonCheckbox,
 } from "@ionic/react";
 import "./SelectTags.css";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
-import { Tag, Tags } from "../../helpers/types";
+import { Tags } from "../../helpers/types";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { receiptsActions } from "../../actions/receiptsActions";
@@ -24,16 +24,6 @@ type Props = {
   setTagOptions: (value: Tags) => void;
   tagOptions: Tags;
 };
-
-// export const alphaSort = (a: Tag, b: Tag) => {
-//   if (a.val < b.val) {
-//     return -1;
-//   }
-//   if (a.val > b.val) {
-//     return 1;
-//   }
-//   return 0;
-// };
 
 const SelectTags: React.FC<Props> = (props: Props) => {
   const alpha: any = {
@@ -67,14 +57,12 @@ const SelectTags: React.FC<Props> = (props: Props) => {
 
   const dispatch = useDispatch();
   const [newTag, setNewTag] = useState("");
-
-  const { tagOptions, setTagOptions } = props;
+  const { tagOptions } = props;
 
   const addNewTag = () => {
     if (newTag) {
-      // dispatch(receiptsActions.addNewTag(newTag, tagOptions));
-      // setTagOptions([...tagOptions, { val: newTag, isChecked: false }]);
-      // setNewTag("");
+      dispatch(receiptsActions.addNewTag(newTag, tagOptions));
+      setNewTag("");
     }
   };
 

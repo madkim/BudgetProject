@@ -15,9 +15,9 @@ import {
 } from "@ionic/react";
 
 import React, { useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import { Receipt, Tag, Tags } from "../helpers/types";
 import { receiptsActions } from "../actions/receiptsActions";
+import { Receipt, Tag, Tags } from "../helpers/types";
+import { connect, useDispatch } from "react-redux";
 
 import moment from "moment";
 import momentTZ from "moment-timezone";
@@ -151,7 +151,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
         <br />
 
         <SelectTags
-          selectTag={(tag) => selectTag(tag)}
+          selectTag={(tag: string) => selectTag(tag)}
           setTagOptions={setTagOptions}
           tagOptions={tagOptions}
         />

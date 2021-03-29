@@ -9,6 +9,11 @@ import {
   IonFabButton,
   IonButton,
   IonLoading,
+  IonItemSliding,
+  IonItemOption,
+  IonItemOptions,
+  IonItem,
+  IonLabel,
 } from "@ionic/react";
 import ListView from "../components/ListView";
 
@@ -55,7 +60,7 @@ const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
         </IonFab>
 
         <IonLoading
-          isOpen={props.receipts.length === 0}
+          isOpen={props.receipts && props.receipts.length === 0}
           message={"Please wait..."}
         />
 
@@ -68,6 +73,7 @@ const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
 const mapStateToProps = (state: {
   receiptsReducer: { receipts: Receipt[] };
 }) => {
+  console.log(state.receiptsReducer.receipts);
   return {
     receipts: state.receiptsReducer.receipts,
   };

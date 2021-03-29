@@ -1,5 +1,5 @@
 import { receiptsConstants } from "../constants/receiptsConstants";
-import { Action } from "../helpers/types";
+import { Action, Receipt } from "../helpers/types";
 
 export const initState = {
   receipts: [],
@@ -17,6 +17,15 @@ export function receiptsReducer(state = initState, action: Action) {
     return (state = {
       ...state,
       receipts: action.payload,
+    });
+  }
+  if (action.type === receiptsConstants.DELETE_RECEIPT) {
+    const receiptId = action.payload;
+    return (state = {
+      ...state,
+      receipts: state.receipts.filter(
+        (receipt: Receipt) => receipt.id !== receiptId
+      ),
     });
   }
   if (action.type === receiptsConstants.GET_ALL_TAGS) {

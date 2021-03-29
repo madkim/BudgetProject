@@ -1,12 +1,12 @@
 import { receiptsConstants } from "../constants/receiptsConstants";
-import { Receipt, Receipts, Tags, Tag } from "../helpers/types";
+import { Receipt, Tags } from "../helpers/types";
 import { Dispatch } from "react";
 import { Action } from "../helpers/types";
 import { db } from "../helpers/firebase";
-import moment from "moment";
 
 export const receiptsActions = {
   addNewReceipt,
+  deleteReceipt,
   getAllReceipts,
   getAllTags,
   addNewTag,
@@ -21,6 +21,7 @@ function getAllReceipts() {
       .then((receipts) => {
         receipts.docs.map((receipt) => {
           data.push({
+            id: receipt.id,
             date: receipt.data().date.toDate(),
             price: receipt.data().price,
             tags: receipt.data().tags,
@@ -44,26 +45,50 @@ function addNewReceipt(
   receipts: Receipt[]
 ) {
   return (dispatch: Dispatch<Action>) => {
-    const newReceipt = { date: date, price: price, tags: tags };
-    const updatedReceipts = [...receipts, newReceipt];
-
     db.collection("receipts")
       .add({
         date: new Date(date),
         price: price,
         tags: tags,
       })
-      .then(() => {
-        console.log("Document successfully written!");
+      .then((docRef) => {
+        const newReceipt = {
+          id: docRef.id,
+          date: date,
+          price: price,
+          tags: tags,
+        };
+        const updatedReceipts = [...receipts, newReceipt];
         dispatch(success(updatedReceipts));
       })
       .catch((error: Error) => {
-        console.error("Error writing document: ", error);
+        console.error("Error writing receipt: ", error);
       });
     function success(updatedReceipts: Receipt[]) {
       return {
         type: receiptsConstants.ADD_NEW_RECEIPT,
         payload: updatedReceipts,
+      };
+    }
+  };
+}
+
+function deleteReceipt(receiptId: string) {
+  return (dispatch: Dispatch<Action>) => {
+    db.collection("receipts")
+      .doc(receiptId)
+      .delete()
+      .then(() => {
+        console.log("Receipt successfully deleted!");
+        dispatch(success(receiptId));
+      })
+      .catch((error) => {
+        console.error("Error removing receipt: ", error);
+      });
+    function success(receiptId: string) {
+      return {
+        type: receiptsConstants.DELETE_RECEIPT,
+        payload: receiptId,
       };
     }
   };
@@ -128,13 +153,21 @@ function getAllTags() {
   return { type: receiptsConstants.GET_ALL_TAGS, payload: data };
 }
 
-function addNewTag(newTag: string, tagOptions: Tag[]) {
+function addNewTag(newTag: string, tagOptions: Tags) {
   return (dispatch: Dispatch<Action>) => {
     db.collection("tags")
       .doc(newTag)
       .set({ name: newTag.toLowerCase() })
       .then(() => {
-        const tags = [...tagOptions, { val: newTag, isChecked: false }];
+        const tags = { ...tagOptions };
+        const letter = newTag.charAt(0).toUpperCase();
+        const newTagData = { val: newTag, isChecked: false };
+
+        if (tags[letter]) {
+          tags[letter].push(newTagData);
+        } else {
+          tags[letter] = [newTagData];
+        }
         dispatch({ type: receiptsConstants.ADD_NEW_TAG, payload: tags });
       })
       .catch((error) => {
