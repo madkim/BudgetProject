@@ -16,61 +16,74 @@ import {
 
 import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
+import { Receipt, Tag, Tags } from "../helpers/types";
 import { receiptsActions } from "../actions/receiptsActions";
-import { Receipts, Tag } from "../helpers/types";
-import { Tags } from "./Tags/Tags";
 
 import moment from "moment";
 import momentTZ from "moment-timezone";
-import SelectTags from "./SelectTags";
+import SelectTags from "./Tags/SelectTags";
 
 interface Props {
-  receipts: Receipts;
-  tagOptions: Tag[];
+  receipts: Receipt[];
+  tagOptions: Tags;
 }
 
 const AddForm: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const timezone = momentTZ.tz.guess();
 
+  const [tags, setTags] = useState<string[]>([]);
   const [date, setDate] = useState(moment(new Date()).format());
   const [time, setTime] = useState(moment(new Date()).format());
-  const [tags, setTags] = useState([""]);
   const [price, setPrice] = useState<number | null>(null);
   const [tagOptions, setTagOptions] = useState(props.tagOptions);
 
-  const addTags = (tags: Array<{ val: string; isChecked: boolean }>) => {
-    const selectedTags = tags.filter((tag) => tag.isChecked === true);
+  const addTags = (updatedTags: Tags) => {
+    let selectedTags: Tag[] = [];
+    Object.keys(updatedTags).map((letter) => {
+      selectedTags = [
+        ...selectedTags,
+        ...updatedTags[letter].filter((tag) => tag.isChecked === true),
+      ];
+    });
     setTags(selectedTags.map((a) => a.val));
   };
 
   const selectTag = (value: string) => {
-    const updatedTags = [];
-    for (let tag of tagOptions) {
-      if (tag.val.toLowerCase() === value.toLowerCase()) {
-        updatedTags.push({ val: value, isChecked: !tag.isChecked });
-      } else {
-        updatedTags.push(tag);
-      }
-    }
+    const updatedTags: Tags = {};
+
+    Object.keys(tagOptions).map((letter: string) => {
+      updatedTags[letter] = [];
+
+      tagOptions[letter].map((tagOption) => {
+        if (tagOption.val.toLowerCase() === value.toLowerCase()) {
+          updatedTags[letter].push({
+            val: value,
+            isChecked: !tagOption.isChecked,
+          });
+        } else {
+          updatedTags[letter].push(tagOption);
+        }
+      });
+    });
     addTags(updatedTags);
     setTagOptions(updatedTags);
   };
 
   const addReceipt = () => {
-    const this_date = moment(date);
-    const this_time = moment(time);
+    const mmntDate = moment(date);
+    const mmntTime = moment(time);
 
-    const dateTime = this_date.set({
-      hour: this_time.get("hour"),
-      minute: this_time.get("minute"),
+    const dateTime = mmntDate.set({
+      hour: mmntTime.get("hour"),
+      minute: mmntTime.get("minute"),
       second: 0,
       millisecond: 0,
     });
 
     dispatch(
       receiptsActions.addNewReceipt(
-        dateTime.format(),
+        dateTime.toDate(),
         price,
         tags,
         props.receipts
@@ -137,13 +150,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
 
         <br />
 
-        {/* <SelectTags
-          selectTag={(tag) => selectTag(tag)}
-          setTagOptions={setTagOptions}
-          tagOptions={tagOptions}
-        /> */}
-
-        <Tags
+        <SelectTags
           selectTag={(tag) => selectTag(tag)}
           setTagOptions={setTagOptions}
           tagOptions={tagOptions}
@@ -182,7 +189,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipts; tagOptions: Tag[] };
+  receiptsReducer: { receipts: Receipt[]; tagOptions: Tags };
 }) => {
   return {
     receipts: state.receiptsReducer.receipts,

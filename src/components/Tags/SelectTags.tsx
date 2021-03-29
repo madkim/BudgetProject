@@ -10,22 +10,32 @@ import {
   IonButton,
   IonIcon,
 } from "@ionic/react";
-import "./Tags.css";
+import "./SelectTags.css";
 
 import React, { useEffect, useState, useRef } from "react";
 
-import { Tag } from "../../helpers/types";
+import { Tag, Tags } from "../../helpers/types";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { receiptsActions } from "../../actions/receiptsActions";
 
 type Props = {
   selectTag: (tag: string) => void;
-  setTagOptions: (value: Tag[]) => void;
-  tagOptions: Tag[];
+  setTagOptions: (value: Tags) => void;
+  tagOptions: Tags;
 };
 
-export const Tags: React.FC<Props> = (props: Props) => {
+// export const alphaSort = (a: Tag, b: Tag) => {
+//   if (a.val < b.val) {
+//     return -1;
+//   }
+//   if (a.val > b.val) {
+//     return 1;
+//   }
+//   return 0;
+// };
+
+const SelectTags: React.FC<Props> = (props: Props) => {
   const alpha: any = {
     A: useRef(null),
     B: useRef(null),
@@ -57,39 +67,15 @@ export const Tags: React.FC<Props> = (props: Props) => {
 
   const dispatch = useDispatch();
   const [newTag, setNewTag] = useState("");
+
   const { tagOptions, setTagOptions } = props;
 
-  useEffect(() => {
-    tagOptions.sort(alphaSort);
-  }, []);
-
-  const alphaSort = (a: Tag, b: Tag) => {
-    if (a.val < b.val) {
-      return -1;
-    }
-    if (a.val > b.val) {
-      return 1;
-    }
-    return 0;
-  };
-
-  const addTag = () => {
+  const addNewTag = () => {
     if (newTag) {
-      dispatch(receiptsActions.addNewTag(newTag, tagOptions));
-      setTagOptions([...tagOptions, { val: newTag, isChecked: false }]);
-      setNewTag("");
+      // dispatch(receiptsActions.addNewTag(newTag, tagOptions));
+      // setTagOptions([...tagOptions, { val: newTag, isChecked: false }]);
+      // setNewTag("");
     }
-  };
-
-  const getLetters = () => {
-    const letters: Array<string> = [];
-    tagOptions.filter((tag) => {
-      const letter = tag.val.charAt(0).toUpperCase();
-      if (letters.includes(letter) === false) {
-        letters.push(letter);
-      }
-    });
-    return letters;
   };
 
   const handlePan = (e: any) => {
@@ -126,7 +112,7 @@ export const Tags: React.FC<Props> = (props: Props) => {
             </IonCol>
             {newTag && (
               <IonCol size="auto" className="ion-no-padding">
-                <IonButton color="success" onClick={addTag}>
+                <IonButton color="success" onClick={addNewTag}>
                   <IonIcon icon={addOutline} />
                 </IonButton>
               </IonCol>
@@ -143,7 +129,7 @@ export const Tags: React.FC<Props> = (props: Props) => {
             style={{ minHeight: minListHeight }}
           >
             {Object.keys(alpha).map((letter) => {
-              if (getLetters().includes(letter)) {
+              if (Object.keys(tagOptions).includes(letter)) {
                 return (
                   <small key={letter}>
                     <li>{letter}</li>
@@ -161,32 +147,35 @@ export const Tags: React.FC<Props> = (props: Props) => {
             overflowY: "scroll",
           }}
         >
-          {tagOptions.map(({ val, isChecked }, i) => {
-            let letter = val.charAt(0).toUpperCase();
-            let prevLetter = tagOptions[i - 1]
-              ? tagOptions[i - 1].val.charAt(0).toUpperCase()
-              : "";
-            return (
-              <div key={i} className="ion-padding-start">
-                {letter !== prevLetter && (
+          {Object.keys(tagOptions).length > 0 &&
+            Object.keys(tagOptions).map((letter, i) => {
+              return (
+                <div key={i} className="ion-padding-start">
                   <div className="text" ref={alpha[letter]}>
                     {letter}
                   </div>
-                )}
-                <IonItem lines="none" key={i}>
-                  <IonLabel>{val}</IonLabel>
-                  <IonCheckbox
-                    slot="start"
-                    value={val}
-                    checked={isChecked}
-                    onIonChange={(e) => props.selectTag(e.detail.value!)}
-                  />
-                </IonItem>
-              </div>
-            );
-          })}
+                  {tagOptions[letter].map(({ val, isChecked }, i) => {
+                    return (
+                      <IonItem lines="none" key={i}>
+                        <IonLabel className="ion-text-capitalize">
+                          {val}
+                        </IonLabel>
+                        <IonCheckbox
+                          slot="start"
+                          value={val}
+                          checked={isChecked}
+                          onIonChange={(e) => props.selectTag(e.detail.value!)}
+                        />
+                      </IonItem>
+                    );
+                  })}
+                </div>
+              );
+            })}
         </IonList>
       </div>
     </div>
   );
 };
+
+export default SelectTags;

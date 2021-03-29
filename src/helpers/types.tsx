@@ -1,6 +1,5 @@
 export interface Receipt {
-  id: string;
-  date: string;
+  date: Date;
   price: number | null;
   tags: string[];
 }
@@ -20,5 +19,5 @@ export interface Tag {
 }
 
 export interface Tags {
-  [key: number]: Tag[];
+  [key: string]: Tag[];
 }

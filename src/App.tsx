@@ -15,7 +15,7 @@ import { IonReactRouter } from "@ionic/react-router";
 
 import Add from "./components/AddForm";
 import Home from "./pages/Home";
-import Tags from "./components/SelectTags";
+import SelectTags from "./components/Tags/SelectTags";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -42,7 +42,7 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route path="/add" component={Add} />
-          <Route path="/tags" component={Tags} />
+          <Route path="/tags" component={SelectTags} />
           <Route path="/receipts" component={Home} />
           <Route exact path="/">
             <Redirect to="/receipts" />

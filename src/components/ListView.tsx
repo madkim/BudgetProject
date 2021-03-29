@@ -5,22 +5,23 @@ import {
   IonItem,
   IonIcon,
   IonLabel,
+  IonBadge,
   IonContent,
   IonItemGroup,
   IonItemDivider,
-  IonBadge,
 } from "@ionic/react";
 import moment from "moment";
 
 import { Receipt, Receipts } from "../helpers/types";
+import { useEffect, useState } from "react";
 import { chevronForwardOutline } from "ionicons/icons";
 
 interface Props {
-  receipts: Receipts;
+  receipts: Receipt[];
 }
 
 const ListView: React.FC<Props> = (props: Props) => {
-  const { receipts } = props;
+  const [receipts, setReceipts] = useState<Receipts>({});
 
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
@@ -36,21 +37,41 @@ const ListView: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const addMonthAsKey = () => {
+    const receipts: Receipts = {};
+    if (props.receipts) {
+      props.receipts.map((receipt) => {
+        const date = moment(receipt.date).format("YYYY-MM");
+        if (receipts[date]) {
+          receipts[date].push(receipt);
+        } else {
+          receipts[date] = [receipt];
+        }
+      });
+      setReceipts(receipts);
+    }
+  };
+
+  useEffect(() => {
+    addMonthAsKey();
+  }, [props.receipts]);
+
   return (
     <IonContent>
       <IonList>
         {Object.keys(receipts).length > 0 &&
-          Object.keys(receipts).map((month: string) => {
+          Object.keys(receipts).map((month) => {
+            const date = moment(month);
             return (
-              <IonItemGroup key={`group-${month}`}>
+              <IonItemGroup key={`group-${date}`}>
                 <IonItemDivider sticky>
                   <IonLabel>
-                    <h1>{moment(month).format("MMMM YYYY")}</h1>
+                    <h1>{date.format("MMMM YYYY")}</h1>
                   </IonLabel>
                 </IonItemDivider>
-                {receipts[month].map((receipt: Receipt) => {
+                {receipts[month].map((receipt, index) => {
                   return (
-                    <IonItem key={receipt.id}>
+                    <IonItem key={index}>
                       <IonLabel>
                         <IonRow>
                           <IonCol size="auto">
@@ -64,7 +85,11 @@ const ListView: React.FC<Props> = (props: Props) => {
                           <IonCol size="4">
                             {receipt.tags.map((tag, index) => {
                               return (
-                                <IonLabel key={index} text-wrap>
+                                <IonLabel
+                                  key={index}
+                                  text-wrap
+                                  className="ion-text-capitalize"
+                                >
                                   {tag}
                                 </IonLabel>
                               );

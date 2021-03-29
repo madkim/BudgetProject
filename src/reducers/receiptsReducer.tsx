@@ -2,8 +2,8 @@ import { receiptsConstants } from "../constants/receiptsConstants";
 import { Action } from "../helpers/types";
 
 export const initState = {
-  receipts: {},
-  tagOptions: [],
+  receipts: [],
+  tagOptions: {},
 };
 
 export function receiptsReducer(state = initState, action: Action) {

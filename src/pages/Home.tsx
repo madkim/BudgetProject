@@ -17,19 +17,19 @@ import { add, filterOutline, settingsOutline } from "ionicons/icons";
 
 import { connect, useDispatch } from "react-redux";
 import { receiptsActions } from "../actions/receiptsActions";
-import { Receipts } from "../helpers/types";
+import { Receipt } from "../helpers/types";
 
 interface Props {
-  receipts: Receipts;
+  receipts: Receipt[];
 }
 
-const Home: React.FC<Props> = (props: { receipts: Receipts }) => {
+const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(receiptsActions.getAllReceipts());
     dispatch(receiptsActions.getAllTags());
-  }, []);
+  }, [dispatch]);
 
   return (
     <IonPage>
@@ -55,7 +55,7 @@ const Home: React.FC<Props> = (props: { receipts: Receipts }) => {
         </IonFab>
 
         <IonLoading
-          isOpen={Object.keys(props.receipts).length === 0}
+          isOpen={props.receipts.length === 0}
           message={"Please wait..."}
         />
 
@@ -66,7 +66,7 @@ const Home: React.FC<Props> = (props: { receipts: Receipts }) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipts };
+  receiptsReducer: { receipts: Receipt[] };
 }) => {
   return {
     receipts: state.receiptsReducer.receipts,
