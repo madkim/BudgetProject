@@ -14,7 +14,7 @@ import "./SelectTags.css";
 
 import React, { useState, useRef } from "react";
 
-import { Tags } from "../../helpers/types";
+import { Tags, Ref } from "../../helpers/types";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { receiptsActions } from "../../actions/receiptsActions";
@@ -56,12 +56,15 @@ const SelectTags: React.FC<Props> = (props: Props) => {
   };
 
   const dispatch = useDispatch();
-  const [newTag, setNewTag] = useState("");
+
   const { tagOptions } = props;
+  const [newTag, setNewTag] = useState("");
+  const [addTagFocus, setAddTagFocus] = useState(false);
 
   const addNewTag = () => {
     if (newTag) {
       dispatch(receiptsActions.addNewTag(newTag, tagOptions));
+      blurIonInput(addNewTagInput);
       setNewTag("");
     }
   };
@@ -78,9 +81,17 @@ const SelectTags: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const blurIonInput = (input: Ref) => {
+    input.current?.getInputElement().then((element) => {
+      element.blur();
+    });
+    setAddTagFocus(false);
+  };
+
   const alphaList = document.getElementById("alphaList");
-  const listHeight = alphaList ? alphaList.offsetHeight : "inherit";
-  const minListHeight = window.innerHeight / 3;
+  const listHeight = alphaList ? alphaList.offsetHeight : "";
+  const minListHeight = window.screen.height / 4;
+  const addNewTagInput: Ref = useRef(null);
 
   return (
     <div className="wrapper">
@@ -92,13 +103,19 @@ const SelectTags: React.FC<Props> = (props: Props) => {
             </IonCol>
             <IonCol className="ion-no-padding">
               <IonInput
+                ref={addNewTagInput}
                 type="text"
                 value={newTag}
                 placeholder="Add New Tag"
+                onIonBlur={() => setAddTagFocus(false)}
+                onIonFocus={() => setAddTagFocus(true)}
                 onIonChange={(e) => setNewTag(e.detail.value!)}
+                onKeyPress={(e) =>
+                  e.key === "Enter" ? blurIonInput(addNewTagInput) : ""
+                }
               ></IonInput>
             </IonCol>
-            {newTag && (
+            {addTagFocus && (
               <IonCol size="auto" className="ion-no-padding">
                 <IonButton color="success" onClick={addNewTag}>
                   <IonIcon icon={addOutline} />

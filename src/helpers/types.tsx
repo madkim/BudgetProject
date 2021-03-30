@@ -22,3 +22,5 @@ export interface Tag {
 export interface Tags {
   [key: string]: Tag[];
 }
+
+export type Ref = React.RefObject<HTMLIonInputElement>;

@@ -14,10 +14,10 @@ import {
   IonDatetime,
 } from "@ionic/react";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { receiptsActions } from "../actions/receiptsActions";
-import { Receipt, Tag, Tags } from "../helpers/types";
 import { connect, useDispatch } from "react-redux";
+import { Receipt, Tag, Tags, Ref } from "../helpers/types";
 
 import moment from "moment";
 import momentTZ from "moment-timezone";
@@ -31,12 +31,14 @@ interface Props {
 const AddForm: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const timezone = momentTZ.tz.guess();
+  const priceInput: Ref = useRef(null);
 
   const [tags, setTags] = useState<string[]>([]);
   const [date, setDate] = useState(moment(new Date()).format());
   const [time, setTime] = useState(moment(new Date()).format());
   const [price, setPrice] = useState<number | null>(null);
   const [tagOptions, setTagOptions] = useState(props.tagOptions);
+  const [priceInputFocus, setPriceInputFocus] = useState(false);
 
   const addTags = (updatedTags: Tags) => {
     let selectedTags: Tag[] = [];
@@ -91,6 +93,13 @@ const AddForm: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const blurIonInput = (input: Ref) => {
+    input.current?.getInputElement().then((element) => {
+      element.blur();
+    });
+    setPriceInputFocus(false);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -136,12 +145,31 @@ const AddForm: React.FC<Props> = (props: Props) => {
                   </IonCol>
                   <IonCol>
                     <IonInput
+                      ref={priceInput}
                       type="number"
                       value={price}
+                      onIonBlur={() => setPriceInputFocus(false)}
+                      onIonFocus={() => setPriceInputFocus(true)}
                       placeholder="Enter Price"
-                      onIonChange={(e) => setPrice(+e.detail.value!)}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" ? blurIonInput(priceInput) : ""
+                      }
+                      onIonChange={(e) => {
+                        setPrice(+e.detail.value!);
+                      }}
                     ></IonInput>
                   </IonCol>
+                  {priceInputFocus && (
+                    <IonCol size="2">
+                      <IonButton
+                        size="small"
+                        color="success"
+                        onClick={() => blurIonInput(priceInput)}
+                      >
+                        Done
+                      </IonButton>
+                    </IonCol>
+                  )}
                 </IonRow>
               </IonItem>
             </IonCol>
