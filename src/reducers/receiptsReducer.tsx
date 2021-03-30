@@ -34,6 +34,12 @@ export function receiptsReducer(state = initState, action: Action) {
       tagOptions: action.payload,
     });
   }
+  if (action.type === receiptsConstants.UPDATE_TAGS) {
+    return (state = {
+      ...state,
+      tagOptions: action.payload,
+    });
+  }
   if (action.type === receiptsConstants.ADD_NEW_TAG) {
     return (state = {
       ...state,

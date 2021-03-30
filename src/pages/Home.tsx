@@ -4,16 +4,11 @@ import {
   IonPage,
   IonTitle,
   IonHeader,
+  IonButton,
   IonContent,
   IonToolbar,
-  IonFabButton,
-  IonButton,
   IonLoading,
-  IonItemSliding,
-  IonItemOption,
-  IonItemOptions,
-  IonItem,
-  IonLabel,
+  IonFabButton,
 } from "@ionic/react";
 import ListView from "../components/ListView";
 
@@ -33,7 +28,6 @@ const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
 
   useEffect(() => {
     dispatch(receiptsActions.getAllReceipts());
-    dispatch(receiptsActions.getAllTags());
   }, [dispatch]);
 
   return (

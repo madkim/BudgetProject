@@ -15,9 +15,9 @@ import {
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { receiptsActions } from "../actions/receiptsActions";
-import { connect, useDispatch } from "react-redux";
 import { Receipt, Tag, Tags, Ref } from "../helpers/types";
+import { connect, useDispatch } from "react-redux";
+import { receiptsActions } from "../actions/receiptsActions";
 
 import moment from "moment";
 import momentTZ from "moment-timezone";
@@ -37,7 +37,6 @@ const AddForm: React.FC<Props> = (props: Props) => {
   const [date, setDate] = useState(moment(new Date()).format());
   const [time, setTime] = useState(moment(new Date()).format());
   const [price, setPrice] = useState<number | null>(null);
-  const [tagOptions, setTagOptions] = useState(props.tagOptions);
   const [priceInputFocus, setPriceInputFocus] = useState(false);
 
   const addTags = (updatedTags: Tags) => {
@@ -49,27 +48,6 @@ const AddForm: React.FC<Props> = (props: Props) => {
       ];
     });
     setTags(selectedTags.map((a) => a.val));
-  };
-
-  const selectTag = (value: string) => {
-    const updatedTags: Tags = {};
-
-    Object.keys(tagOptions).map((letter: string) => {
-      updatedTags[letter] = [];
-
-      tagOptions[letter].map((tagOption) => {
-        if (tagOption.val.toLowerCase() === value.toLowerCase()) {
-          updatedTags[letter].push({
-            val: value,
-            isChecked: !tagOption.isChecked,
-          });
-        } else {
-          updatedTags[letter].push(tagOption);
-        }
-      });
-    });
-    addTags(updatedTags);
-    setTagOptions(updatedTags);
   };
 
   const addReceipt = () => {
@@ -178,11 +156,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
 
         <br />
 
-        <SelectTags
-          selectTag={(tag: string) => selectTag(tag)}
-          setTagOptions={setTagOptions}
-          tagOptions={tagOptions}
-        />
+        <SelectTags addTags={addTags} />
 
         <br />
 

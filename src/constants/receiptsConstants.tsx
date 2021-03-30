@@ -4,4 +4,5 @@ export const receiptsConstants = {
   DELETE_RECEIPT: "DELETE_RECEIPT",
   GET_ALL_TAGS: "GET_ALL_TAGS",
   ADD_NEW_TAG: "ADD_NEW_TAG",
+  UPDATE_TAGS: "UPDATE_TAGS",
 };

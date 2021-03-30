@@ -12,17 +12,18 @@ import {
 } from "@ionic/react";
 import "./SelectTags.css";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
+import { connect } from "react-redux";
 import { Tags, Ref } from "../../helpers/types";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { receiptsActions } from "../../actions/receiptsActions";
+import { receiptsConstants } from "../../constants/receiptsConstants";
 
 type Props = {
-  selectTag: (tag: string) => void;
-  setTagOptions: (value: Tags) => void;
   tagOptions: Tags;
+  addTags: (updatedTags: Tags) => void;
 };
 
 const SelectTags: React.FC<Props> = (props: Props) => {
@@ -56,10 +57,15 @@ const SelectTags: React.FC<Props> = (props: Props) => {
   };
 
   const dispatch = useDispatch();
+
   const { tagOptions } = props;
 
   const [newTag, setNewTag] = useState("");
   const [addTagFocus, setAddTagFocus] = useState(false);
+
+  useEffect(() => {
+    dispatch(receiptsActions.getAllTags());
+  }, [dispatch]);
 
   const addNewTag = () => {
     if (newTag) {
@@ -67,6 +73,27 @@ const SelectTags: React.FC<Props> = (props: Props) => {
       blurIonInput(addNewTagInput);
       setNewTag("");
     }
+  };
+
+  const selectTag = (value: string) => {
+    const updatedTags: Tags = {};
+
+    Object.keys(tagOptions).map((letter: string) => {
+      updatedTags[letter] = [];
+
+      tagOptions[letter].map((tagOption) => {
+        if (tagOption.val.toLowerCase() === value.toLowerCase()) {
+          updatedTags[letter].push({
+            val: value,
+            isChecked: !tagOption.isChecked,
+          });
+        } else {
+          updatedTags[letter].push(tagOption);
+        }
+      });
+    });
+    dispatch({ type: receiptsConstants.UPDATE_TAGS, payload: updatedTags });
+    props.addTags(updatedTags);
   };
 
   const handlePan = (e: any) => {
@@ -88,9 +115,9 @@ const SelectTags: React.FC<Props> = (props: Props) => {
     setAddTagFocus(false);
   };
 
-  const alphaList = document.getElementById("alphaList");
-  const listHeight = alphaList ? alphaList.offsetHeight : "";
-  const minListHeight = window.screen.height / 4;
+  // const alphaList = document.getElementById("alphaList");
+  // const listHeight = alphaList ? alphaList.offsetHeight : "";
+  const listHeight = window.screen.height / 3;
   const addNewTagInput: Ref = useRef(null);
 
   return (
@@ -131,7 +158,7 @@ const SelectTags: React.FC<Props> = (props: Props) => {
             id="alphaList"
             onTouchMove={handlePan}
             className="abc js-abc-nav"
-            style={{ minHeight: minListHeight }}
+            // style={{ minHeight: minListHeight }}
           >
             {Object.keys(alpha).map((letter) => {
               if (Object.keys(tagOptions).includes(letter)) {
@@ -148,7 +175,7 @@ const SelectTags: React.FC<Props> = (props: Props) => {
         <IonList
           style={{
             maxHeight: listHeight,
-            minHeight: minListHeight,
+            // minHeight: minListHeight,
             overflowY: "scroll",
           }}
         >
@@ -169,7 +196,7 @@ const SelectTags: React.FC<Props> = (props: Props) => {
                           slot="start"
                           value={val}
                           checked={isChecked}
-                          onIonChange={(e) => props.selectTag(e.detail.value!)}
+                          onIonChange={(e) => selectTag(e.detail.value!)}
                         />
                       </IonItem>
                     );
@@ -183,4 +210,10 @@ const SelectTags: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default SelectTags;
+const mapStateToProps = (state: { receiptsReducer: { tagOptions: Tags } }) => {
+  return {
+    tagOptions: state.receiptsReducer.tagOptions,
+  };
+};
+
+export default connect(mapStateToProps)(SelectTags);
