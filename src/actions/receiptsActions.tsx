@@ -1,5 +1,6 @@
 import { receiptsConstants } from "../constants/receiptsConstants";
 import { Receipt, Tags } from "../helpers/types";
+import { alphaSortValue, alphaSortKey } from "../helpers/alphasort";
 import { Dispatch } from "react";
 import { Action } from "../helpers/types";
 import { db } from "../helpers/firebase";
@@ -95,161 +96,29 @@ function deleteReceipt(receiptId: string) {
 }
 
 function getAllTags() {
-  let data: Tags = {};
-  db.collection("tags")
-    .orderBy("name", "asc")
-    .get()
-    .then((tags) => {
-      tags.docs.map((tag) => {
-        const letter = tag.data().name.charAt(0).toUpperCase();
-        const tagData = { val: tag.data().name, isChecked: false };
-        if (data[letter]) {
-          data[letter].push(tagData);
-        } else {
-          data[letter] = [tagData];
-        }
+  return (dispatch: Dispatch<Action>) => {
+    const data: Tags = {};
+    db.collection("tags")
+      .orderBy("name", "asc")
+      .get()
+      .then((tags) => {
+        tags.docs.map((tag) => {
+          const letter = tag.data().name.charAt(0).toUpperCase();
+          const tagData = { val: tag.data().name, isChecked: false };
+          if (data[letter]) {
+            data[letter].push(tagData);
+            data[letter].sort(alphaSortValue);
+          } else {
+            data[letter] = [tagData];
+          }
+        });
+        const unsorted = Object.assign({}, data);
+        dispatch(success(alphaSortKey(unsorted)));
       });
-    });
-
-  // data = {
-  //   A: [
-  //     { val: "Target", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //     { val: "Stater Bros", isChecked: false },
-  //     { val: "Bargain Hunt", isChecked: false },
-  //     { val: "Ben Franklin", isChecked: false },
-  //     { val: "Bi-Mart", isChecked: false },
-  //     { val: "Big Lots", isChecked: false },
-  //     { val: "BJ's Wholesale Club", isChecked: false },
-  //     { val: "Burlington", isChecked: false },
-  //     { val: "Christmas Tree Shops", isChecked: false },
-  //     { val: "Costco", isChecked: false },
-  //     { val: "Dd's Discounts", isChecked: false },
-  //     { val: "Dirt Cheap", isChecked: false },
-  //   ],
-  //   B: [
-  //     { val: "Dollar General", isChecked: false },
-  //     { val: "Dollar Tree", isChecked: false },
-  //     { val: "Family Dollar", isChecked: false },
-  //     { val: "Five Below", isChecked: false },
-  //     { val: "Fred Meyer", isChecked: false },
-  //     { val: "Gabe's", isChecked: false },
-  //     { val: "Harbor Freight Tools", isChecked: false },
-  //     { val: "HomeGoods", isChecked: false },
-  //     { val: "HomeSense", isChecked: false },
-  //     { val: "Marshalls", isChecked: false },
-  //     { val: "Meijer", isChecked: false },
-  //     { val: "National Stores", isChecked: false },
-  //     { val: "Ocean State Job Lot", isChecked: false },
-  //   ],
-  //   C: [
-  //     { val: "Ollie's Bargain Outlet", isChecked: false },
-  //     { val: "Renys", isChecked: false },
-  //     { val: "Roses", isChecked: false },
-  //     { val: "Ross Stores", isChecked: false },
-  //     { val: "Sam's Club", isChecked: false },
-  //     { val: "Target", isChecked: false },
-  //   ],
-  //   D: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-
-  //   E: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   F: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   G: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   H: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   I: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   J: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   K: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   L: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   M: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   N: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   O: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   P: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   Q: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   R: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  //   S: [
-  //     { val: "T.J. Maxx", isChecked: false },
-  //     { val: "Treasure Hunt", isChecked: false },
-  //     { val: "Tuesday Morning", isChecked: false },
-  //     { val: "Walmart", isChecked: false },
-  //   ],
-  // };
-
-  return { type: receiptsConstants.GET_ALL_TAGS, payload: data };
+    function success(sorted: Tags) {
+      return { type: receiptsConstants.GET_ALL_TAGS, payload: sorted };
+    }
+  };
 }
 
 function addNewTag(newTag: string, tagOptions: Tags) {
@@ -258,14 +127,16 @@ function addNewTag(newTag: string, tagOptions: Tags) {
       .doc(newTag)
       .set({ name: newTag.toLowerCase() })
       .then(() => {
-        const tags = { ...tagOptions };
+        let tags = { ...tagOptions };
         const letter = newTag.charAt(0).toUpperCase();
         const newTagData = { val: newTag, isChecked: false };
 
         if (tags[letter]) {
           tags[letter].push(newTagData);
+          tags[letter].sort(alphaSortValue);
         } else {
           tags[letter] = [newTagData];
+          tags = alphaSortKey(tags);
         }
         dispatch({ type: receiptsConstants.ADD_NEW_TAG, payload: tags });
       })

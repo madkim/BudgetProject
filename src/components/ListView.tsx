@@ -64,7 +64,6 @@ const ListView: React.FC<Props> = (props: Props) => {
           receipts[date] = [receipt];
         }
       });
-      console.log(receipts);
       setReceipts(receipts);
     }
   };

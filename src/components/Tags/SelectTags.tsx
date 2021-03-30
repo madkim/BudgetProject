@@ -56,8 +56,8 @@ const SelectTags: React.FC<Props> = (props: Props) => {
   };
 
   const dispatch = useDispatch();
-
   const { tagOptions } = props;
+
   const [newTag, setNewTag] = useState("");
   const [addTagFocus, setAddTagFocus] = useState(false);
 
@@ -107,7 +107,7 @@ const SelectTags: React.FC<Props> = (props: Props) => {
                 type="text"
                 value={newTag}
                 placeholder="Add New Tag"
-                onIonBlur={() => setAddTagFocus(false)}
+                // onIonBlur={() => setAddTagFocus(false)}
                 onIonFocus={() => setAddTagFocus(true)}
                 onIonChange={(e) => setNewTag(e.detail.value!)}
                 onKeyPress={(e) =>

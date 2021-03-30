@@ -73,7 +73,6 @@ const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
 const mapStateToProps = (state: {
   receiptsReducer: { receipts: Receipt[] };
 }) => {
-  console.log(state.receiptsReducer.receipts);
   return {
     receipts: state.receiptsReducer.receipts,
   };
