@@ -16,8 +16,8 @@ import {
 import moment from "moment";
 
 import { useDispatch } from "react-redux";
-import { receiptsActions } from "../actions/receiptsActions";
-import { Receipt, Receipts } from "../helpers/types";
+import { receiptActions } from "../../_actions/receiptActions";
+import { Receipt, Receipts } from "../../_helpers/types";
 import { useEffect, useState } from "react";
 import { chevronForwardOutline } from "ionicons/icons";
 
@@ -25,7 +25,7 @@ interface Props {
   receipts: Receipt[];
 }
 
-const ListView: React.FC<Props> = (props: Props) => {
+const ListRecepts: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const [receipts, setReceipts] = useState<Receipts>({});
 
@@ -35,7 +35,7 @@ const ListView: React.FC<Props> = (props: Props) => {
     );
 
     if (answer) {
-      dispatch(receiptsActions.deleteReceipt(receiptId));
+      dispatch(receiptActions.deleteReceipt(receiptId));
     }
   };
 
@@ -142,4 +142,4 @@ const ListView: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default ListView;
+export default ListRecepts;

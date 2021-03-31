@@ -12,23 +12,26 @@ import {
   IonContent,
   IonToolbar,
   IonDatetime,
+  IonThumbnail,
+  IonImg,
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { Receipt, Tag, Tags, Ref } from "../helpers/types";
+import { Receipt, Seller, Sellers, Ref } from "../../_helpers/types";
 import { connect, useDispatch } from "react-redux";
-import { receiptsActions } from "../actions/receiptsActions";
+import { receiptActions } from "../../_actions/receiptActions";
+
+import ReceiptSwiss from "../../_assets/ReceiptSwiss.jpeg";
 
 import moment from "moment";
 import momentTZ from "moment-timezone";
-import SelectTags from "./Tags/SelectTags";
 
 interface Props {
   receipts: Receipt[];
-  tagOptions: Tags;
+  sellerOptions: Sellers;
 }
 
-const AddForm: React.FC<Props> = (props: Props) => {
+const AddReceipt: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const timezone = momentTZ.tz.guess();
   const priceInput: Ref = useRef(null);
@@ -39,8 +42,8 @@ const AddForm: React.FC<Props> = (props: Props) => {
   const [price, setPrice] = useState<number | null>(null);
   const [priceInputFocus, setPriceInputFocus] = useState(false);
 
-  const addTags = (updatedTags: Tags) => {
-    let selectedTags: Tag[] = [];
+  const addTags = (updatedTags: Sellers) => {
+    let selectedTags: Seller[] = [];
     Object.keys(updatedTags).map((letter) => {
       selectedTags = [
         ...selectedTags,
@@ -62,7 +65,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
     });
 
     dispatch(
-      receiptsActions.addNewReceipt(
+      receiptActions.addNewReceipt(
         dateTime.toDate(),
         price,
         tags,
@@ -83,7 +86,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
       <IonHeader>
         <IonToolbar color="success">
           <IonTitle size="large" className="ion-text-center">
-            Add Item
+            Add Receipt
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -92,8 +95,20 @@ const AddForm: React.FC<Props> = (props: Props) => {
         <IonGrid>
           <IonRow>
             <IonCol>
+              <IonItem lines="none">
+                {/* <IonThumbnail slot="start" style={{ height: "100%" }}> */}
+                <IonImg src={ReceiptSwiss} />
+                {/* </IonThumbnail> */}
+              </IonItem>
+            </IonCol>
+          </IonRow>
+
+          <br />
+
+          <IonRow>
+            <IonCol>
               <IonItem>
-                <IonLabel position="stacked">Date</IonLabel>
+                <IonLabel position="stacked">Date:</IonLabel>
                 <IonDatetime
                   value={date}
                   onIonChange={(e) => setDate(e.detail.value!)}
@@ -103,7 +118,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
             </IonCol>
             <IonCol>
               <IonItem>
-                <IonLabel position="stacked">Time</IonLabel>
+                <IonLabel position="stacked">Time:</IonLabel>
                 <IonDatetime
                   value={time}
                   displayFormat="h:mm A"
@@ -113,10 +128,13 @@ const AddForm: React.FC<Props> = (props: Props) => {
               </IonItem>
             </IonCol>
           </IonRow>
+
+          <br />
+
           <IonRow>
             <IonCol>
               <IonItem>
-                <IonLabel position="stacked">Price</IonLabel>
+                <IonLabel position="stacked">Total Spent:</IonLabel>
                 <IonRow>
                   <IonCol size="auto" style={{ marginTop: "8px" }}>
                     $
@@ -128,7 +146,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
                       value={price}
                       onIonBlur={() => setPriceInputFocus(false)}
                       onIonFocus={() => setPriceInputFocus(true)}
-                      placeholder="Enter Price"
+                      placeholder="Enter Total"
                       onKeyPress={(e) =>
                         e.key === "Enter" ? blurIonInput(priceInput) : ""
                       }
@@ -154,11 +172,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
           </IonRow>
         </IonGrid>
 
-        <br />
-
-        <SelectTags addTags={addTags} />
-
-        <br />
+        {/* <SelectTags addTags={addTags} /> */}
 
         <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
@@ -169,7 +183,7 @@ const AddForm: React.FC<Props> = (props: Props) => {
               routerLink="/"
               routerDirection="back"
             >
-              Save
+              Next
             </IonButton>
           </IonCol>
           <IonCol size="12">
@@ -191,12 +205,12 @@ const AddForm: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipt[]; tagOptions: Tags };
+  receiptsReducer: { receipts: Receipt[]; sellerOptions: Sellers };
 }) => {
   return {
     receipts: state.receiptsReducer.receipts,
-    tagOptions: state.receiptsReducer.tagOptions,
+    sellerOptions: state.receiptsReducer.sellerOptions,
   };
 };
 
-export default connect(mapStateToProps)(AddForm);
+export default connect(mapStateToProps)(AddReceipt);

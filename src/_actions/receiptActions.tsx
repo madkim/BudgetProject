@@ -1,11 +1,11 @@
-import { receiptsConstants } from "../constants/receiptsConstants";
-import { Receipt, Tags } from "../helpers/types";
-import { alphaSortValue, alphaSortKey } from "../helpers/alphasort";
+import { receiptConstants } from "../_constants/receiptConstants";
+import { Receipt, Sellers } from "../_helpers/types";
+import { alphaSortValue, alphaSortKey } from "../_helpers/alphasort";
 import { Dispatch } from "react";
-import { Action } from "../helpers/types";
-import { db } from "../helpers/firebase";
+import { Action } from "../_helpers/types";
+import { db } from "../_helpers/firebase";
 
-export const receiptsActions = {
+export const receiptActions = {
   addNewReceipt,
   deleteReceipt,
   getAllReceipts,
@@ -33,7 +33,7 @@ function getAllReceipts() {
   };
   function success(receipts: Receipt[]) {
     return {
-      type: receiptsConstants.GET_ALL_RECEIPTS,
+      type: receiptConstants.GET_ALL_RECEIPTS,
       payload: receipts,
     };
   }
@@ -67,7 +67,7 @@ function addNewReceipt(
       });
     function success(updatedReceipts: Receipt[]) {
       return {
-        type: receiptsConstants.ADD_NEW_RECEIPT,
+        type: receiptConstants.ADD_NEW_RECEIPT,
         payload: updatedReceipts,
       };
     }
@@ -88,7 +88,7 @@ function deleteReceipt(receiptId: string) {
       });
     function success(receiptId: string) {
       return {
-        type: receiptsConstants.DELETE_RECEIPT,
+        type: receiptConstants.DELETE_RECEIPT,
         payload: receiptId,
       };
     }
@@ -97,7 +97,7 @@ function deleteReceipt(receiptId: string) {
 
 function getAllTags() {
   return (dispatch: Dispatch<Action>) => {
-    const data: Tags = {};
+    const data: Sellers = {};
     db.collection("tags")
       .orderBy("name", "asc")
       .get()
@@ -115,19 +115,19 @@ function getAllTags() {
         const unsorted = Object.assign({}, data);
         dispatch(success(alphaSortKey(unsorted)));
       });
-    function success(sorted: Tags) {
-      return { type: receiptsConstants.GET_ALL_TAGS, payload: sorted };
+    function success(sorted: Sellers) {
+      return { type: receiptConstants.GET_ALL_TAGS, payload: sorted };
     }
   };
 }
 
-function addNewTag(newTag: string, tagOptions: Tags) {
+function addNewTag(newTag: string, sellerOptions: Sellers) {
   return (dispatch: Dispatch<Action>) => {
     db.collection("tags")
       .doc(newTag)
       .set({ name: newTag.toLowerCase() })
       .then(() => {
-        let tags = { ...tagOptions };
+        let tags = { ...sellerOptions };
         const letter = newTag.charAt(0).toUpperCase();
         const newTagData = { val: newTag, isChecked: false };
 
@@ -138,7 +138,7 @@ function addNewTag(newTag: string, tagOptions: Tags) {
           tags[letter] = [newTagData];
           tags = alphaSortKey(tags);
         }
-        dispatch({ type: receiptsConstants.ADD_NEW_TAG, payload: tags });
+        dispatch({ type: receiptConstants.ADD_NEW_TAG, payload: tags });
       })
       .catch((error) => {
         alert(error);

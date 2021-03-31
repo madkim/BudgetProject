@@ -10,14 +10,14 @@ import {
   IonLoading,
   IonFabButton,
 } from "@ionic/react";
-import ListView from "../components/ListView";
+import ListView from "./Receipts/ListReceipts";
 
 import React, { useEffect } from "react";
 import { add, filterOutline, settingsOutline } from "ionicons/icons";
 
 import { connect, useDispatch } from "react-redux";
-import { receiptsActions } from "../actions/receiptsActions";
-import { Receipt } from "../helpers/types";
+import { receiptActions } from "../_actions/receiptActions";
+import { Receipt } from "../_helpers/types";
 
 interface Props {
   receipts: Receipt[];
@@ -27,7 +27,7 @@ const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(receiptsActions.getAllReceipts());
+    dispatch(receiptActions.getAllReceipts());
   }, [dispatch]);
 
   return (

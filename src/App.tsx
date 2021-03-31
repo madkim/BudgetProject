@@ -13,9 +13,9 @@ import { receiptOutline, statsChartOutline } from "ionicons/icons";
 
 import { IonReactRouter } from "@ionic/react-router";
 
-import Add from "./components/AddForm";
-import Home from "./pages/Home";
-import SelectTags from "./components/Tags/SelectTags";
+import Add from "./_components/Receipts/AddReceipt";
+import Home from "./_components/Home";
+import SelectTags from "./_components/Sellers/SelectSeller";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";

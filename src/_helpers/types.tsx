@@ -14,13 +14,13 @@ export interface Action {
   payload: any;
 }
 
-export interface Tag {
+export interface Seller {
   val: string;
   isChecked: boolean;
 }
 
-export interface Tags {
-  [key: string]: Tag[];
+export interface Sellers {
+  [key: string]: Seller[];
 }
 
 export type Ref = React.RefObject<HTMLIonInputElement>;

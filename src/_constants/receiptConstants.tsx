@@ -1,4 +1,4 @@
-export const receiptsConstants = {
+export const receiptConstants = {
   GET_ALL_RECEIPTS: "GET_ALL_RECEIPTS",
   ADD_NEW_RECEIPT: "ADD_NEW_RECEIPT",
   DELETE_RECEIPT: "DELETE_RECEIPT",

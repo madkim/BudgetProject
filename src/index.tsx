@@ -1,11 +1,11 @@
 import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom";
-import reportWebVitals from "./reportWebVitals";
-import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./unused/reportWebVitals";
+import * as serviceWorkerRegistration from "./unused/serviceWorkerRegistration";
 // import "bootstrap/dist/css/bootstrap.css";
 
-import store from "./helpers/store";
+import store from "./_helpers/store";
 import { Provider } from "react-redux";
 
 ReactDOM.render(

@@ -10,23 +10,23 @@ import {
   IonButton,
   IonCheckbox,
 } from "@ionic/react";
-import "./SelectTags.css";
+import "./SelectSeller.css";
 
 import React, { useState, useRef, useEffect } from "react";
 
 import { connect } from "react-redux";
-import { Tags, Ref } from "../../helpers/types";
+import { Sellers, Ref } from "../../_helpers/types";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
-import { receiptsActions } from "../../actions/receiptsActions";
-import { receiptsConstants } from "../../constants/receiptsConstants";
+import { receiptActions } from "../../_actions/receiptActions";
+import { receiptConstants } from "../../_constants/receiptConstants";
 
 type Props = {
-  tagOptions: Tags;
-  addTags: (updatedTags: Tags) => void;
+  sellerOptions: Sellers;
+  addTags: (updatedTags: Sellers) => void;
 };
 
-const SelectTags: React.FC<Props> = (props: Props) => {
+const SelectSeller: React.FC<Props> = (props: Props) => {
   const alpha: any = {
     A: useRef(null),
     B: useRef(null),
@@ -58,41 +58,41 @@ const SelectTags: React.FC<Props> = (props: Props) => {
 
   const dispatch = useDispatch();
 
-  const { tagOptions } = props;
+  const { sellerOptions } = props;
 
   const [newTag, setNewTag] = useState("");
   const [addTagFocus, setAddTagFocus] = useState(false);
 
   useEffect(() => {
-    dispatch(receiptsActions.getAllTags());
+    dispatch(receiptActions.getAllTags());
   }, [dispatch]);
 
   const addNewTag = () => {
     if (newTag) {
-      dispatch(receiptsActions.addNewTag(newTag, tagOptions));
+      dispatch(receiptActions.addNewTag(newTag, sellerOptions));
       blurIonInput(addNewTagInput);
       setNewTag("");
     }
   };
 
   const selectTag = (value: string) => {
-    const updatedTags: Tags = {};
+    const updatedTags: Sellers = {};
 
-    Object.keys(tagOptions).map((letter: string) => {
+    Object.keys(sellerOptions).map((letter: string) => {
       updatedTags[letter] = [];
 
-      tagOptions[letter].map((tagOption) => {
-        if (tagOption.val.toLowerCase() === value.toLowerCase()) {
+      sellerOptions[letter].map((sellerOption) => {
+        if (sellerOption.val.toLowerCase() === value.toLowerCase()) {
           updatedTags[letter].push({
             val: value,
-            isChecked: !tagOption.isChecked,
+            isChecked: !sellerOption.isChecked,
           });
         } else {
-          updatedTags[letter].push(tagOption);
+          updatedTags[letter].push(sellerOption);
         }
       });
     });
-    dispatch({ type: receiptsConstants.UPDATE_TAGS, payload: updatedTags });
+    dispatch({ type: receiptConstants.UPDATE_TAGS, payload: updatedTags });
     props.addTags(updatedTags);
   };
 
@@ -126,14 +126,14 @@ const SelectTags: React.FC<Props> = (props: Props) => {
         <IonGrid className="ion-margin-end">
           <IonRow>
             <IonCol size="3">
-              <IonLabel position="fixed">Tags:</IonLabel>
+              <IonLabel position="fixed">Sellers:</IonLabel>
             </IonCol>
             <IonCol className="ion-no-padding">
               <IonInput
                 ref={addNewTagInput}
                 type="text"
                 value={newTag}
-                placeholder="Add New Tag"
+                placeholder="Add New Seller"
                 // onIonBlur={() => setAddTagFocus(false)}
                 onIonFocus={() => setAddTagFocus(true)}
                 onIonChange={(e) => setNewTag(e.detail.value!)}
@@ -161,7 +161,7 @@ const SelectTags: React.FC<Props> = (props: Props) => {
             // style={{ minHeight: minListHeight }}
           >
             {Object.keys(alpha).map((letter) => {
-              if (Object.keys(tagOptions).includes(letter)) {
+              if (Object.keys(sellerOptions).includes(letter)) {
                 return (
                   <small key={letter}>
                     <li>{letter}</li>
@@ -179,14 +179,14 @@ const SelectTags: React.FC<Props> = (props: Props) => {
             overflowY: "scroll",
           }}
         >
-          {Object.keys(tagOptions).length > 0 &&
-            Object.keys(tagOptions).map((letter, i) => {
+          {Object.keys(sellerOptions).length > 0 &&
+            Object.keys(sellerOptions).map((letter, i) => {
               return (
                 <div key={i} className="ion-padding-start">
                   <div className="text" ref={alpha[letter]}>
                     {letter}
                   </div>
-                  {tagOptions[letter].map(({ val, isChecked }, i) => {
+                  {sellerOptions[letter].map(({ val, isChecked }, i) => {
                     return (
                       <IonItem lines="none" key={i}>
                         <IonLabel className="ion-text-capitalize">
@@ -210,10 +210,12 @@ const SelectTags: React.FC<Props> = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: { receiptsReducer: { tagOptions: Tags } }) => {
+const mapStateToProps = (state: {
+  receiptsReducer: { sellerOptions: Sellers };
+}) => {
   return {
-    tagOptions: state.receiptsReducer.tagOptions,
+    sellerOptions: state.receiptsReducer.sellerOptions,
   };
 };
 
-export default connect(mapStateToProps)(SelectTags);
+export default connect(mapStateToProps)(SelectSeller);

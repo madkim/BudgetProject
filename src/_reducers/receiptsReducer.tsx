@@ -1,25 +1,25 @@
-import { receiptsConstants } from "../constants/receiptsConstants";
-import { Action, Receipt } from "../helpers/types";
+import { receiptConstants } from "../_constants/receiptConstants";
+import { Action, Receipt } from "../_helpers/types";
 
 export const initState = {
   receipts: [],
-  tagOptions: {},
+  sellerOptions: {},
 };
 
 export function receiptsReducer(state = initState, action: Action) {
-  if (action.type === receiptsConstants.GET_ALL_RECEIPTS) {
+  if (action.type === receiptConstants.GET_ALL_RECEIPTS) {
     return (state = {
       ...state,
       receipts: action.payload,
     });
   }
-  if (action.type === receiptsConstants.ADD_NEW_RECEIPT) {
+  if (action.type === receiptConstants.ADD_NEW_RECEIPT) {
     return (state = {
       ...state,
       receipts: action.payload,
     });
   }
-  if (action.type === receiptsConstants.DELETE_RECEIPT) {
+  if (action.type === receiptConstants.DELETE_RECEIPT) {
     const receiptId = action.payload;
     return (state = {
       ...state,
@@ -28,22 +28,22 @@ export function receiptsReducer(state = initState, action: Action) {
       ),
     });
   }
-  if (action.type === receiptsConstants.GET_ALL_TAGS) {
+  if (action.type === receiptConstants.GET_ALL_TAGS) {
     return (state = {
       ...state,
-      tagOptions: action.payload,
+      sellerOptions: action.payload,
     });
   }
-  if (action.type === receiptsConstants.UPDATE_TAGS) {
+  if (action.type === receiptConstants.UPDATE_TAGS) {
     return (state = {
       ...state,
-      tagOptions: action.payload,
+      sellerOptions: action.payload,
     });
   }
-  if (action.type === receiptsConstants.ADD_NEW_TAG) {
+  if (action.type === receiptConstants.ADD_NEW_TAG) {
     return (state = {
       ...state,
-      tagOptions: action.payload,
+      sellerOptions: action.payload,
     });
   }
   return state;
