@@ -65,7 +65,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
 
   const [newSeller, setNewSeller] = useState("");
   const [addSellerFocus, setAddSellerFocus] = useState(false);
-  const { sellerOptions, addReceipt } = props;
+  const { sellerOptions, addReceipt, setParentState } = props;
 
   useEffect(() => {
     if (Object.keys(sellerOptions).length === 0) {
@@ -166,9 +166,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
             <IonList style={{ height: listHeight, overflowY: "scroll" }}>
               <IonRadioGroup
                 value={props.seller}
-                onIonChange={(e) =>
-                  props.setParentState({ seller: e.detail.value })
-                }
+                onIonChange={(e) => setParentState({ seller: e.detail.value })}
               >
                 {Object.keys(sellerOptions).length > 0 &&
                   Object.keys(sellerOptions).map((letter, i) => {
@@ -217,8 +215,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
               fill="outline"
               color="success"
               expand="block"
-              routerLink="/add"
-              routerDirection="back"
+              onClick={() => setParentState({ step: "ADD_RECEIPT" })}
             >
               Back
             </IonButton>

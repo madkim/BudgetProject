@@ -5,10 +5,11 @@ import { receiptActions } from "../../_actions/receiptActions";
 import { Receipt, Sellers } from "../../_helpers/types";
 
 import AddReceipt from "./AddReceipt";
-import SelectSellers from "./Sellers/SelectSeller";
+import SelectSeller from "./Sellers/SelectSeller";
 import moment from "moment";
 
 type State = {
+  step: string;
   date: string;
   time: string;
   price: number | null;
@@ -27,6 +28,7 @@ class Receipts extends React.Component<Props, State> {
     super(props);
 
     this.state = {
+      step: "ADD_RECEIPT",
       date: moment(new Date()).format(),
       time: moment(new Date()).format(),
       price: null,
@@ -50,28 +52,31 @@ class Receipts extends React.Component<Props, State> {
       millisecond: 0,
     });
 
-    // this.props.dispatch(
-    //   receiptActions.addNewReceipt(
-    //     dateTime.toDate(),
-    //     this.state.price,
-    //     this.state.seller,
-    //     this.props.receipts
-    //   )
-    // );
+    this.props.dispatch(
+      receiptActions.addNewReceipt(
+        dateTime.toDate(),
+        this.state.price,
+        this.state.seller,
+        this.props.receipts
+      )
+    );
   };
 
   handleSetParentState = (value: object) => {
     this.setState(value);
   };
 
-  path = this.props.location.pathname;
-
   render() {
-    const { date, time, price, seller } = this.state;
+    const { step, date, time, price, seller } = this.state;
+
+    enum STEP {
+      ADD_RECEIPT = "ADD_RECEIPT",
+      SELECT_SELLER = "SELECT_SELLER",
+    }
 
     return (
       <Fragment>
-        {this.path === "/add" && (
+        {step === STEP.ADD_RECEIPT && (
           <AddReceipt
             date={date}
             time={time}
@@ -79,8 +84,9 @@ class Receipts extends React.Component<Props, State> {
             setParentState={this.handleSetParentState}
           />
         )}
-        {this.path === "/sellers" && (
-          <SelectSellers
+
+        {step === STEP.SELECT_SELLER && (
+          <SelectSeller
             seller={seller}
             addReceipt={this.addReceipt}
             sellerOptions={this.props.sellerOptions}

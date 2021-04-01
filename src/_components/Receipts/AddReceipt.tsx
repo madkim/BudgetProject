@@ -139,8 +139,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
             <IonButton
               color="success"
               expand="block"
-              routerLink="/sellers"
-              routerDirection="forward"
+              onClick={() => setParentState({ step: "SELECT_SELLER" })}
             >
               Next
             </IonButton>
