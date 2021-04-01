@@ -52,7 +52,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding-end ion-padding-top">
+      <IonContent className="ion-padding-end ">
         <IonGrid>
           <IonRow>
             <IonCol>
