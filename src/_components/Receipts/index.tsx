@@ -1,28 +1,38 @@
 import React, { Fragment } from "react";
 
 import { connect } from "react-redux";
-import { Receipt as ReceiptType } from "../../_helpers/types";
 import { receiptActions } from "../../_actions/receiptActions";
+import { Receipt, Sellers } from "../../_helpers/types";
 
 import AddReceipt from "./AddReceipt";
 import SelectSellers from "./Sellers/SelectSeller";
 import moment from "moment";
 
 type State = {
-  date: "";
-  time: "";
-  price: 0;
-  seller: { id: ""; name: "" };
+  date: string;
+  time: string;
+  price: number | null;
+  seller: { id: string; name: string };
 };
 
 type Props = {
   dispatch: any;
   location: any;
-  receipts: ReceiptType[];
+  receipts: Receipt[];
+  sellerOptions: Sellers;
 };
 
-class Receipt extends React.Component<Props, State> {
-  path = this.props.location.pathname;
+class Receipts extends React.Component<Props, State> {
+  state: State = {
+    date: moment(new Date()).format(),
+    time: moment(new Date()).format(),
+    price: null,
+    seller: { id: "", name: "" },
+  };
+
+  componentDidMount() {
+    this.props.dispatch(receiptActions.getAllSellers());
+  }
 
   addReceipt = () => {
     const mmntDate = moment(this.state.date);
@@ -45,16 +55,45 @@ class Receipt extends React.Component<Props, State> {
     );
   };
 
+  handleSetParentState = (value: object) => {
+    this.setState(value);
+  };
+
+  path = this.props.location.pathname;
+
   render() {
+    const { date, time, price, seller } = this.state;
+
     return (
       <Fragment>
-        {this.path === "/add" && <AddReceipt />}
+        {this.path === "/add" && (
+          <AddReceipt
+            date={date}
+            time={time}
+            price={price}
+            setParentState={this.handleSetParentState}
+          />
+        )}
         {this.path === "/sellers" && (
-          <SelectSellers addReceipt={this.addReceipt} />
+          <SelectSellers
+            seller={seller}
+            addReceipt={this.addReceipt}
+            sellerOptions={this.props.sellerOptions}
+            setParentState={this.handleSetParentState}
+          />
         )}
       </Fragment>
     );
   }
 }
 
-export default connect()(Receipt);
+const mapStateToProps = (state: {
+  receiptsReducer: { receipts: Receipt[]; sellerOptions: Sellers };
+}) => {
+  return {
+    receipts: state.receiptsReducer.receipts,
+    sellerOptions: state.receiptsReducer.sellerOptions,
+  };
+};
+
+export default connect(mapStateToProps)(Receipts);

@@ -19,15 +19,26 @@ function getAllReceipts() {
       .orderBy("date", "desc")
       .get()
       .then((receipts) => {
-        receipts.docs.map((receipt) => {
-          data.push({
-            id: receipt.id,
-            date: receipt.data().date.toDate(),
-            price: receipt.data().price,
-            seller: receipt.data().seller.name,
-          });
+        const receiptsLen = receipts.docs.length;
+        receipts.docs.map((receipt, index) => {
+          receipt
+            .data()
+            .seller.get()
+            .then((seller: any) => {
+              data.push({
+                id: receipt.id,
+                date: receipt.data().date.toDate(),
+                price: receipt.data().price,
+                seller: seller.data().name,
+              });
+              return data;
+            })
+            .then((data: Receipt[]) => {
+              if (index + 1 === receiptsLen) {
+                dispatch(success(data));
+              }
+            });
         });
-        dispatch(success(data));
       });
   };
   function success(receipts: Receipt[]) {

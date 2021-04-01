@@ -19,15 +19,16 @@ import "./SelectSeller.css";
 
 import React, { useState, useRef, useEffect } from "react";
 
-import { connect } from "react-redux";
-import { Sellers, Ref } from "../../../_helpers/types";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { receiptActions } from "../../../_actions/receiptActions";
+import { Sellers, Seller, Ref } from "../../../_helpers/types";
 
 type Props = {
+  seller: Seller;
   sellerOptions: Sellers;
   addReceipt: () => void;
+  setParentState: (value: object) => void;
 };
 
 const SelectSeller: React.FC<Props> = (props: Props) => {
@@ -62,14 +63,14 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
 
   const dispatch = useDispatch();
 
-  const { addReceipt, sellerOptions } = props;
-
   const [newSeller, setNewSeller] = useState("");
-  const [selectedSeller, setSelectedSeller] = useState("");
   const [addSellerFocus, setAddSellerFocus] = useState(false);
+  const { sellerOptions, addReceipt } = props;
 
   useEffect(() => {
-    dispatch(receiptActions.getAllSellers());
+    if (Object.keys(sellerOptions).length === 0) {
+      dispatch(receiptActions.getAllSellers());
+    }
   }, [dispatch]);
 
   const addNewSeller = () => {
@@ -164,8 +165,10 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
 
             <IonList style={{ height: listHeight, overflowY: "scroll" }}>
               <IonRadioGroup
-                value={selectedSeller}
-                onIonChange={(e) => setSelectedSeller(e.detail.value)}
+                value={props.seller}
+                onIonChange={(e) =>
+                  props.setParentState({ seller: e.detail.value })
+                }
               >
                 {Object.keys(sellerOptions).length > 0 &&
                   Object.keys(sellerOptions).map((letter, i) => {
@@ -180,7 +183,10 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                               <IonLabel className="ion-text-capitalize">
                                 {seller.name}
                               </IonLabel>
-                              <IonRadio slot="start" value={seller.id} />
+                              <IonRadio
+                                slot="start"
+                                value={{ id: seller.id, name: seller.name }}
+                              />
                             </IonItem>
                           );
                         })}
@@ -218,12 +224,4 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: {
-  receiptsReducer: { sellerOptions: Sellers };
-}) => {
-  return {
-    sellerOptions: state.receiptsReducer.sellerOptions,
-  };
-};
-
-export default connect(mapStateToProps)(SelectSeller);
+export default SelectSeller;

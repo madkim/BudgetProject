@@ -17,24 +17,20 @@ import {
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { Receipt, Ref } from "../../_helpers/types";
-import { connect } from "react-redux";
-
-import moment from "moment";
-import momentTZ from "moment-timezone";
+import { Ref } from "../../_helpers/types";
 import ReceiptSwiss from "../../_assets/ReceiptSwiss.jpeg";
+import momentTZ from "moment-timezone";
 
 interface Props {
-  receipts: Receipt[];
+  date: string;
+  time: string;
+  price: number | null;
+  setParentState: (value: object) => void;
 }
 
 const AddReceipt: React.FC<Props> = (props: Props) => {
   const timezone = momentTZ.tz.guess();
   const priceInput: Ref = useRef(null);
-
-  const [date, setDate] = useState(moment(new Date()).format());
-  const [time, setTime] = useState(moment(new Date()).format());
-  const [price, setPrice] = useState<number | null>(null);
   const [priceInputFocus, setPriceInputFocus] = useState(false);
 
   const blurIonInput = () => {
@@ -44,6 +40,8 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
     });
     setPriceInputFocus(false);
   };
+
+  const { date, time, price, setParentState } = props;
 
   return (
     <IonPage>
@@ -75,7 +73,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                 <IonLabel position="stacked">Date:</IonLabel>
                 <IonDatetime
                   value={date}
-                  onIonChange={(e) => setDate(e.detail.value!)}
+                  onIonChange={(e) => setParentState({ date: e.detail.value! })}
                   display-timezone={timezone}
                 ></IonDatetime>
               </IonItem>
@@ -91,7 +89,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                 <IonDatetime
                   value={time}
                   displayFormat="h:mm A"
-                  onIonChange={(e) => setTime(e.detail.value!)}
+                  onIonChange={(e) => setParentState({ time: e.detail.value! })}
                   display-timezone={timezone}
                 ></IonDatetime>
               </IonItem>
@@ -120,7 +118,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                         e.key === "Enter" ? blurIonInput() : ""
                       }
                       onIonChange={(e) => {
-                        setPrice(+e.detail.value!);
+                        setParentState({ price: +e.detail.value! });
                       }}
                     ></IonInput>
                   </IonCol>
@@ -170,12 +168,4 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipt[] };
-}) => {
-  return {
-    receipts: state.receiptsReducer.receipts,
-  };
-};
-
-export default connect(mapStateToProps)(AddReceipt);
+export default AddReceipt;
