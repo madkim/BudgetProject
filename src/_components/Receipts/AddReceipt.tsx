@@ -1,4 +1,5 @@
 import {
+  IonImg,
   IonRow,
   IonCol,
   IonItem,
@@ -13,69 +14,32 @@ import {
   IonToolbar,
   IonDatetime,
   IonThumbnail,
-  IonImg,
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { Receipt, Seller, Sellers, Ref } from "../../_helpers/types";
-import { connect, useDispatch } from "react-redux";
-import { receiptActions } from "../../_actions/receiptActions";
-
-import ReceiptSwiss from "../../_assets/ReceiptSwiss.jpeg";
+import { Receipt, Ref } from "../../_helpers/types";
+import { connect } from "react-redux";
 
 import moment from "moment";
 import momentTZ from "moment-timezone";
+import ReceiptSwiss from "../../_assets/ReceiptSwiss.jpeg";
 
 interface Props {
   receipts: Receipt[];
-  sellerOptions: Sellers;
 }
 
 const AddReceipt: React.FC<Props> = (props: Props) => {
-  const dispatch = useDispatch();
   const timezone = momentTZ.tz.guess();
   const priceInput: Ref = useRef(null);
 
-  const [tags, setTags] = useState<string[]>([]);
   const [date, setDate] = useState(moment(new Date()).format());
   const [time, setTime] = useState(moment(new Date()).format());
   const [price, setPrice] = useState<number | null>(null);
   const [priceInputFocus, setPriceInputFocus] = useState(false);
 
-  const addTags = (updatedTags: Sellers) => {
-    let selectedTags: Seller[] = [];
-    Object.keys(updatedTags).map((letter) => {
-      selectedTags = [
-        ...selectedTags,
-        ...updatedTags[letter].filter((tag) => tag.isChecked === true),
-      ];
-    });
-    setTags(selectedTags.map((a) => a.val));
-  };
-
-  const addReceipt = () => {
-    const mmntDate = moment(date);
-    const mmntTime = moment(time);
-
-    const dateTime = mmntDate.set({
-      hour: mmntTime.get("hour"),
-      minute: mmntTime.get("minute"),
-      second: 0,
-      millisecond: 0,
-    });
-
-    dispatch(
-      receiptActions.addNewReceipt(
-        dateTime.toDate(),
-        price,
-        tags,
-        props.receipts
-      )
-    );
-  };
-
-  const blurIonInput = (input: Ref) => {
-    input.current?.getInputElement().then((element) => {
+  const blurIonInput = () => {
+    priceInput.current?.getInputElement().then((element) => {
+      setPriceInputFocus(false);
       element.blur();
     });
     setPriceInputFocus(false);
@@ -96,9 +60,9 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
           <IonRow>
             <IonCol>
               <IonItem lines="none">
-                {/* <IonThumbnail slot="start" style={{ height: "100%" }}> */}
-                <IonImg src={ReceiptSwiss} />
-                {/* </IonThumbnail> */}
+                <IonThumbnail style={{ height: "25vh", width: "50vw" }}>
+                  <IonImg src={ReceiptSwiss} />
+                </IonThumbnail>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -116,6 +80,11 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                 ></IonDatetime>
               </IonItem>
             </IonCol>
+          </IonRow>
+
+          <br />
+
+          <IonRow>
             <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Time:</IonLabel>
@@ -148,7 +117,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                       onIonFocus={() => setPriceInputFocus(true)}
                       placeholder="Enter Total"
                       onKeyPress={(e) =>
-                        e.key === "Enter" ? blurIonInput(priceInput) : ""
+                        e.key === "Enter" ? blurIonInput() : ""
                       }
                       onIonChange={(e) => {
                         setPrice(+e.detail.value!);
@@ -160,7 +129,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                       <IonButton
                         size="small"
                         color="success"
-                        onClick={() => blurIonInput(priceInput)}
+                        onClick={() => blurIonInput()}
                       >
                         Done
                       </IonButton>
@@ -172,16 +141,13 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
           </IonRow>
         </IonGrid>
 
-        {/* <SelectTags addTags={addTags} /> */}
-
         <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
             <IonButton
               color="success"
               expand="block"
-              onClick={addReceipt}
-              routerLink="/"
-              routerDirection="back"
+              routerLink="/sellers"
+              routerDirection="forward"
             >
               Next
             </IonButton>
@@ -205,11 +171,10 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipt[]; sellerOptions: Sellers };
+  receiptsReducer: { receipts: Receipt[] };
 }) => {
   return {
     receipts: state.receiptsReducer.receipts,
-    sellerOptions: state.receiptsReducer.sellerOptions,
   };
 };
 

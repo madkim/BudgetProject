@@ -1,16 +1,15 @@
-import { receiptConstants } from "../_constants/receiptConstants";
-import { Receipt, Sellers } from "../_helpers/types";
+import { Action, Receipt, Sellers, Seller } from "../_helpers/types";
 import { alphaSortValue, alphaSortKey } from "../_helpers/alphasort";
+import { receiptConstants } from "../_constants/receiptConstants";
 import { Dispatch } from "react";
-import { Action } from "../_helpers/types";
 import { db } from "../_helpers/firebase";
 
 export const receiptActions = {
+  getAllReceipts,
   addNewReceipt,
   deleteReceipt,
-  getAllReceipts,
-  getAllTags,
-  addNewTag,
+  getAllSellers,
+  addNewSeller,
 };
 
 function getAllReceipts() {
@@ -25,7 +24,7 @@ function getAllReceipts() {
             id: receipt.id,
             date: receipt.data().date.toDate(),
             price: receipt.data().price,
-            tags: receipt.data().tags,
+            seller: receipt.data().seller.name,
           });
         });
         dispatch(success(data));
@@ -42,7 +41,7 @@ function getAllReceipts() {
 function addNewReceipt(
   date: Date,
   price: number | null,
-  tags: string[],
+  seller: Seller,
   receipts: Receipt[]
 ) {
   return (dispatch: Dispatch<Action>) => {
@@ -50,14 +49,14 @@ function addNewReceipt(
       .add({
         date: new Date(date),
         price: price,
-        tags: tags,
+        seller: db.collection("sellers").doc(seller.id),
       })
-      .then((docRef) => {
+      .then((receiptRef) => {
         const newReceipt = {
-          id: docRef.id,
+          id: receiptRef.id,
           date: date,
           price: price,
-          tags: tags,
+          seller: { id: seller.id, name: seller.name },
         };
         const updatedReceipts = [...receipts, newReceipt];
         dispatch(success(updatedReceipts));
@@ -95,50 +94,51 @@ function deleteReceipt(receiptId: string) {
   };
 }
 
-function getAllTags() {
+function getAllSellers() {
   return (dispatch: Dispatch<Action>) => {
     const data: Sellers = {};
-    db.collection("tags")
+    db.collection("sellers")
       .orderBy("name", "asc")
       .get()
-      .then((tags) => {
-        tags.docs.map((tag) => {
-          const letter = tag.data().name.charAt(0).toUpperCase();
-          const tagData = { val: tag.data().name, isChecked: false };
+      .then((sellers) => {
+        sellers.docs.map((seller) => {
+          const name = seller.data().name;
+          const letter = name.charAt(0).toUpperCase();
+          const curSeller = { id: seller.id, name: name };
+
           if (data[letter]) {
-            data[letter].push(tagData);
+            data[letter].push(curSeller);
             data[letter].sort(alphaSortValue);
           } else {
-            data[letter] = [tagData];
+            data[letter] = [curSeller];
           }
         });
         const unsorted = Object.assign({}, data);
         dispatch(success(alphaSortKey(unsorted)));
       });
     function success(sorted: Sellers) {
-      return { type: receiptConstants.GET_ALL_TAGS, payload: sorted };
+      return { type: receiptConstants.GET_ALL_SELLERS, payload: sorted };
     }
   };
 }
 
-function addNewTag(newTag: string, sellerOptions: Sellers) {
+function addNewSeller(newSellerName: string, sellerOptions: Sellers) {
   return (dispatch: Dispatch<Action>) => {
-    db.collection("tags")
-      .doc(newTag)
-      .set({ name: newTag.toLowerCase() })
-      .then(() => {
-        let tags = { ...sellerOptions };
-        const letter = newTag.charAt(0).toUpperCase();
-        const newTagData = { val: newTag, isChecked: false };
+    db.collection("sellers")
+      .add({ name: newSellerName.toLowerCase() })
+      .then((sellerRef) => {
+        let sellers = { ...sellerOptions };
+        const letter = newSellerName.charAt(0).toUpperCase();
+        const newSeller = { id: sellerRef.id, name: newSellerName };
 
-        if (tags[letter]) {
-          tags[letter].push(newTagData);
-          tags[letter].sort(alphaSortValue);
+        if (sellers[letter]) {
+          sellers[letter].push(newSeller);
+          sellers[letter].sort(alphaSortValue);
         } else {
-          tags[letter] = [newTagData];
-          tags = alphaSortKey(tags);
+          sellers[letter] = [newSeller];
+          sellers = alphaSortKey(sellers);
         }
-        dispatch({ type: receiptConstants.ADD_NEW_TAG, payload: tags });
+        dispatch({ type: receiptConstants.ADD_NEW_SELLER, payload: sellers });
       })
       .catch((error) => {
         alert(error);

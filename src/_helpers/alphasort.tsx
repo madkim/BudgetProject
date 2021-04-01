@@ -1,10 +1,10 @@
 import { Seller, Sellers } from "./types";
 
 export function alphaSortValue(a: Seller, b: Seller) {
-  if (a.val.toLowerCase() < b.val.toLowerCase()) {
+  if (a.name.toLowerCase() < b.name.toLowerCase()) {
     return -1;
   }
-  if (a.val.toLowerCase() > b.val.toLowerCase()) {
+  if (a.name.toLowerCase() > b.name.toLowerCase()) {
     return 1;
   }
   return 0;

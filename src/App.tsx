@@ -13,9 +13,9 @@ import { receiptOutline, statsChartOutline } from "ionicons/icons";
 
 import { IonReactRouter } from "@ionic/react-router";
 
-import Add from "./_components/Receipts/AddReceipt";
+// import Add from "./_components/Receipts/AddReceipt";
 import Home from "./_components/Home";
-import SelectTags from "./_components/Sellers/SelectSeller";
+import Receipt from "./_components/Receipts";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -41,8 +41,8 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/add" component={Add} />
-          <Route path="/tags" component={SelectTags} />
+          <Route path="/add" component={Receipt} />
+          <Route path="/sellers" component={Receipt} />
           <Route path="/receipts" component={Home} />
           <Route exact path="/">
             <Redirect to="/receipts" />

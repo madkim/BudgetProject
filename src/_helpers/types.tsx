@@ -2,7 +2,7 @@ export interface Receipt {
   id: string;
   date: Date;
   price: number | null;
-  tags: string[];
+  seller: Seller;
 }
 
 export interface Receipts {
@@ -15,8 +15,8 @@ export interface Action {
 }
 
 export interface Seller {
-  val: string;
-  isChecked: boolean;
+  id: string;
+  name: string;
 }
 
 export interface Sellers {

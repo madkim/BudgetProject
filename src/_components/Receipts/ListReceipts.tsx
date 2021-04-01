@@ -85,7 +85,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                     <h1>{date.format("MMMM YYYY")}</h1>
                   </IonLabel>
                 </IonItemDivider>
-                {receipts[month].map((receipt, index) => {
+                {receipts[month].map((receipt) => {
                   return (
                     <IonItemSliding key={receipt.id}>
                       <IonItemOptions side="start">
@@ -109,18 +109,14 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                               </IonBadge>
                             </IonCol>
                             <IonCol size="4">
-                              {receipt.tags &&
-                                receipt.tags.map((tag, index) => {
-                                  return (
-                                    <IonLabel
-                                      key={index}
-                                      text-wrap
-                                      className="ion-text-capitalize"
-                                    >
-                                      {tag}
-                                    </IonLabel>
-                                  );
-                                })}
+                              {receipt.seller && (
+                                <IonLabel
+                                  text-wrap
+                                  className="ion-text-capitalize"
+                                >
+                                  {receipt.seller}
+                                </IonLabel>
+                              )}
                             </IonCol>
                             <IonCol size="1">
                               <IonIcon

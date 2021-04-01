@@ -9,7 +9,6 @@
 }
 
 .abc {
-  font-size: 10px;
   position: absolute;
   top: 0;
   right: 0;
@@ -18,11 +17,10 @@
   margin: 0;
   padding: 0;
   z-index: 2;
-}
-.abc li {
-  padding: 5px 10px;
-  margin: -1px 0;
-  text-align: center;
-}
 
-/*# sourceMappingURL=SelectSeller.css.map */
+  li {
+    padding: 5px 10px;
+    margin: -1px 0;
+    text-align: center;
+  }
+}

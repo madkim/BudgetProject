@@ -28,19 +28,19 @@ export function receiptsReducer(state = initState, action: Action) {
       ),
     });
   }
-  if (action.type === receiptConstants.GET_ALL_TAGS) {
+  if (action.type === receiptConstants.GET_ALL_SELLERS) {
     return (state = {
       ...state,
       sellerOptions: action.payload,
     });
   }
-  if (action.type === receiptConstants.UPDATE_TAGS) {
+  if (action.type === receiptConstants.UPDATE_SELLER) {
     return (state = {
       ...state,
       sellerOptions: action.payload,
     });
   }
-  if (action.type === receiptConstants.ADD_NEW_TAG) {
+  if (action.type === receiptConstants.ADD_NEW_SELLER) {
     return (state = {
       ...state,
       sellerOptions: action.payload,
