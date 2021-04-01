@@ -8,22 +8,22 @@ import AddReceipt from "./AddReceipt";
 import SelectSellers from "./Sellers/SelectSeller";
 import moment from "moment";
 
-type IState = {
+type State = {
   date: string;
   time: string;
   price: number | null;
   seller: { id: string; name: string };
 };
 
-type IProps = {
+type Props = {
   dispatch: any;
   location: any;
   receipts: Receipt[];
   sellerOptions: Sellers;
 };
 
-class Receipts extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+class Receipts extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {

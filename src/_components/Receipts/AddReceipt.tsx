@@ -54,18 +54,6 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
 
       <IonContent className="ion-padding-end ion-padding-top">
         <IonGrid>
-          {/* <IonRow>
-            <IonCol>
-              <IonItem lines="none">
-                <IonThumbnail style={{ height: "25vh", width: "50vw" }}>
-                  <IonImg src={ReceiptSwiss} />
-                </IonThumbnail>
-              </IonItem>
-            </IonCol>
-          </IonRow> */}
-
-          <br />
-
           <IonRow>
             <IonCol>
               <IonItem>
@@ -77,11 +65,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                 ></IonDatetime>
               </IonItem>
             </IonCol>
-          </IonRow>
 
-          <br />
-
-          <IonRow>
             <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Time:</IonLabel>
@@ -137,6 +121,18 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
             </IonCol>
           </IonRow>
         </IonGrid>
+
+        <br />
+
+        <IonRow>
+          <IonCol>
+            <IonItem lines="none">
+              <IonThumbnail style={{ height: "40vh", width: "100vw" }}>
+                <IonImg src={ReceiptSwiss} />
+              </IonThumbnail>
+            </IonItem>
+          </IonCol>
+        </IonRow>
 
         <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
