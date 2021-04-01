@@ -118,7 +118,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                         e.key === "Enter" ? blurIonInput() : ""
                       }
                       onIonChange={(e) => {
-                        setParentState({ price: +e.detail.value! });
+                        setParentState({ price: e.detail.value });
                       }}
                     ></IonInput>
                   </IonCol>

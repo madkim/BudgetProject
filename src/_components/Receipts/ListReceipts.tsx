@@ -114,7 +114,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                                   text-wrap
                                   className="ion-text-capitalize"
                                 >
-                                  {receipt.seller}
+                                  {receipt.seller.name}
                                 </IonLabel>
                               )}
                             </IonCol>

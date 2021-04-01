@@ -126,7 +126,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                   type="text"
                   value={newSeller}
                   placeholder="Add New Seller"
-                  // onIonBlur={() => setAddSellerFocus(false)}
+                  onIonBlur={() => setAddSellerFocus(false)}
                   onIonFocus={() => setAddSellerFocus(true)}
                   onIonChange={(e) => setNewSeller(e.detail.value!)}
                   onKeyPress={(e) =>
@@ -202,7 +202,13 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
 
         <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
-            <IonButton color="success" expand="block" onClick={addReceipt}>
+            <IonButton
+              color="success"
+              expand="block"
+              onClick={addReceipt}
+              routerLink="/"
+              routerDirection="forward"
+            >
               Save
             </IonButton>
           </IonCol>

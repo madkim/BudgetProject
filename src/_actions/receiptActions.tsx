@@ -29,7 +29,7 @@ function getAllReceipts() {
                 id: receipt.id,
                 date: receipt.data().date.toDate(),
                 price: receipt.data().price,
-                seller: seller.data().name,
+                seller: { id: seller.data().id, name: seller.data().name },
               });
               return data;
             })
