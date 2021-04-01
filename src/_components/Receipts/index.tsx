@@ -45,14 +45,15 @@ class Receipts extends React.Component<Props, State> {
       millisecond: 0,
     });
 
-    this.props.dispatch(
-      receiptActions.addNewReceipt(
-        dateTime.toDate(),
-        this.state.price,
-        this.state.seller,
-        this.props.receipts
-      )
-    );
+    console.log(this.state.price);
+    // this.props.dispatch(
+    //   receiptActions.addNewReceipt(
+    //     dateTime.toDate(),
+    //     this.state.price,
+    //     this.state.seller,
+    //     this.props.receipts
+    //   )
+    // );
   };
 
   handleSetParentState = (value: object) => {

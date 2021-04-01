@@ -35,7 +35,6 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
 
   const blurIonInput = () => {
     priceInput.current?.getInputElement().then((element) => {
-      setPriceInputFocus(false);
       element.blur();
     });
     setPriceInputFocus(false);
@@ -55,7 +54,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
 
       <IonContent className="ion-padding-end ion-padding-top">
         <IonGrid>
-          <IonRow>
+          {/* <IonRow>
             <IonCol>
               <IonItem lines="none">
                 <IonThumbnail style={{ height: "25vh", width: "50vw" }}>
@@ -63,7 +62,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                 </IonThumbnail>
               </IonItem>
             </IonCol>
-          </IonRow>
+          </IonRow> */}
 
           <br />
 
