@@ -8,33 +8,38 @@ import AddReceipt from "./AddReceipt";
 import SelectSellers from "./Sellers/SelectSeller";
 import moment from "moment";
 
-type State = {
+type IState = {
   date: string;
   time: string;
   price: number | null;
   seller: { id: string; name: string };
 };
 
-type Props = {
+type IProps = {
   dispatch: any;
   location: any;
   receipts: Receipt[];
   sellerOptions: Sellers;
 };
 
-class Receipts extends React.Component<Props, State> {
-  state: State = {
-    date: moment(new Date()).format(),
-    time: moment(new Date()).format(),
-    price: null,
-    seller: { id: "", name: "" },
-  };
+class Receipts extends React.Component<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+
+    this.state = {
+      date: moment(new Date()).format(),
+      time: moment(new Date()).format(),
+      price: null,
+      seller: { id: "", name: "" },
+    };
+  }
 
   componentDidMount() {
     this.props.dispatch(receiptActions.getAllSellers());
   }
 
   addReceipt = () => {
+    console.log(this.state);
     const mmntDate = moment(this.state.date);
     const mmntTime = moment(this.state.time);
 
@@ -45,7 +50,6 @@ class Receipts extends React.Component<Props, State> {
       millisecond: 0,
     });
 
-    console.log(this.state.price);
     // this.props.dispatch(
     //   receiptActions.addNewReceipt(
     //     dateTime.toDate(),
