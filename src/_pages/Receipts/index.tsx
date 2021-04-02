@@ -10,20 +10,20 @@ import {
   IonLoading,
   IonFabButton,
 } from "@ionic/react";
-import ListView from "./Receipts/ListReceipts";
+import ListReceipts from "./ListReceipts";
 
 import React, { useEffect } from "react";
 import { add, filterOutline, settingsOutline } from "ionicons/icons";
 
 import { connect, useDispatch } from "react-redux";
-import { receiptActions } from "../_actions/receiptActions";
-import { Receipt } from "../_helpers/types";
+import { receiptActions } from "../../_actions/receiptActions";
+import { Receipt } from "../../_helpers/types";
 
 interface Props {
   receipts: Receipt[];
 }
 
-const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
+const Receipts: React.FC<Props> = (props: { receipts: Receipt[] }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -58,7 +58,8 @@ const Home: React.FC<Props> = (props: { receipts: Receipt[] }) => {
           message={"Please wait..."}
         />
 
-        <ListView receipts={props.receipts} />
+        <ListReceipts receipts={props.receipts} />
+        
       </IonContent>
     </IonPage>
   );
@@ -72,4 +73,4 @@ const mapStateToProps = (state: {
   };
 };
 
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(Receipts);

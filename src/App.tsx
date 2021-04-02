@@ -1,4 +1,4 @@
-import { Redirect, Route, useLocation } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonTabs,
@@ -13,9 +13,8 @@ import { receiptOutline, statsChartOutline } from "ionicons/icons";
 
 import { IonReactRouter } from "@ionic/react-router";
 
-// import Add from "./_components/Receipts/AddReceipt";
-import Home from "./_components/Home";
-import Receipt from "./_components/Receipts";
+import Receipts from "./_pages/Receipts";
+import AddReceipt from "./_pages/Receipts/AddReceipt";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -41,8 +40,8 @@ const App: React.FC = () => (
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/add" component={Receipt} />
-          <Route path="/receipts" component={Home} />
+          <Route path="/add" component={AddReceipt} />
+          <Route path="/receipts" component={Receipts} />
           <Route exact path="/">
             <Redirect to="/receipts" />
           </Route>

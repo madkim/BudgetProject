@@ -14,8 +14,8 @@ import {
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { Ref } from "../../_helpers/types";
-import ReceiptSwiss from "../../_assets/ReceiptSwiss.jpeg";
+import { Ref } from "../../../_helpers/types";
+import ReceiptSwiss from '../../../_assets/ReceiptSwiss.jpeg';
 import momentTZ from "moment-timezone";
 
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
   setParentState: (value: object) => void;
 }
 
-const AddReceipt: React.FC<Props> = (props: Props) => {
+const AddReceiptDetails: React.FC<Props> = (props: Props) => {
   const timezone = momentTZ.tz.guess();
   const priceInput: Ref = useRef(null);
 
@@ -160,4 +160,4 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default AddReceipt;
+export default AddReceiptDetails;

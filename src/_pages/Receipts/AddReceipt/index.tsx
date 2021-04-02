@@ -3,12 +3,12 @@ import React from "react";
 import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
 import { connect } from "react-redux";
-import { sellerActions } from "../../_actions/sellerActions";
-import { receiptActions } from "../../_actions/receiptActions";
-import { Receipt, Sellers } from "../../_helpers/types";
+import { sellerActions } from "../../../_actions/sellerActions";
+import { receiptActions } from "../../../_actions/receiptActions";
+import { Receipt, Sellers } from "../../../_helpers/types";
 
-import AddReceipt from "./AddReceipt";
-import SelectSeller from "./Sellers/SelectSeller";
+import AddReceipt from "./AddReceiptDetails";
+import SelectSeller from "./AddReceiptSeller";
 import moment from "moment";
 
 type State = {
@@ -26,7 +26,7 @@ type Props = {
   sellerOptions: Sellers;
 };
 
-class Receipts extends React.Component<Props, State> {
+class AddReceipts extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
@@ -98,7 +98,6 @@ class Receipts extends React.Component<Props, State> {
 
         {step === STEP.SELECT_SELLER && (
           <SelectSeller
-            seller={seller}
             addReceipt={this.addReceipt}
             sellerOptions={this.props.sellerOptions}
             setParentState={this.handleSetParentState}
@@ -118,4 +117,4 @@ const mapStateToProps = (state: {
   };
 };
 
-export default connect(mapStateToProps)(Receipts);
+export default connect(mapStateToProps)(AddReceipts);

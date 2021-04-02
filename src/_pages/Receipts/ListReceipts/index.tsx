@@ -16,8 +16,8 @@ import {
 import moment from "moment";
 
 import { useDispatch } from "react-redux";
-import { receiptActions } from "../../_actions/receiptActions";
-import { Receipt, Receipts } from "../../_helpers/types";
+import { receiptActions } from "../../../_actions/receiptActions";
+import { Receipt, Receipts } from "../../../_helpers/types";
 import { useEffect, useState } from "react";
 import { chevronForwardOutline } from "ionicons/icons";
 

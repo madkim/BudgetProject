@@ -13,7 +13,7 @@ import {
   IonGrid,
   IonText,
 } from "@ionic/react";
-import "./SelectSeller.css";
+import "./AddReceiptSeller.css";
 
 import React, { useState, useRef, useEffect } from "react";
 
@@ -21,16 +21,15 @@ import { useHistory } from "react-router-dom";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { sellerActions } from "../../../_actions/sellerActions";
-import { Sellers, Seller, Ref } from "../../../_helpers/types";
+import { Sellers, Ref } from "../../../_helpers/types";
 
 type Props = {
-  seller: Seller | null;
   sellerOptions: Sellers;
   addReceipt: () => void;
   setParentState: (value: object) => void;
 };
 
-const SelectSeller: React.FC<Props> = (props: Props) => {
+const AddReceiptSeller: React.FC<Props> = (props: Props) => {
   const alpha: any = {
     A: useRef(null),
     B: useRef(null),
@@ -86,10 +85,11 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
 
   const setSelectedSeller = (id: string) => {
     const sellers = Object.values(sellerOptions).flat(1);
-    const selectedSeller = sellers.find((seller) => seller.id === id);
+    const selectedSeller = sellers.find((current) => current.id === id);
 
-    setParentState({ seller: selectedSeller });
     setSeller(id);
+    setParentState({ seller: selectedSeller });
+
   };
 
   const handlePan = (e: any) => {
@@ -239,4 +239,4 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default SelectSeller;
+export default AddReceiptSeller;
