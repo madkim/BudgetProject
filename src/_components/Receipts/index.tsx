@@ -3,6 +3,7 @@ import React from "react";
 import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
 import { connect } from "react-redux";
+import { sellerActions } from "../../_actions/sellerActions";
 import { receiptActions } from "../../_actions/receiptActions";
 import { Receipt, Sellers } from "../../_helpers/types";
 
@@ -39,7 +40,7 @@ class Receipts extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.props.dispatch(receiptActions.getAllSellers());
+    this.props.dispatch(sellerActions.getAllSellers());
   }
 
   addReceipt = () => {
