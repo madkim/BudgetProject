@@ -10,6 +10,7 @@ import {
   IonButton,
   IonContent,
   IonRadioGroup,
+  IonGrid,
 } from "@ionic/react";
 import "./SelectSeller.css";
 
@@ -109,36 +110,46 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
   const addNewSellerInput: Ref = useRef(null);
 
   return (
-    <IonContent className="ion-padding-end ion-padding-top">
-      <div className="wrapper">
-        <IonItem className="ion-padding-start">
-          <IonRow>
-            <IonCol size="12" className="ion-no-padding">
+    <IonContent className="ion-padding-end">
+      <IonGrid>
+        <IonRow>
+          <IonCol>
+            <IonItem>
               <IonLabel position="stacked">Sellers:</IonLabel>
-            </IonCol>
-            <IonCol className="ion-no-padding">
-              <IonInput
-                ref={addNewSellerInput}
-                type="text"
-                value={newSeller}
-                placeholder="Add New Seller"
-                onIonBlur={() => setAddSellerFocus(false)}
-                onIonFocus={() => setAddSellerFocus(true)}
-                onIonChange={(e) => setNewSeller(e.detail.value!)}
-                onKeyPress={(e) =>
-                  e.key === "Enter" ? blurIonInput(addNewSellerInput) : ""
-                }
-              ></IonInput>
-            </IonCol>
+              <IonRow style={{ width: "100%" }}>
+                <IonCol className="ion-no-padding">
+                  <IonInput
+                    ref={addNewSellerInput}
+                    type="text"
+                    value={newSeller}
+                    placeholder="Add New Seller"
+                    onIonBlur={() => setAddSellerFocus(false)}
+                    onIonFocus={() => setAddSellerFocus(true)}
+                    onIonChange={(e) => setNewSeller(e.detail.value!)}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" ? blurIonInput(addNewSellerInput) : ""
+                    }
+                  ></IonInput>
+                </IonCol>
+              </IonRow>
+            </IonItem>
+          </IonCol>
+          <IonCol size="auto" className="ion-text-right ion-margin-top">
             {addSellerFocus && (
               <IonCol size="auto" className="ion-no-padding">
-                <IonButton color="success" onClick={addNewSeller}>
+                <IonButton
+                  size="default"
+                  color="success"
+                  onClick={addNewSeller}
+                >
                   <IonIcon icon={addOutline} />
                 </IonButton>
               </IonCol>
             )}
-          </IonRow>
-        </IonItem>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+      <div className="wrapper">
         <div className="container js-abc ion-padding-start">
           <div style={{ touchAction: "none" }}>
             <ul

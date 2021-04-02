@@ -44,7 +44,7 @@ class Receipts extends React.Component<Props, State> {
   }
 
   addReceipt = () => {
-    console.log(this.state);
+    console.log("STATE", this.state);
     const mmntDate = moment(this.state.date);
     const mmntTime = moment(this.state.time);
 
@@ -56,14 +56,14 @@ class Receipts extends React.Component<Props, State> {
     });
 
     if (this.state.seller !== null && this.state.price !== null) {
-      this.props.dispatch(
-        receiptActions.addNewReceipt(
-          dateTime.toDate(),
-          this.state.price,
-          this.state.seller,
-          this.props.receipts
-        )
-      );
+      // this.props.dispatch(
+      //   receiptActions.addNewReceipt(
+      //     dateTime.toDate(),
+      //     this.state.price,
+      //     this.state.seller,
+      //     this.props.receipts
+      //   )
+      // );
     }
   };
 

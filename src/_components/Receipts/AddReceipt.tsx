@@ -70,7 +70,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
           <IonCol>
             <IonItem>
               <IonLabel position="stacked">Total Spent:</IonLabel>
-              <IonRow>
+              <IonRow style={{ width: "100%" }}>
                 <IonCol size="auto" style={{ marginTop: "8px" }}>
                   $
                 </IonCol>
@@ -90,19 +90,19 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                     }}
                   ></IonInput>
                 </IonCol>
-                {priceInputFocus && (
-                  <IonCol size="2">
-                    <IonButton
-                      size="small"
-                      color="success"
-                      onClick={() => blurIonInput()}
-                    >
-                      Done
-                    </IonButton>
-                  </IonCol>
-                )}
               </IonRow>
             </IonItem>
+          </IonCol>
+          <IonCol size="auto" className="ion-text-right ion-margin-top">
+            {priceInputFocus && (
+              <IonButton
+                size="default"
+                color="success"
+                onClick={() => blurIonInput()}
+              >
+                Done
+              </IonButton>
+            )}
           </IonCol>
         </IonRow>
       </IonGrid>
