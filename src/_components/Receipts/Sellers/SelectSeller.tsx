@@ -11,11 +11,13 @@ import {
   IonContent,
   IonRadioGroup,
   IonGrid,
+  IonText,
 } from "@ionic/react";
 import "./SelectSeller.css";
 
 import React, { useState, useRef, useEffect } from "react";
 
+import { useHistory } from "react-router-dom";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { sellerActions } from "../../../_actions/sellerActions";
@@ -58,11 +60,14 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
     Z: useRef(null),
   };
 
+  const history = useHistory();
   const dispatch = useDispatch();
 
-  const [newSeller, setNewSeller] = useState("");
+  const [error, setError] = useState("");
   const [seller, setSeller] = useState("");
+  const [newSeller, setNewSeller] = useState("");
   const [addSellerFocus, setAddSellerFocus] = useState(false);
+
   const { sellerOptions, addReceipt, setParentState } = props;
 
   useEffect(() => {
@@ -104,6 +109,17 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
       element.blur();
     });
     setAddSellerFocus(false);
+  };
+
+  const validate = () => {
+    setError("");
+
+    if (!seller) {
+      setError("seller");
+    } else {
+      addReceipt();
+      history.push("/");
+    }
   };
 
   const listHeight = window.screen.height / 2;
@@ -202,15 +218,17 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
 
       <br />
 
+      {error === "seller" && (
+        <IonText color="danger">
+          <span className="ion-margin ion-padding">
+            Please select a seller.
+          </span>
+        </IonText>
+      )}
+
       <IonRow className="ion-padding-start ion-padding-top">
         <IonCol size="12">
-          <IonButton
-            color="success"
-            expand="block"
-            onClick={addReceipt}
-            routerLink="/"
-            routerDirection="forward"
-          >
+          <IonButton color="success" expand="block" onClick={validate}>
             Save
           </IonButton>
         </IonCol>

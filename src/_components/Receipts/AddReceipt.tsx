@@ -10,6 +10,7 @@ import {
   IonContent,
   IonDatetime,
   IonThumbnail,
+  IonText,
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
@@ -27,6 +28,8 @@ interface Props {
 const AddReceipt: React.FC<Props> = (props: Props) => {
   const timezone = momentTZ.tz.guess();
   const priceInput: Ref = useRef(null);
+
+  const [error, setError] = useState("");
   const [priceInputFocus, setPriceInputFocus] = useState(false);
 
   const blurIonInput = () => {
@@ -34,6 +37,16 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
       element.blur();
     });
     setPriceInputFocus(false);
+  };
+
+  const validate = () => {
+    setError("");
+
+    if (!props.price) {
+      setError("price");
+    } else {
+      setParentState({ step: "SELECT_SELLER" });
+    }
   };
 
   const { date, time, price, setParentState } = props;
@@ -92,6 +105,11 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
                 </IonCol>
               </IonRow>
             </IonItem>
+            {error === "price" && (
+              <IonText color="danger">
+                <span className="ion-margin">Please enter total spent.</span>
+              </IonText>
+            )}
           </IonCol>
           <IonCol size="auto" className="ion-text-right ion-margin-top">
             {priceInputFocus && (
@@ -121,11 +139,7 @@ const AddReceipt: React.FC<Props> = (props: Props) => {
 
       <IonRow className="ion-padding-start ion-padding-top">
         <IonCol size="12">
-          <IonButton
-            color="success"
-            expand="block"
-            onClick={() => setParentState({ step: "SELECT_SELLER" })}
-          >
+          <IonButton color="success" expand="block" onClick={validate}>
             Next
           </IonButton>
         </IonCol>
