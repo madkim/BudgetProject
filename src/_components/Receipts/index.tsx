@@ -1,4 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
+
+import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
 import { connect } from "react-redux";
 import { receiptActions } from "../../_actions/receiptActions";
@@ -13,7 +15,7 @@ type State = {
   date: string;
   time: string;
   price: number | null;
-  seller: { id: string; name: string };
+  seller: { id: string; name: string } | null;
 };
 
 type Props = {
@@ -32,7 +34,7 @@ class Receipts extends React.Component<Props, State> {
       date: moment(new Date()).format(),
       time: moment(new Date()).format(),
       price: null,
-      seller: { id: "", name: "" },
+      seller: null,
     };
   }
 
@@ -52,14 +54,16 @@ class Receipts extends React.Component<Props, State> {
       millisecond: 0,
     });
 
-    this.props.dispatch(
-      receiptActions.addNewReceipt(
-        dateTime.toDate(),
-        this.state.price,
-        this.state.seller,
-        this.props.receipts
-      )
-    );
+    if (this.state.seller !== null && this.state.price !== null) {
+      this.props.dispatch(
+        receiptActions.addNewReceipt(
+          dateTime.toDate(),
+          this.state.price,
+          this.state.seller,
+          this.props.receipts
+        )
+      );
+    }
   };
 
   handleSetParentState = (value: object) => {
@@ -75,7 +79,14 @@ class Receipts extends React.Component<Props, State> {
     }
 
     return (
-      <Fragment>
+      <IonPage>
+        <IonHeader>
+          <IonToolbar color="success">
+            <IonTitle size="large" className="ion-text-center">
+              {step === STEP.ADD_RECEIPT ? "Add Receipt" : "Select Seller"}
+            </IonTitle>
+          </IonToolbar>
+        </IonHeader>
         {step === STEP.ADD_RECEIPT && (
           <AddReceipt
             date={date}
@@ -93,7 +104,7 @@ class Receipts extends React.Component<Props, State> {
             setParentState={this.handleSetParentState}
           />
         )}
-      </Fragment>
+      </IonPage>
     );
   }
 }

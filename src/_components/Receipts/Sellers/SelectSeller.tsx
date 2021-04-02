@@ -25,7 +25,7 @@ import { receiptActions } from "../../../_actions/receiptActions";
 import { Sellers, Seller, Ref } from "../../../_helpers/types";
 
 type Props = {
-  seller: Seller;
+  seller: Seller | null;
   sellerOptions: Sellers;
   addReceipt: () => void;
   setParentState: (value: object) => void;
@@ -104,126 +104,116 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
   const addNewSellerInput: Ref = useRef(null);
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar color="success">
-          <IonTitle size="large" className="ion-text-center">
-            Select Seller
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <br />
-      <IonContent className="ion-padding-end ion-padding-top">
-        <div className="wrapper">
-          <IonItem className="ion-padding-start">
-            <IonRow>
-              <IonCol size="12" className="ion-no-padding">
-                <IonLabel position="stacked">Sellers:</IonLabel>
+    <IonContent className="ion-padding-end ion-padding-top">
+      <div className="wrapper">
+        <IonItem className="ion-padding-start">
+          <IonRow>
+            <IonCol size="12" className="ion-no-padding">
+              <IonLabel position="stacked">Sellers:</IonLabel>
+            </IonCol>
+            <IonCol className="ion-no-padding">
+              <IonInput
+                ref={addNewSellerInput}
+                type="text"
+                value={newSeller}
+                placeholder="Add New Seller"
+                onIonBlur={() => setAddSellerFocus(false)}
+                onIonFocus={() => setAddSellerFocus(true)}
+                onIonChange={(e) => setNewSeller(e.detail.value!)}
+                onKeyPress={(e) =>
+                  e.key === "Enter" ? blurIonInput(addNewSellerInput) : ""
+                }
+              ></IonInput>
+            </IonCol>
+            {addSellerFocus && (
+              <IonCol size="auto" className="ion-no-padding">
+                <IonButton color="success" onClick={addNewSeller}>
+                  <IonIcon icon={addOutline} />
+                </IonButton>
               </IonCol>
-              <IonCol className="ion-no-padding">
-                <IonInput
-                  ref={addNewSellerInput}
-                  type="text"
-                  value={newSeller}
-                  placeholder="Add New Seller"
-                  onIonBlur={() => setAddSellerFocus(false)}
-                  onIonFocus={() => setAddSellerFocus(true)}
-                  onIonChange={(e) => setNewSeller(e.detail.value!)}
-                  onKeyPress={(e) =>
-                    e.key === "Enter" ? blurIonInput(addNewSellerInput) : ""
-                  }
-                ></IonInput>
-              </IonCol>
-              {addSellerFocus && (
-                <IonCol size="auto" className="ion-no-padding">
-                  <IonButton color="success" onClick={addNewSeller}>
-                    <IonIcon icon={addOutline} />
-                  </IonButton>
-                </IonCol>
-              )}
-            </IonRow>
-          </IonItem>
-          <div className="container js-abc ion-padding-start">
-            <div style={{ touchAction: "none" }}>
-              <ul
-                id="alphaList"
-                onTouchMove={handlePan}
-                className="abc js-abc-nav"
-                style={{ height: listHeight }}
-              >
-                {Object.keys(alpha).map((letter) => {
-                  if (Object.keys(sellerOptions).includes(letter)) {
-                    return (
-                      <small key={letter}>
-                        <li>{letter}</li>
-                      </small>
-                    );
-                  }
-                })}
-              </ul>
-            </div>
-
-            <IonList style={{ height: listHeight, overflowY: "scroll" }}>
-              <IonRadioGroup
-                value={props.seller}
-                onIonChange={(e) => setParentState({ seller: e.detail.value })}
-              >
-                {Object.keys(sellerOptions).length > 0 &&
-                  Object.keys(sellerOptions).map((letter, i) => {
-                    return (
-                      <div key={i} className="ion-padding-start">
-                        <div className="text" ref={alpha[letter]}>
-                          {letter}
-                        </div>
-                        {sellerOptions[letter].map((seller, i) => {
-                          return (
-                            <IonItem lines="none" key={i}>
-                              <IonLabel className="ion-text-capitalize">
-                                {seller.name}
-                              </IonLabel>
-                              <IonRadio
-                                slot="start"
-                                value={{ id: seller.id, name: seller.name }}
-                              />
-                            </IonItem>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
-              </IonRadioGroup>
-            </IonList>
+            )}
+          </IonRow>
+        </IonItem>
+        <div className="container js-abc ion-padding-start">
+          <div style={{ touchAction: "none" }}>
+            <ul
+              id="alphaList"
+              onTouchMove={handlePan}
+              className="abc js-abc-nav"
+              style={{ height: listHeight }}
+            >
+              {Object.keys(alpha).map((letter) => {
+                if (Object.keys(sellerOptions).includes(letter)) {
+                  return (
+                    <small key={letter}>
+                      <li>{letter}</li>
+                    </small>
+                  );
+                }
+              })}
+            </ul>
           </div>
+
+          <IonList style={{ height: listHeight, overflowY: "scroll" }}>
+            <IonRadioGroup
+              value={props.seller}
+              onIonChange={(e) => setParentState({ seller: e.detail.value })}
+            >
+              {Object.keys(sellerOptions).length > 0 &&
+                Object.keys(sellerOptions).map((letter, i) => {
+                  return (
+                    <div key={i} className="ion-padding-start">
+                      <div className="text" ref={alpha[letter]}>
+                        {letter}
+                      </div>
+                      {sellerOptions[letter].map((seller, i) => {
+                        return (
+                          <IonItem lines="none" key={i}>
+                            <IonLabel className="ion-text-capitalize">
+                              {seller.name}
+                            </IonLabel>
+                            <IonRadio
+                              slot="start"
+                              value={{ id: seller.id, name: seller.name }}
+                            />
+                          </IonItem>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+            </IonRadioGroup>
+          </IonList>
         </div>
+      </div>
 
-        <br />
+      <br />
 
-        <IonRow className="ion-padding-start ion-padding-top">
-          <IonCol size="12">
-            <IonButton
-              color="success"
-              expand="block"
-              onClick={addReceipt}
-              routerLink="/"
-              routerDirection="forward"
-            >
-              Save
-            </IonButton>
-          </IonCol>
-          <IonCol size="12">
-            <IonButton
-              fill="outline"
-              color="success"
-              expand="block"
-              onClick={() => setParentState({ step: "ADD_RECEIPT" })}
-            >
-              Back
-            </IonButton>
-          </IonCol>
-        </IonRow>
-        <br />
-      </IonContent>
-    </IonPage>
+      <IonRow className="ion-padding-start ion-padding-top">
+        <IonCol size="12">
+          <IonButton
+            color="success"
+            expand="block"
+            onClick={addReceipt}
+            routerLink="/"
+            routerDirection="forward"
+          >
+            Save
+          </IonButton>
+        </IonCol>
+        <IonCol size="12">
+          <IonButton
+            fill="outline"
+            color="success"
+            expand="block"
+            onClick={() => setParentState({ step: "ADD_RECEIPT" })}
+          >
+            Back
+          </IonButton>
+        </IonCol>
+      </IonRow>
+      <br />
+    </IonContent>
   );
 };
 
