@@ -66,7 +66,6 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
   const [error, setError] = useState("");
   const [seller, setSeller] = useState("");
   const [newSeller, setNewSeller] = useState("");
-  const [addSellerFocus, setAddSellerFocus] = useState(false);
 
   const { sellerOptions, addReceipt, setParentState } = props;
 
@@ -77,6 +76,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
   }, [dispatch]);
 
   const addNewSeller = () => {
+    console.log(newSeller);
     if (newSeller) {
       dispatch(sellerActions.addNewSeller(newSeller, sellerOptions));
       blurIonInput(addNewSellerInput);
@@ -108,7 +108,6 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
     input.current?.getInputElement().then((element) => {
       element.blur();
     });
-    setAddSellerFocus(false);
   };
 
   const validate = () => {
@@ -139,8 +138,6 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                     type="text"
                     value={newSeller}
                     placeholder="Add New Seller"
-                    onIonBlur={() => setAddSellerFocus(false)}
-                    onIonFocus={() => setAddSellerFocus(true)}
                     onIonChange={(e) => setNewSeller(e.detail.value!)}
                     onKeyPress={(e) =>
                       e.key === "Enter" ? blurIonInput(addNewSellerInput) : ""
@@ -151,17 +148,11 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
             </IonItem>
           </IonCol>
           <IonCol size="auto" className="ion-text-right ion-margin-top">
-            {addSellerFocus && (
-              <IonCol size="auto" className="ion-no-padding">
-                <IonButton
-                  size="default"
-                  color="success"
-                  onClick={addNewSeller}
-                >
-                  <IonIcon icon={addOutline} />
-                </IonButton>
-              </IonCol>
-            )}
+            <IonCol size="auto" className="ion-no-padding">
+              <IonButton size="default" color="success" onClick={addNewSeller}>
+                <IonIcon icon={addOutline} />
+              </IonButton>
+            </IonCol>
           </IonCol>
         </IonRow>
       </IonGrid>
