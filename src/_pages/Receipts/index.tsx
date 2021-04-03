@@ -59,7 +59,6 @@ const Receipts: React.FC<Props> = (props: { receipts: Receipt[] }) => {
         />
 
         <ListReceipts receipts={props.receipts} />
-        
       </IonContent>
     </IonPage>
   );

@@ -88,7 +88,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                 {receipts[month].map((receipt) => {
                   return (
                     <IonItemSliding key={receipt.id}>
-                      <IonItemOptions side="start">
+                      <IonItemOptions side="end">
                         <IonItemOption
                           color="danger"
                           onClick={() => deleteReceipt(receipt.id)}

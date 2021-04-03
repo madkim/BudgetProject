@@ -1,5 +1,6 @@
 import { Action, Receipt, Seller } from "../_helpers/types";
 import { receiptConstants } from "../_constants/receiptConstants";
+import { dateSortValue } from "../_helpers/datesort";
 import { Dispatch } from "react";
 import { db } from "../_helpers/firebase";
 
@@ -67,7 +68,7 @@ function addNewReceipt(
           seller: { id: seller.id, name: seller.name },
         };
         const updatedReceipts = [...receipts, newReceipt];
-        dispatch(success(updatedReceipts));
+        dispatch(success(updatedReceipts.sort(dateSortValue)));
       })
       .catch((error: Error) => {
         console.error("Error writing receipt: ", error);

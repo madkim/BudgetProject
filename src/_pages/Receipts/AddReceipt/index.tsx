@@ -71,7 +71,7 @@ class AddReceipts extends React.Component<Props, State> {
   };
 
   render() {
-    const { step, date, time, price, seller } = this.state;
+    const { step, date, time, price } = this.state;
 
     enum STEP {
       ADD_RECEIPT = "ADD_RECEIPT",
