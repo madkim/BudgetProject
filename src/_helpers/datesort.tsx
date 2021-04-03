@@ -1,4 +1,4 @@
-import { Receipt, Receipts } from "./types";
+import { Receipt } from "./types";
 
 export function dateSortValue(a: Receipt, b: Receipt) {
   if (new Date(a.date) > new Date(b.date)) {
@@ -8,13 +8,4 @@ export function dateSortValue(a: Receipt, b: Receipt) {
     return 1;
   }
   return 0;
-}
-
-export function dateSortKey(unordered: Receipts) {
-  return Object.keys(unordered)
-    .sort()
-    .reduce((obj: Receipts, key: string) => {
-      obj[key] = unordered[key];
-      return obj;
-    }, {});
 }
