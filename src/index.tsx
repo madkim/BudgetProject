@@ -7,6 +7,10 @@ import * as serviceWorkerRegistration from "./unused/serviceWorkerRegistration";
 
 import store from "./_helpers/store";
 import { Provider } from "react-redux";
+import { defineCustomElements } from "@ionic/pwa-elements/loader";
+
+// Call the element loader after the platform has been bootstrapped
+defineCustomElements(window);
 
 ReactDOM.render(
   <React.StrictMode>

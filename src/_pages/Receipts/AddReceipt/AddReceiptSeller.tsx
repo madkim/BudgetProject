@@ -21,12 +21,13 @@ import { useHistory } from "react-router-dom";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
 import { sellerActions } from "../../../_actions/sellerActions";
-import { Sellers, Ref } from "../../../_helpers/types";
+import { Sellers, Seller, Ref } from "../../../_helpers/types";
 
 type Props = {
   sellerOptions: Sellers;
+  setStep: (step: string) => void;
   addReceipt: () => void;
-  setParentState: (value: object) => void;
+  setParentSeller: (seller: Seller | undefined) => void;
 };
 
 const AddReceiptSeller: React.FC<Props> = (props: Props) => {
@@ -66,7 +67,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
   const [seller, setSeller] = useState("");
   const [newSeller, setNewSeller] = useState("");
 
-  const { sellerOptions, addReceipt, setParentState } = props;
+  const { sellerOptions, setStep, addReceipt, setParentSeller } = props;
 
   useEffect(() => {
     if (Object.keys(sellerOptions).length === 0) {
@@ -90,7 +91,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
     const selectedSeller = sellers.find((current) => current.id === id);
 
     setSeller(id);
-    setParentState({ seller: selectedSeller });
+    setParentSeller(selectedSeller);
   };
 
   const handlePan = (e: any) => {
@@ -236,7 +237,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
             fill="outline"
             color="success"
             expand="block"
-            onClick={() => setParentState({ step: "ADD_RECEIPT" })}
+            onClick={() => setStep("ADD_RECEIPT_DETAILS")}
           >
             Back
           </IonButton>

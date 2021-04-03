@@ -1,23 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
-import { connect } from "react-redux";
+import { useTakePhoto } from "../../../_hooks/useTakePhoto";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { receiptActions } from "../../../_actions/receiptActions";
-import { Receipt, Sellers } from "../../../_helpers/types";
+import { connect, useDispatch } from "react-redux";
+import { Receipt, Sellers, Seller } from "../../../_helpers/types";
 
-import AddReceipt from "./AddReceiptDetails";
-import SelectSeller from "./AddReceiptSeller";
+import AddReceiptDetails from "./AddReceiptDetails";
+import AddReceiptSeller from "./AddReceiptSeller";
 import moment from "moment";
-
-type State = {
-  step: string;
-  date: string;
-  time: string;
-  price: number | null;
-  seller: { id: string; name: string } | null;
-};
 
 type Props = {
   dispatch: any;
@@ -26,87 +19,78 @@ type Props = {
   sellerOptions: Sellers;
 };
 
-class AddReceipts extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const AddReceipts: React.FC<Props> = (props: Props) => {
+  const dispatch = useDispatch();
+  const { photo, takePhoto } = useTakePhoto();
 
-    this.state = {
-      step: "ADD_RECEIPT",
-      date: moment(new Date()).format(),
-      time: moment(new Date()).format(),
-      price: null,
-      seller: null,
-    };
-  }
+  const [step, setStep] = useState("ADD_RECEIPT_DETAILS");
+  const [date, setDate] = useState(moment(new Date()).format());
+  const [price, setPrice] = useState<number | null>(null);
+  const [seller, setSeller] = useState<Seller | undefined>(undefined);
+  const [noPhoto, setNoPhoto] = useState(false);
 
-  componentDidMount() {
-    this.props.dispatch(sellerActions.getAllSellers());
-  }
+  useEffect(() => {
+    dispatch(sellerActions.getAllSellers());
 
-  addReceipt = () => {
-    const mmntDate = moment(this.state.date);
-    const mmntTime = moment(this.state.time);
+    takePhoto()
+      .then(() => {})
+      .catch((error) => {
+        setNoPhoto(true);
+      });
+  }, []);
 
-    const dateTime = mmntDate.set({
-      hour: mmntTime.get("hour"),
-      minute: mmntTime.get("minute"),
-      second: 0,
-      millisecond: 0,
-    });
-
-    if (this.state.seller !== null && this.state.price !== null) {
-      this.props.dispatch(
+  const addReceipt = () => {
+    if (seller !== undefined && price !== null) {
+      dispatch(
         receiptActions.addNewReceipt(
-          dateTime.toDate(),
-          this.state.price,
-          this.state.seller,
-          this.props.receipts
+          moment(date).toDate(),
+          price,
+          seller,
+          props.receipts
         )
       );
     }
   };
 
-  handleSetParentState = (value: object) => {
-    this.setState(value);
-  };
-
-  render() {
-    const { step, date, time, price } = this.state;
-
-    enum STEP {
-      ADD_RECEIPT = "ADD_RECEIPT",
-      SELECT_SELLER = "SELECT_SELLER",
-    }
-
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar color="success">
-            <IonTitle size="large" className="ion-text-center">
-              {step === STEP.ADD_RECEIPT ? "Add Receipt" : "Select Seller"}
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        {step === STEP.ADD_RECEIPT && (
-          <AddReceipt
-            date={date}
-            time={time}
-            price={price}
-            setParentState={this.handleSetParentState}
-          />
-        )}
-
-        {step === STEP.SELECT_SELLER && (
-          <SelectSeller
-            addReceipt={this.addReceipt}
-            sellerOptions={this.props.sellerOptions}
-            setParentState={this.handleSetParentState}
-          />
-        )}
-      </IonPage>
-    );
+  enum STEP {
+    ADD_RECEIPT_DETAILS = "ADD_RECEIPT_DETAILS",
+    ADD_RECEIPT_SELLER = "ADD_RECEIPT_SELLER",
   }
-}
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar color="success">
+          <IonTitle size="large" className="ion-text-center">
+            {step === STEP.ADD_RECEIPT_DETAILS
+              ? "Add Receipt"
+              : "Select Seller"}
+          </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+
+      {step === STEP.ADD_RECEIPT_DETAILS && (
+        <AddReceiptDetails
+          date={date}
+          price={price}
+          photo={photo}
+          noPhoto={noPhoto}
+          setStep={setStep}
+          setDate={setDate}
+          setPrice={setPrice}
+        />
+      )}
+
+      {step === STEP.ADD_RECEIPT_SELLER && (
+        <AddReceiptSeller
+          setStep={setStep}
+          addReceipt={addReceipt}
+          setParentSeller={setSeller}
+          sellerOptions={props.sellerOptions}
+        />
+      )}
+    </IonPage>
+  );
+};
 
 const mapStateToProps = (state: {
   receiptsReducer: { receipts: Receipt[]; sellerOptions: Sellers };

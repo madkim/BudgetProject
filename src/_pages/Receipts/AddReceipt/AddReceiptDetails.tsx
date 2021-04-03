@@ -11,18 +11,22 @@ import {
   IonDatetime,
   IonThumbnail,
   IonText,
+  IonIcon,
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { Ref } from "../../../_helpers/types";
-import ReceiptSwiss from "../../../_assets/ReceiptSwiss.jpeg";
+import { alertCircleOutline } from "ionicons/icons";
+import { Photo, Ref } from "../../../_helpers/types";
 import momentTZ from "moment-timezone";
 
 interface Props {
   date: string;
-  time: string;
   price: number | null;
-  setParentState: (value: object) => void;
+  photo: Photo | undefined;
+  noPhoto: Boolean;
+  setDate: (date: string) => void;
+  setStep: (step: string) => void;
+  setPrice: (price: number) => void;
 }
 
 const AddReceiptDetails: React.FC<Props> = (props: Props) => {
@@ -41,15 +45,10 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
 
   const validate = () => {
     setError("");
-
-    if (!props.price) {
-      setError("price");
-    } else {
-      setParentState({ step: "SELECT_SELLER" });
-    }
+    !props.price ? setError("price") : props.setStep("ADD_RECEIPT_SELLER");
   };
 
-  const { date, time, price, setParentState } = props;
+  const { date, price, photo, noPhoto } = props;
 
   return (
     <IonContent className="ion-padding-end">
@@ -60,23 +59,11 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
               <IonLabel position="stacked">Date:</IonLabel>
               <IonDatetime
                 value={date}
-                onIonChange={(e) => setParentState({ date: e.detail.value! })}
+                onIonChange={(e) => props.setDate(e.detail.value!)}
                 display-timezone={timezone}
               ></IonDatetime>
             </IonItem>
           </IonCol>
-
-          {/* <IonCol>
-            <IonItem>
-              <IonLabel position="stacked">Time:</IonLabel>
-              <IonDatetime
-                value={time}
-                displayFormat="h:mm A"
-                onIonChange={(e) => setParentState({ time: e.detail.value! })}
-                display-timezone={timezone}
-              ></IonDatetime>
-            </IonItem>
-          </IonCol> */}
         </IonRow>
 
         <IonRow className="ion-margin-top">
@@ -99,7 +86,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
                       e.key === "Enter" ? blurIonInput() : ""
                     }
                     onIonChange={(e) => {
-                      setParentState({ price: e.detail.value });
+                      props.setPrice(+e.detail.value!);
                     }}
                   ></IonInput>
                 </IonCol>
@@ -131,7 +118,11 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
         <IonCol>
           <IonItem lines="none">
             <IonThumbnail style={{ height: "40vh", width: "100vw" }}>
-              <IonImg src={ReceiptSwiss} />
+              {noPhoto ? (
+                <IonIcon icon={alertCircleOutline} />
+              ) : (
+                photo && <IonImg src={photo.webviewPath} />
+              )}
             </IonThumbnail>
           </IonItem>
         </IonCol>
