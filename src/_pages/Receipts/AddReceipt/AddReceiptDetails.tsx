@@ -15,7 +15,7 @@ import {
 
 import React, { useState, useRef } from "react";
 import { Ref } from "../../../_helpers/types";
-import ReceiptSwiss from '../../../_assets/ReceiptSwiss.jpeg';
+import ReceiptSwiss from "../../../_assets/ReceiptSwiss.jpeg";
 import momentTZ from "moment-timezone";
 
 interface Props {
@@ -52,7 +52,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
   const { date, time, price, setParentState } = props;
 
   return (
-    <IonContent className="ion-padding-end ">
+    <IonContent className="ion-padding-end">
       <IonGrid>
         <IonRow>
           <IonCol>
@@ -66,7 +66,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
             </IonItem>
           </IonCol>
 
-          <IonCol>
+          {/* <IonCol>
             <IonItem>
               <IonLabel position="stacked">Time:</IonLabel>
               <IonDatetime
@@ -76,17 +76,17 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
                 display-timezone={timezone}
               ></IonDatetime>
             </IonItem>
-          </IonCol>
+          </IonCol> */}
         </IonRow>
 
-        <IonRow>
+        <IonRow className="ion-margin-top">
           <IonCol>
             <IonItem>
-              <IonLabel position="stacked">Total Spent:</IonLabel>
               <IonRow style={{ width: "100%" }}>
                 <IonCol size="auto" style={{ marginTop: "8px" }}>
                   $
                 </IonCol>
+
                 <IonCol>
                   <IonInput
                     ref={priceInput}
@@ -111,7 +111,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
               </IonText>
             )}
           </IonCol>
-          <IonCol size="auto" className="ion-text-right ion-margin-top">
+          <IonCol size="auto" className="ion-text-right ">
             {priceInputFocus && (
               <IonButton
                 size="default"
