@@ -6,6 +6,8 @@ import {
   FilesystemDirectory,
 } from "@capacitor/core";
 
+import firebase from "firebase/app";
+
 import { useFilesystem, base64FromPath } from "@ionic/react-hooks/filesystem";
 import { useState, useEffect } from "react";
 import { useStorage } from "@ionic/react-hooks/storage";
@@ -24,11 +26,8 @@ export function useTakePhoto() {
       quality: 100,
     });
     const fileName = new Date().getTime() + ".jpeg";
-    const newPhoto = {
-      filepath: fileName,
-      webviewPath: cameraPhoto.webPath,
-    };
-
+    const savedFileImage = await uploadPicture(cameraPhoto, fileName);
+    const newPhoto = savedFileImage;
     setPhoto(newPhoto);
   };
 
@@ -37,3 +36,24 @@ export function useTakePhoto() {
     takePhoto,
   };
 }
+
+const uploadPicture = async (
+  photo: CameraPhoto,
+  fileName: string
+): Promise<Photo> => {
+  let firebaseStore = firebase.storage().ref();
+
+  const base64Data = await base64FromPath(photo.webPath!);
+
+  firebaseStore
+    .child(fileName)
+    .putString(base64Data, "data_url")
+    .then(() => {
+      console.log("photo uploaded :)");
+    });
+
+  return {
+    filepath: fileName,
+    webviewPath: photo.webPath,
+  };
+};

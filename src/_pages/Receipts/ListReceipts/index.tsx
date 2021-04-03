@@ -12,6 +12,7 @@ import {
   IonItemDivider,
   IonItemSliding,
   IonItemOptions,
+  IonThumbnail,
 } from "@ionic/react";
 import moment from "moment";
 
@@ -97,7 +98,13 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                           Delete
                         </IonItemOption>
                       </IonItemOptions>
-                      <IonItem>
+                      <IonItem className="ion-no-padding">
+                        <IonThumbnail slot="start">
+                          <img
+                            alt="receipt"
+                            src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+                          />
+                        </IonThumbnail>
                         <IonLabel>
                           <IonRow>
                             <IonCol size="auto">
