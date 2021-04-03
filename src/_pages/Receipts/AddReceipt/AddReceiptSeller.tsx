@@ -75,11 +75,13 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
   }, [dispatch]);
 
   const addNewSeller = () => {
-    console.log(newSeller);
     if (newSeller) {
+      setError("");
       dispatch(sellerActions.addNewSeller(newSeller, sellerOptions));
       blurIonInput(addNewSellerInput);
       setNewSeller("");
+    } else {
+      setError("newSeller");
     }
   };
 
@@ -89,7 +91,6 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
 
     setSeller(id);
     setParentState({ seller: selectedSeller });
-
   };
 
   const handlePan = (e: any) => {
@@ -155,6 +156,13 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
             </IonCol>
           </IonCol>
         </IonRow>
+        {error === "newSeller" && (
+          <IonText color="danger">
+            <span className="ion-margin ion-padding">
+              Please add a seller name.
+            </span>
+          </IonText>
+        )}
       </IonGrid>
       <div className="wrapper">
         <div className="container js-abc ion-padding-start">
