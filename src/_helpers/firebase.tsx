@@ -18,3 +18,6 @@ firebase.initializeApp(firebaseConfig);
 
 // Create a link to firebase database
 export const db = firebase.firestore();
+
+// Create a reference to firebase storage bucket
+export const fireStorage = firebase.storage().ref();

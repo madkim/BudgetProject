@@ -20,7 +20,7 @@ import { useDispatch } from "react-redux";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { Receipt, Receipts } from "../../../_helpers/types";
 import { useEffect, useState } from "react";
-import { chevronForwardOutline } from "ionicons/icons";
+import { imageOutline, chevronForwardOutline } from "ionicons/icons";
 
 interface Props {
   receipts: Receipt[];
@@ -99,12 +99,17 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                         </IonItemOption>
                       </IonItemOptions>
                       <IonItem className="ion-no-padding">
-                        <IonThumbnail slot="start">
-                          <img
-                            alt="receipt"
-                            src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+                        {receipt.photo ? (
+                          <IonThumbnail slot="start">
+                            <img alt="receipt" src={receipt.photo} />
+                          </IonThumbnail>
+                        ) : (
+                          <IonIcon
+                            color="large"
+                            icon={imageOutline}
+                            className="ion-padding"
                           />
-                        </IonThumbnail>
+                        )}
                         <IonLabel>
                           <IonRow>
                             <IonCol size="auto">

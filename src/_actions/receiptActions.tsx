@@ -1,7 +1,9 @@
 import { Action, Receipt, Seller, Photo } from "../_helpers/types";
 import { receiptConstants } from "../_constants/receiptConstants";
+import { receiptsService } from "../_services/receiptsService";
 import { dateSortValue } from "../_helpers/datesort";
 import { uploadPhoto } from "../_hooks/useTakePhoto";
+import { fireStorage } from "../_helpers/firebase";
 import { Dispatch } from "react";
 import { db } from "../_helpers/firebase";
 
@@ -13,31 +15,13 @@ export const receiptActions = {
 
 function getAllReceipts() {
   return (dispatch: Dispatch<Action>) => {
-    let data: Receipt[] = [];
-    db.collection("receipts")
-      .orderBy("date", "desc")
-      .get()
+    receiptsService
+      .getAll()
       .then((receipts) => {
-        const receiptsLen = receipts.docs.length;
-        receipts.docs.map((receipt, index) => {
-          receipt
-            .data()
-            .seller.get()
-            .then((seller: any) => {
-              data.push({
-                id: receipt.id,
-                date: receipt.data().date.toDate(),
-                price: receipt.data().price,
-                seller: { id: seller.data().id, name: seller.data().name },
-              });
-              return data;
-            })
-            .then((data: Receipt[]) => {
-              if (index + 1 === receiptsLen) {
-                dispatch(success(data));
-              }
-            });
-        });
+        dispatch(success(receipts));
+      })
+      .catch(() => {
+        alert("Could not retrieve receipts at this time. Please try again.");
       });
   };
   function success(receipts: Receipt[]) {
@@ -50,7 +34,7 @@ function getAllReceipts() {
 
 function addNewReceipt(
   date: Date,
-  photo: Photo,
+  photo: Photo | undefined,
   price: number | null,
   seller: Seller,
   receipts: Receipt[]
@@ -63,26 +47,30 @@ function addNewReceipt(
         seller: db.collection("sellers").doc(seller.id),
       })
       .then((receiptRef) => {
-        uploadPhoto(photo, receiptRef.id)
-          .then(() => {
-            const newReceipt = {
-              id: receiptRef.id,
-              date: date,
-              price: price,
-              seller: { id: seller.id, name: seller.name },
-            };
-            const updatedReceipts = [...receipts, newReceipt];
-            dispatch(success(updatedReceipts.sort(dateSortValue)));
-          })
-          .catch((error: Error) => {
-            alert(
-              "There was an error creating your receipt. Please try again."
-            );
-            console.error("Error writing receipt: ", error);
-          });
+        const newReceipt = {
+          id: receiptRef.id,
+          date: date,
+          price: price,
+          photo: "",
+          seller: { id: seller.id, name: seller.name },
+        };
+
+        if (photo !== undefined) {
+          uploadPhoto(photo, receiptRef.id)
+            .then((photoRef) => {
+              newReceipt.photo = photoRef.webPath ? photoRef.webPath : "";
+              return newReceipt;
+            })
+            .catch((error: Error) => {
+              alert("Error: could not upload receipt photo.");
+              console.log("addNewReceipt", error);
+            });
+        }
+        const updatedReceipts = [...receipts, newReceipt];
+        dispatch(success(updatedReceipts.sort(dateSortValue)));
       })
       .catch((error: Error) => {
-        alert("There was an error creating your receipt. Please try again.");
+        alert("Could not create receipt. Please try again.");
         console.error("Error writing receipt: ", error);
       });
     function success(updatedReceipts: Receipt[]) {
@@ -100,6 +88,9 @@ function deleteReceipt(receiptId: string) {
       .doc(receiptId)
       .delete()
       .then(() => {
+        let receiptPhoto = fireStorage.child("receipts/" + receiptId);
+        receiptPhoto.delete();
+
         console.log("Receipt successfully deleted!");
         dispatch(success(receiptId));
       })

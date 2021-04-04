@@ -53,10 +53,10 @@ const Receipts: React.FC<Props> = (props: { receipts: Receipt[] }) => {
           </IonFabButton>
         </IonFab>
 
-        <IonLoading
+        {/* <IonLoading
           isOpen={props.receipts && props.receipts.length === 0}
           message={"Please wait..."}
-        />
+        /> */}
 
         <ListReceipts receipts={props.receipts} />
       </IonContent>

@@ -3,6 +3,7 @@ import { CameraPhoto } from "@capacitor/core";
 export interface Receipt {
   id: string;
   date: Date;
+  photo: string;
   price: number | null;
   seller: Seller;
 }
