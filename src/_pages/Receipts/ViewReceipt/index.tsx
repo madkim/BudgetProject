@@ -4,34 +4,40 @@ import {
   IonCol,
   IonItem,
   IonGrid,
-  IonText,
   IonIcon,
   IonPage,
-  IonInput,
   IonLabel,
   IonButton,
   IonContent,
-  IonDatetime,
   IonThumbnail,
   IonHeader,
   IonToolbar,
   IonTitle,
 } from "@ionic/react";
 
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { connect, useDispatch } from "react-redux";
 import { alertCircleOutline } from "ionicons/icons";
-import { Photo, Ref } from "../../../_helpers/types";
-import momentTZ from "moment-timezone";
+import { receiptActions } from "../../../_actions/receiptActions";
+import { Photo, Receipt } from "../../../_helpers/types";
+
+import moment from "moment";
 
 interface Props {
-  date: string;
-  price: number | null;
-  photo: Photo | undefined;
-  noPhoto: Boolean;
+  receipt: Receipt;
 }
 
 const ViewReceipt: React.FC<Props> = (props: Props) => {
-  const { date, price, photo, noPhoto } = props;
+  const { id } = useParams<{ id: string }>();
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(receiptActions.getReceiptByID(id, history));
+  }, [dispatch]);
+
+  const { receipt } = props;
 
   return (
     <IonPage>
@@ -49,6 +55,9 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
             <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Date:</IonLabel>
+                <IonLabel position="stacked">
+                  {receipt && moment(receipt.date).format("L")}
+                </IonLabel>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -57,6 +66,9 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
             <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Total spent:</IonLabel>
+                <IonLabel position="stacked">
+                  {receipt && receipt.price}
+                </IonLabel>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -65,6 +77,9 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
             <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Seller:</IonLabel>
+                <IonLabel position="stacked">
+                  {receipt.seller && receipt.seller.name}
+                </IonLabel>
               </IonItem>
             </IonCol>
           </IonRow>
@@ -75,7 +90,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
         <IonRow>
           <IonCol>
             <IonItem lines="none">
-              <IonThumbnail style={{ height: "40vh", width: "100vw" }}>
+              <IonThumbnail style={{ height: "35vh", width: "100vw" }}>
                 <>
                   <IonIcon icon={alertCircleOutline} />
                   <small> No Photo</small>
@@ -113,4 +128,10 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default ViewReceipt;
+const mapStateToProps = (state: { receiptsReducer: { receipt: Receipt } }) => {
+  return {
+    receipt: state.receiptsReducer.receipt,
+  };
+};
+
+export default connect(mapStateToProps)(ViewReceipt);

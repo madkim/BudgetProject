@@ -2,15 +2,35 @@ import { Action, Receipt, Seller, Photo } from "../_helpers/types";
 import { receiptConstants } from "../_constants/receiptConstants";
 import { receiptsService } from "../_services/receiptsService";
 import { dateSortValue } from "../_helpers/datesort";
-import { fireStorage } from "../_helpers/firebase";
 import { Dispatch } from "react";
-import { db } from "../_helpers/firebase";
 
 export const receiptActions = {
+  getReceiptByID,
   getAllReceipts,
   addNewReceipt,
   deleteReceipt,
 };
+
+function getReceiptByID(id: string, history: any) {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
+    receiptsService
+      .getByID(id)
+      .then((receipt: Receipt) => {
+        dispatch(success(receipt));
+        history.push(`/view/${id}`);
+      })
+      .catch(() => {
+        alert("Could not retrieve receipt at this time. Please try again.");
+      });
+  };
+  function success(receipt: Receipt) {
+    return {
+      type: receiptConstants.GET_RECEIPT_BY_ID,
+      payload: receipt,
+    };
+  }
+}
 
 function getAllReceipts() {
   return (dispatch: Dispatch<Action>) => {

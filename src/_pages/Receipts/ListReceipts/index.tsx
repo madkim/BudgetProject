@@ -13,23 +13,26 @@ import {
   IonItemSliding,
   IonItemOptions,
   IonThumbnail,
+  IonSpinner,
 } from "@ionic/react";
 import moment from "moment";
 
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { Receipt, Receipts } from "../../../_helpers/types";
 import { useEffect, useState } from "react";
+import { useDispatch, connect } from "react-redux";
 import { imageOutline, chevronForwardOutline } from "ionicons/icons";
 
 interface Props {
+  loading: boolean;
   receipts: Receipt[];
 }
 
 const ListRecepts: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
 
   const deleteReceipt = (receipt: Receipt) => {
@@ -72,7 +75,8 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   };
 
   const viewReceipt = (id: string) => {
-    history.push(`/view/${id}`);
+    setClicked(id);
+    dispatch(receiptActions.getReceiptByID(id, history));
   };
 
   useEffect(() => {
@@ -139,12 +143,16 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                                 </IonLabel>
                               )}
                             </IonCol>
-                            <IonCol size="1">
-                              <IonIcon
-                                color="medium"
-                                icon={chevronForwardOutline}
-                              />
-                            </IonCol>
+                            {props.loading && clicked === receipt.id ? (
+                              <IonSpinner name="lines-small" />
+                            ) : (
+                              <IonCol size="1">
+                                <IonIcon
+                                  color="medium"
+                                  icon={chevronForwardOutline}
+                                />
+                              </IonCol>
+                            )}
                           </IonRow>
                         </IonLabel>
                       </IonItem>
@@ -159,4 +167,10 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default ListRecepts;
+const mapStateToProps = (state: { receiptsReducer: { loading: boolean } }) => {
+  return {
+    loading: state.receiptsReducer.loading,
+  };
+};
+
+export default connect(mapStateToProps)(ListRecepts);

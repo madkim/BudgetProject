@@ -4,10 +4,28 @@ import { fireStorage } from "../_helpers/firebase";
 import { db } from "../_helpers/firebase";
 
 export const receiptsService = {
+  getByID,
   getAll,
   addNew,
   remove,
 };
+
+function getByID(id: string) {
+  return db
+    .collection("receipts")
+    .doc(id)
+    .get()
+    .then((receipt) => {
+      return {
+        id: receipt.id,
+        date: receipt.data()!.date.toDate(),
+        photo: "",
+        price: receipt.data()!.price,
+        seller: { id: "", name: "test" },
+        hasPhoto: false,
+      };
+    });
+}
 
 function getAll() {
   return db
