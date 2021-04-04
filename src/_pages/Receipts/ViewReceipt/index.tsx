@@ -17,6 +17,7 @@ import {
   IonList,
   IonListHeader,
   IonText,
+  IonBadge,
 } from "@ionic/react";
 
 import {
@@ -59,14 +60,28 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
     }
   }, [dispatch]);
 
+  const getBadgeColor = (price: number | null) => {
+    if (price !== null) {
+      if (price < 30) {
+        return "success";
+      }
+      if (price > 30 && price < 80) {
+        return "warning";
+      }
+      if (price > 80) {
+        return "danger";
+      }
+    }
+  };
+
   const deleteReceipt = (receipt: Receipt) => {
     let answer = window.confirm(
       "Are you sure you want to delete this receipt?"
     );
     if (answer) {
-      setShowPopover({ showPopover: false, event: undefined });
       dispatch(receiptActions.deleteReceipt(receipt, goBack));
     }
+    setShowPopover({ showPopover: false, event: undefined });
   };
 
   const { receipt } = props;
@@ -148,7 +163,11 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
               <IonItem>
                 <IonLabel position="stacked">Total spent:</IonLabel>
                 <IonLabel position="stacked">
-                  {receipt && receipt.price}
+                  {receipt && (
+                    <IonBadge color={getBadgeColor(receipt.price)}>
+                      {receipt.price}
+                    </IonBadge>
+                  )}
                 </IonLabel>
               </IonItem>
             </IonCol>
