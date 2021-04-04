@@ -17,6 +17,7 @@ import "./AddReceiptSeller.css";
 
 import React, { useState, useRef, useEffect } from "react";
 
+import { useHaptics } from "../../../_hooks/useHaptics";
 import { useHistory } from "react-router-dom";
 import { addOutline } from "ionicons/icons";
 import { useDispatch } from "react-redux";
@@ -65,8 +66,10 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
 
   const [error, setError] = useState("");
   const [seller, setSeller] = useState("");
+  const [letter, setLetter] = useState("");
   const [newSeller, setNewSeller] = useState("");
 
+  const { impact, impactLight } = useHaptics();
   const { sellerOptions, setStep, addReceipt, setParentSeller } = props;
 
   useEffect(() => {
@@ -99,9 +102,13 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
     const Y = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
     const realTarget = document.elementFromPoint(X, Y);
     if (realTarget !== null) {
-      const letter = realTarget.innerHTML;
-      if (alpha[letter] !== undefined && alpha[letter].current !== null) {
-        alpha[letter].current.scrollIntoView();
+      const current = realTarget.innerHTML;
+      if (current !== letter) {
+        setLetter(current);
+        if (alpha[current] !== undefined && alpha[current].current !== null) {
+          impactLight();
+          alpha[current].current.scrollIntoView();
+        }
       }
     }
   };

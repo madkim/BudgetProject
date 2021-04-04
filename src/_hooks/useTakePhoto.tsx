@@ -12,7 +12,7 @@ export function useTakePhoto() {
   const takePhoto = async () => {
     const cameraPhoto = await getPhoto({
       resultType: CameraResultType.Uri,
-      source: CameraSource.Camera,
+      source: CameraSource.Prompt,
       quality: 100,
     });
     setPhoto(cameraPhoto);
