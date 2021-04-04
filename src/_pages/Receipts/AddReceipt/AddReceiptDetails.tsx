@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { alertCircleOutline, calendarNumberSharp } from "ionicons/icons";
+import { alertCircleOutline } from "ionicons/icons";
 import { Photo, Ref } from "../../../_helpers/types";
 import momentTZ from "moment-timezone";
 

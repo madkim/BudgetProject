@@ -16,6 +16,7 @@ import {
 } from "@ionic/react";
 import moment from "moment";
 
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { Receipt, Receipts } from "../../../_helpers/types";
@@ -27,6 +28,7 @@ interface Props {
 }
 
 const ListRecepts: React.FC<Props> = (props: Props) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const [receipts, setReceipts] = useState<Receipts>({});
 
@@ -69,6 +71,10 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const viewReceipt = (id: string) => {
+    history.push(`/view/${id}`);
+  };
+
   useEffect(() => {
     addMonthAsKey();
   }, [props.receipts]);
@@ -88,7 +94,10 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                 </IonItemDivider>
                 {receipts[month].map((receipt) => {
                   return (
-                    <IonItemSliding key={receipt.id}>
+                    <IonItemSliding
+                      key={receipt.id}
+                      onClick={() => viewReceipt(receipt.id)}
+                    >
                       <IonItemOptions side="end">
                         <IonItemOption
                           color="danger"
