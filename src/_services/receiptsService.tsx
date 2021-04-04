@@ -15,14 +15,20 @@ function getByID(id: string) {
     .collection("receipts")
     .doc(id)
     .get()
-    .then((receipt) => {
+    .then(async (receipt) => {
+      const seller = await receipt.data()!.seller.get();
+
+      const photoUrl = receipt.data()!.hasPhoto
+        ? await fireStorage.child("receipts/" + receipt.id).getDownloadURL()
+        : "";
+
       return {
         id: receipt.id,
         date: receipt.data()!.date.toDate(),
-        photo: "",
+        photo: photoUrl,
         price: receipt.data()!.price,
-        seller: { id: "", name: "test" },
-        hasPhoto: false,
+        seller: { id: seller.data().id, name: seller.data().name },
+        hasPhoto: photoUrl !== "" ? true : false,
       };
     });
 }

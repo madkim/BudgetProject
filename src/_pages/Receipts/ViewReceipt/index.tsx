@@ -15,12 +15,12 @@ import {
   IonTitle,
 } from "@ionic/react";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { alertCircleOutline } from "ionicons/icons";
 import { receiptActions } from "../../../_actions/receiptActions";
-import { Photo, Receipt } from "../../../_helpers/types";
+import { Receipt } from "../../../_helpers/types";
 
 import moment from "moment";
 
@@ -29,13 +29,13 @@ interface Props {
 }
 
 const ViewReceipt: React.FC<Props> = (props: Props) => {
-  const { id } = useParams<{ id: string }>();
-  const history = useHistory();
-  const dispatch = useDispatch();
+  // const { id } = useParams<{ id: string }>();
+  // const history = useHistory();
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(receiptActions.getReceiptByID(id, history));
-  }, [dispatch]);
+  // useEffect(() => {
+  // dispatch(receiptActions.getReceiptByID(id, history));
+  // }, [dispatch]);
 
   const { receipt } = props;
 
@@ -90,22 +90,16 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
         <IonRow>
           <IonCol>
             <IonItem lines="none">
-              <IonThumbnail style={{ height: "35vh", width: "100vw" }}>
-                <>
-                  <IonIcon icon={alertCircleOutline} />
-                  <small> No Photo</small>
-                </>
+              <IonThumbnail style={{ height: "40vh", width: "100vw" }}>
+                {receipt.hasPhoto ? (
+                  receipt.photo && <IonImg src={receipt.photo} />
+                ) : (
+                  <>
+                    <IonIcon icon={alertCircleOutline} />
+                    <small> No Photo</small>
+                  </>
+                )}
               </IonThumbnail>
-              {/* <IonThumbnail style={{ height: "40vh", width: "100vw" }}>
-              {noPhoto ? (
-                <>
-                  <IonIcon icon={alertCircleOutline} />
-                  <small> No Photo</small>
-                </>
-              ) : (
-                photo && <IonImg src={photo.webPath} />
-              )}
-            </IonThumbnail> */}
             </IonItem>
           </IonCol>
         </IonRow>
