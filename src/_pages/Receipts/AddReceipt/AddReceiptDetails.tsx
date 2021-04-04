@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
-import { alertCircleOutline } from "ionicons/icons";
+import { alertCircleOutline, calendarNumberSharp } from "ionicons/icons";
 import { Photo, Ref } from "../../../_helpers/types";
 import momentTZ from "moment-timezone";
 
@@ -119,7 +119,10 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
           <IonItem lines="none">
             <IonThumbnail style={{ height: "40vh", width: "100vw" }}>
               {noPhoto ? (
-                <IonIcon icon={alertCircleOutline} />
+                <>
+                  <IonIcon icon={alertCircleOutline} />
+                  <small> No Photo</small>
+                </>
               ) : (
                 photo && <IonImg src={photo.webPath} />
               )}
