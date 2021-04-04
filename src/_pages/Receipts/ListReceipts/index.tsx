@@ -99,7 +99,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                         </IonItemOption>
                       </IonItemOptions>
                       <IonItem className="ion-no-padding">
-                        {receipt.photo ? (
+                        {receipt.hasPhoto ? (
                           <IonThumbnail slot="start">
                             <img alt="receipt" src={receipt.photo} />
                           </IonThumbnail>
