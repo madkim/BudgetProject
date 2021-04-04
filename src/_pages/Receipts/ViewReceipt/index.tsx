@@ -18,11 +18,13 @@ import {
   IonListHeader,
   IonText,
   IonBadge,
+  IonButtons,
 } from "@ionic/react";
 
 import {
   trashOutline,
   createOutline,
+  chevronBackOutline,
   alertCircleOutline,
   ellipsisHorizontalOutline,
 } from "ionicons/icons";
@@ -90,6 +92,12 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="success">
+          <IonButtons slot="start" className="ion-padding-top">
+            <IonButton fill="clear" routerLink="/" routerDirection="back">
+              <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
+            </IonButton>
+          </IonButtons>
+
           <IonTitle size="large" className="ion-text-center">
             View Receipt
           </IonTitle>
