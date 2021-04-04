@@ -44,6 +44,9 @@ const App: React.FC = () => (
           <Route path="/add" component={AddReceipt} />
           <Route path="/view/:id" component={ViewReceipt} />
           <Route path="/receipts" component={Receipts} />
+          <Route exact path="/deleted">
+            <Redirect to="/receipts" />
+          </Route>
           <Route exact path="/">
             <Redirect to="/receipts" />
           </Route>

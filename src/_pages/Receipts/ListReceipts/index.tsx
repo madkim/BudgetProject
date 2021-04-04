@@ -39,9 +39,8 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
     let answer = window.confirm(
       "Are you sure you want to delete this receipt?"
     );
-
     if (answer) {
-      dispatch(receiptActions.deleteReceipt(receipt));
+      dispatch(receiptActions.deleteReceipt(receipt, ""));
     }
   };
 

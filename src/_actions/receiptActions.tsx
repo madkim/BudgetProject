@@ -77,12 +77,15 @@ function addNewReceipt(
   }
 }
 
-function deleteReceipt(receipt: Receipt) {
+function deleteReceipt(receipt: Receipt, goBack: any) {
   return (dispatch: Dispatch<Action>) => {
     receiptsService
       .remove(receipt)
       .then((receiptId) => {
         dispatch(success(receiptId));
+        if (goBack !== "") {
+          goBack("/");
+        }
       })
       .catch((error: Error) => {
         alert("Could not delete receipt. Please try again.");
