@@ -1,6 +1,7 @@
-import { Action, Receipt, Seller } from "../_helpers/types";
+import { Action, Receipt, Seller, Photo } from "../_helpers/types";
 import { receiptConstants } from "../_constants/receiptConstants";
 import { dateSortValue } from "../_helpers/datesort";
+import { uploadPhoto } from "../_hooks/useTakePhoto";
 import { Dispatch } from "react";
 import { db } from "../_helpers/firebase";
 
@@ -49,6 +50,7 @@ function getAllReceipts() {
 
 function addNewReceipt(
   date: Date,
+  photo: Photo,
   price: number | null,
   seller: Seller,
   receipts: Receipt[]
@@ -61,16 +63,26 @@ function addNewReceipt(
         seller: db.collection("sellers").doc(seller.id),
       })
       .then((receiptRef) => {
-        const newReceipt = {
-          id: receiptRef.id,
-          date: date,
-          price: price,
-          seller: { id: seller.id, name: seller.name },
-        };
-        const updatedReceipts = [...receipts, newReceipt];
-        dispatch(success(updatedReceipts.sort(dateSortValue)));
+        uploadPhoto(photo, receiptRef.id)
+          .then(() => {
+            const newReceipt = {
+              id: receiptRef.id,
+              date: date,
+              price: price,
+              seller: { id: seller.id, name: seller.name },
+            };
+            const updatedReceipts = [...receipts, newReceipt];
+            dispatch(success(updatedReceipts.sort(dateSortValue)));
+          })
+          .catch((error: Error) => {
+            alert(
+              "There was an error creating your receipt. Please try again."
+            );
+            console.error("Error writing receipt: ", error);
+          });
       })
       .catch((error: Error) => {
+        alert("There was an error creating your receipt. Please try again.");
         console.error("Error writing receipt: ", error);
       });
     function success(updatedReceipts: Receipt[]) {

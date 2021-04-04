@@ -40,10 +40,11 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   }, []);
 
   const addReceipt = () => {
-    if (seller !== undefined && price !== null) {
+    if (seller !== undefined && price !== null && photo !== undefined) {
       dispatch(
         receiptActions.addNewReceipt(
           moment(date).toDate(),
+          photo,
           price,
           seller,
           props.receipts

@@ -1,3 +1,5 @@
+import { CameraPhoto } from "@capacitor/core";
+
 export interface Receipt {
   id: string;
   date: Date;
@@ -18,14 +20,11 @@ export interface Sellers {
   [key: string]: Seller[];
 }
 
-export interface Photo {
-  filepath: string;
-  webviewPath?: string;
-}
-
 export interface Action {
   type: string;
   payload: any;
 }
 
 export type Ref = React.RefObject<HTMLIonInputElement>;
+
+export type Photo = CameraPhoto;

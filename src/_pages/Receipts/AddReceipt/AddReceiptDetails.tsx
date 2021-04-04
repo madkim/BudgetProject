@@ -4,14 +4,14 @@ import {
   IonCol,
   IonItem,
   IonGrid,
+  IonText,
+  IonIcon,
   IonInput,
   IonLabel,
   IonButton,
   IonContent,
   IonDatetime,
   IonThumbnail,
-  IonText,
-  IonIcon,
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
@@ -121,7 +121,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
               {noPhoto ? (
                 <IonIcon icon={alertCircleOutline} />
               ) : (
-                photo && <IonImg src={photo.webviewPath} />
+                photo && <IonImg src={photo.webPath} />
               )}
             </IonThumbnail>
           </IonItem>
