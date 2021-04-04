@@ -30,13 +30,13 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const [receipts, setReceipts] = useState<Receipts>({});
 
-  const deleteReceipt = (receiptId: string) => {
+  const deleteReceipt = (receipt: Receipt) => {
     let answer = window.confirm(
       "Are you sure you want to delete this receipt?"
     );
 
     if (answer) {
-      dispatch(receiptActions.deleteReceipt(receiptId));
+      dispatch(receiptActions.deleteReceipt(receipt));
     }
   };
 
@@ -92,7 +92,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                       <IonItemOptions side="end">
                         <IonItemOption
                           color="danger"
-                          onClick={() => deleteReceipt(receipt.id)}
+                          onClick={() => deleteReceipt(receipt)}
                           expandable
                         >
                           Delete

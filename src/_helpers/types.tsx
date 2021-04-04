@@ -6,6 +6,7 @@ export interface Receipt {
   photo: string;
   price: number | null;
   seller: Seller;
+  hasPhoto: boolean;
 }
 
 export interface Receipts {

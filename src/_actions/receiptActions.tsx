@@ -2,7 +2,6 @@ import { Action, Receipt, Seller, Photo } from "../_helpers/types";
 import { receiptConstants } from "../_constants/receiptConstants";
 import { receiptsService } from "../_services/receiptsService";
 import { dateSortValue } from "../_helpers/datesort";
-import { uploadPhoto } from "../_hooks/useTakePhoto";
 import { fireStorage } from "../_helpers/firebase";
 import { Dispatch } from "react";
 import { db } from "../_helpers/firebase";
@@ -40,61 +39,33 @@ function addNewReceipt(
   receipts: Receipt[]
 ) {
   return (dispatch: Dispatch<Action>) => {
-    db.collection("receipts")
-      .add({
-        date: new Date(date),
-        price: price,
-        seller: db.collection("sellers").doc(seller.id),
-      })
-      .then((receiptRef) => {
-        const newReceipt = {
-          id: receiptRef.id,
-          date: date,
-          price: price,
-          photo: "",
-          seller: { id: seller.id, name: seller.name },
-        };
-
-        if (photo !== undefined) {
-          uploadPhoto(photo, receiptRef.id)
-            .then((photoRef) => {
-              newReceipt.photo = photoRef.webPath ? photoRef.webPath : "";
-              return newReceipt;
-            })
-            .catch((error: Error) => {
-              alert("Error: could not upload receipt photo.");
-              console.log("addNewReceipt", error);
-            });
-        }
-        const updatedReceipts = [...receipts, newReceipt];
+    receiptsService
+      .addNew(date, photo, price, seller, receipts)
+      .then((updatedReceipts) => {
         dispatch(success(updatedReceipts.sort(dateSortValue)));
       })
       .catch((error: Error) => {
         alert("Could not create receipt. Please try again.");
         console.error("Error writing receipt: ", error);
       });
-    function success(updatedReceipts: Receipt[]) {
-      return {
-        type: receiptConstants.ADD_NEW_RECEIPT,
-        payload: updatedReceipts,
-      };
-    }
   };
+  function success(updatedReceipts: Receipt[]) {
+    return {
+      type: receiptConstants.ADD_NEW_RECEIPT,
+      payload: updatedReceipts,
+    };
+  }
 }
 
-function deleteReceipt(receiptId: string) {
+function deleteReceipt(receipt: Receipt) {
   return (dispatch: Dispatch<Action>) => {
-    db.collection("receipts")
-      .doc(receiptId)
-      .delete()
-      .then(() => {
-        let receiptPhoto = fireStorage.child("receipts/" + receiptId);
-        receiptPhoto.delete();
-
-        console.log("Receipt successfully deleted!");
+    receiptsService
+      .remove(receipt)
+      .then((receiptId) => {
         dispatch(success(receiptId));
       })
-      .catch((error) => {
+      .catch((error: Error) => {
+        alert("Could not delete receipt. Please try again.");
         console.error("Error removing receipt: ", error);
       });
     function success(receiptId: string) {
