@@ -7,15 +7,17 @@ import {
   IonLabel,
   IonBadge,
   IonContent,
+  IonSpinner,
+  IonThumbnail,
   IonItemGroup,
   IonItemOption,
   IonItemDivider,
   IonItemSliding,
   IonItemOptions,
-  IonThumbnail,
-  IonSpinner,
 } from "@ionic/react";
 import moment from "moment";
+
+import { PhotoViewer } from "@ionic-native/photo-viewer";
 
 import { useHistory } from "react-router-dom";
 import { receiptActions } from "../../../_actions/receiptActions";
@@ -73,6 +75,19 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const veiwReceiptPhoto = (photoUrl: string) => {
+    if (photoUrl) {
+      var options = {
+        share: true, // default is false
+        closeButton: false, // default is true
+        copyToReference: true, // default is false
+        headers: "", // If this is not provided, an exception will be triggered
+        piccasoOptions: {}, // If this is not provided, an exception will be triggered
+      };
+      PhotoViewer.show(photoUrl, "Optional Title", options);
+    }
+  };
+
   const viewReceipt = (id: string) => {
     setClicked(id);
     dispatch(receiptActions.getReceiptByID(id, history));
@@ -108,13 +123,12 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                         </IonItemOption>
                       </IonItemOptions>
 
-                      <IonItem
-                        button
-                        className="ion-no-padding"
-                        onClick={() => viewReceipt(receipt.id)}
-                      >
+                      <IonItem button detail={false} className="ion-no-padding">
                         {receipt.hasPhoto ? (
-                          <IonThumbnail slot="start">
+                          <IonThumbnail
+                            slot="start"
+                            onClick={() => veiwReceiptPhoto(receipt.photo)}
+                          >
                             <img alt="receipt" src={receipt.photo} />
                           </IonThumbnail>
                         ) : (
@@ -124,7 +138,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                             className="ion-padding"
                           />
                         )}
-                        <IonLabel>
+                        <IonLabel onClick={() => viewReceipt(receipt.id)}>
                           <IonRow>
                             <IonCol size="auto">
                               {moment(receipt.date).format("ddd, Do")}

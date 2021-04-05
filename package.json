@@ -5,6 +5,8 @@
   "dependencies": {
     "@capacitor/core": "2.4.7",
     "@capacitor/ios": "^2.4.7",
+    "@ionic-native/core": "^5.31.1",
+    "@ionic-native/photo-viewer": "^5.31.1",
     "@ionic/pwa-elements": "^3.0.2",
     "@ionic/react": "^5.5.0",
     "@ionic/react-hooks": "0.0.8",
@@ -20,6 +22,7 @@
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
     "bootstrap": "^4.6.0",
+    "com-sarriaroman-photoviewer": "^1.2.5",
     "firebase": "^8.3.1",
     "firebase-admin": "^9.5.0",
     "ionicons": "^5.4.0",
