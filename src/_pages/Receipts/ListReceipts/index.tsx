@@ -97,20 +97,22 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                 </IonItemDivider>
                 {receipts[month].map((receipt) => {
                   return (
-                    <IonItemSliding
-                      key={receipt.id}
-                      onClick={() => viewReceipt(receipt.id)}
-                    >
+                    <IonItemSliding key={receipt.id}>
                       <IonItemOptions side="end">
                         <IonItemOption
                           color="danger"
-                          onClick={() => deleteReceipt(receipt)}
+                          onClick={(e) => deleteReceipt(receipt)}
                           expandable
                         >
                           Delete
                         </IonItemOption>
                       </IonItemOptions>
-                      <IonItem className="ion-no-padding">
+
+                      <IonItem
+                        button
+                        className="ion-no-padding"
+                        onClick={() => viewReceipt(receipt.id)}
+                      >
                         {receipt.hasPhoto ? (
                           <IonThumbnail slot="start">
                             <img alt="receipt" src={receipt.photo} />
