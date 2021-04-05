@@ -69,7 +69,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
   const [letter, setLetter] = useState("");
   const [newSeller, setNewSeller] = useState("");
 
-  const { impact, impactLight } = useHaptics();
+  const { impactLight } = useHaptics();
   const { sellerOptions, setStep, addReceipt, setParentSeller } = props;
 
   useEffect(() => {

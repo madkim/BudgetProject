@@ -1,0 +1,5 @@
+export const sellerConstants = {
+  GET_ALL_SELLERS: "GET_ALL_SELLERS",
+  ADD_NEW_SELLER: "ADD_NEW_SELLER",
+  UPDATE_SELLER: "UPDATE_SELLER",
+};

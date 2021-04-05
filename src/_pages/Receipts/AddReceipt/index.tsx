@@ -94,11 +94,12 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipt[]; sellerOptions: Sellers };
+  receiptsReducer: { receipts: Receipt[] };
+  sellersReducer: { sellerOptions: Sellers };
 }) => {
   return {
     receipts: state.receiptsReducer.receipts,
-    sellerOptions: state.receiptsReducer.sellerOptions,
+    sellerOptions: state.sellersReducer.sellerOptions,
   };
 };
 

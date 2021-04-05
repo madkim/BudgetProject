@@ -101,7 +101,6 @@ function addNew(
         const url = await (await uploadPhoto(photo, receiptRef.id)).webPath;
         photoUrl = url !== undefined ? url : "";
       }
-
       newReceipt.photo = photoUrl;
 
       return [...receipts, newReceipt];
