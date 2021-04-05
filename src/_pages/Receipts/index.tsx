@@ -1,7 +1,9 @@
 import {
+  IonImg,
   IonFab,
   IonIcon,
   IonPage,
+  IonCard,
   IonTitle,
   IonHeader,
   IonButton,
@@ -10,20 +12,14 @@ import {
   IonLoading,
   IonFabButton,
   IonButtons,
-  IonImg,
-  IonCard,
-  IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
-  IonCardContent,
   IonRefresher,
+  IonCardHeader,
+  IonCardContent,
+  IonCardSubtitle,
   IonRefresherContent,
+  IonModal,
 } from "@ionic/react";
-
-import React, { useEffect, useState } from "react";
-import FadeIn from "react-fade-in";
-import sadMoney from "../../_assets/sadMoney.jpeg";
-import ListReceipts from "./ListReceipts";
 
 import {
   add,
@@ -31,6 +27,13 @@ import {
   settingsOutline,
   chevronDownCircleOutline,
 } from "ionicons/icons";
+
+import React, { useEffect, useState } from "react";
+import FadeIn from "react-fade-in";
+import sadMoney from "../../_assets/sadMoney.jpeg";
+import Settings from "../Settings";
+import ListReceipts from "./ListReceipts";
+
 import { connect, useDispatch } from "react-redux";
 import { receiptActions } from "../../_actions/receiptActions";
 import { Receipt } from "../../_helpers/types";
@@ -43,6 +46,7 @@ interface Props {
 
 const Receipts: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   useEffect(() => {
     dispatch(receiptActions.getAllReceipts());
@@ -57,11 +61,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
       <IonHeader>
         <IonToolbar color="success">
           <IonButtons slot="start" className="ion-padding-top">
-            <IonButton
-              fill="clear"
-              routerLink="/settings"
-              routerDirection="back"
-            >
+            <IonButton fill="clear" onClick={() => setShowSettingsModal(true)}>
               <IonIcon icon={settingsOutline} style={{ color: "white" }} />
             </IonButton>
           </IonButtons>
@@ -85,6 +85,10 @@ const Receipts: React.FC<Props> = (props: Props) => {
             refreshingText="Refreshing..."
           ></IonRefresherContent>
         </IonRefresher>
+
+        <IonModal isOpen={showSettingsModal}>
+          <Settings setShowModal={setShowSettingsModal} />
+        </IonModal>
 
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
           <IonFabButton color="success" routerLink="/add">

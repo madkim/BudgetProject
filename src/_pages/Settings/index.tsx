@@ -1,20 +1,28 @@
 import {
   IonIcon,
   IonPage,
+  IonList,
+  IonItem,
+  IonLabel,
   IonTitle,
   IonHeader,
   IonButton,
   IonContent,
   IonToolbar,
-  IonList,
-  IonItem,
-  IonLabel,
+  IonModal,
 } from "@ionic/react";
 
-import React from "react";
-import { chevronForwardOutline } from "ionicons/icons";
+import React, { useState } from "react";
+import ManageSellers from "./ManageSellers";
+import { chevronForwardOutline, bagHandleOutline } from "ionicons/icons";
 
-const Settings: React.FC = () => {
+type Props = {
+  setShowModal: (value: boolean) => void;
+};
+
+const Settings: React.FC<Props> = (props: Props) => {
+  const [showManageSellersModal, setShowManageSellersModal] = useState(false);
+
   return (
     <IonPage>
       <IonContent fullscreen>
@@ -27,8 +35,7 @@ const Settings: React.FC = () => {
             <IonButton
               slot="end"
               fill="clear"
-              routerLink="/"
-              routerDirection="forward"
+              onClick={() => props.setShowModal(false)}
             >
               <IonIcon
                 icon={chevronForwardOutline}
@@ -39,22 +46,23 @@ const Settings: React.FC = () => {
         </IonHeader>
 
         <IonList>
-          <IonItem>
-            <IonLabel>Pokémon Yellow</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Mega Man X</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>The Legend of Zelda</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Pac-Man</IonLabel>
-          </IonItem>
-          <IonItem>
-            <IonLabel>Super Mario World</IonLabel>
+          <IonItem
+            button
+            detail={false}
+            onClick={() => setShowManageSellersModal(true)}
+          >
+            <h3>
+              <IonLabel>
+                <IonIcon icon={bagHandleOutline} />
+                &nbsp; Manage Sellers
+              </IonLabel>
+            </h3>
           </IonItem>
         </IonList>
+
+        <IonModal isOpen={showManageSellersModal}>
+          <ManageSellers setShowModal={setShowManageSellersModal} />
+        </IonModal>
       </IonContent>
     </IonPage>
   );
