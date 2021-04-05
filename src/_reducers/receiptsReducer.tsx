@@ -2,6 +2,7 @@ import { receiptConstants } from "../_constants/receiptConstants";
 import { Action, Receipt } from "../_helpers/types";
 
 export const initState = {
+  request: "",
   loading: false,
   receipt: {},
   receipts: [],
@@ -12,7 +13,15 @@ export function receiptsReducer(state = initState, action: Action) {
   if (action.type === receiptConstants.GET_RECEIPT_REQUEST) {
     return (state = {
       ...state,
+      request: "sent",
       loading: true,
+    });
+  }
+  if (action.type === receiptConstants.GET_RECEIPT_REQUEST_FAILURE) {
+    return (state = {
+      ...state,
+      request: "failed",
+      loading: false,
     });
   }
   if (action.type === receiptConstants.GET_RECEIPT_BY_ID) {
@@ -25,6 +34,7 @@ export function receiptsReducer(state = initState, action: Action) {
   if (action.type === receiptConstants.GET_ALL_RECEIPTS) {
     return (state = {
       ...state,
+      loading: false,
       receipts: action.payload,
     });
   }

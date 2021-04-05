@@ -33,6 +33,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { receiptActions } from "../../../_actions/receiptActions";
+import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { Receipt } from "../../../_helpers/types";
 
 import { useContext } from "react";
@@ -73,6 +74,19 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
       if (price > 80) {
         return "danger";
       }
+    }
+  };
+
+  const veiwReceiptPhoto = (photoUrl: string) => {
+    if (photoUrl) {
+      var options = {
+        share: true, // default is false
+        closeButton: false, // default is true
+        copyToReference: true, // default is false
+        headers: "", // If this is not provided, an exception will be triggered
+        piccasoOptions: {}, // If this is not provided, an exception will be triggered
+      };
+      PhotoViewer.show(photoUrl, props.receipt.seller.name, options);
     }
   };
 
@@ -198,7 +212,12 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
         <IonRow>
           <IonCol>
             <IonItem lines="none">
-              <IonThumbnail style={{ height: "35vh", width: "100vw" }}>
+              <IonThumbnail
+                style={{ height: "35vh", width: "100vw" }}
+                onClick={() =>
+                  receipt.hasPhoto ? veiwReceiptPhoto(receipt.photo) : ""
+                }
+              >
                 {receipt.hasPhoto ? (
                   receipt.photo && <IonImg src={receipt.photo} />
                 ) : (

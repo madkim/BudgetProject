@@ -5,6 +5,7 @@ import { dateSortValue } from "../_helpers/datesort";
 import { Dispatch } from "react";
 
 export const receiptActions = {
+  refreshReceipts,
   getReceiptByID,
   getAllReceipts,
   addNewReceipt,
@@ -34,6 +35,7 @@ function getReceiptByID(id: string, history: any) {
 
 function getAllReceipts() {
   return (dispatch: Dispatch<Action>) => {
+    dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
     receiptsService
       .getAll()
       .then((receipts) => {
@@ -41,6 +43,10 @@ function getAllReceipts() {
       })
       .catch(() => {
         alert("Could not retrieve receipts at this time. Please try again.");
+        dispatch({
+          type: receiptConstants.GET_RECEIPT_REQUEST_FAILURE,
+          payload: "",
+        });
       });
   };
   function success(receipts: Receipt[]) {
@@ -49,6 +55,28 @@ function getAllReceipts() {
       payload: receipts,
     };
   }
+}
+
+function refreshReceipts(e: any) {
+  return (dispatch: Dispatch<Action>) => {
+    receiptsService
+      .getAll()
+      .then((receipts) => {
+        dispatch({
+          type: receiptConstants.GET_ALL_RECEIPTS,
+          payload: receipts,
+        });
+        e.detail.complete();
+      })
+      .catch(() => {
+        alert("Could not retrieve receipts at this time. Please try again.");
+        dispatch({
+          type: receiptConstants.GET_RECEIPT_REQUEST_FAILURE,
+          payload: "",
+        });
+        e.detail.complete();
+      });
+  };
 }
 
 function addNewReceipt(

@@ -17,9 +17,8 @@ import {
 } from "@ionic/react";
 import moment from "moment";
 
-import { PhotoViewer } from "@ionic-native/photo-viewer";
-
 import { useHistory } from "react-router-dom";
+import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { Receipt, Receipts } from "../../../_helpers/types";
 import { useEffect, useState } from "react";
@@ -75,8 +74,8 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const veiwReceiptPhoto = (photoUrl: string) => {
-    if (photoUrl) {
+  const veiwReceiptPhoto = (receipt: Receipt) => {
+    if (receipt.hasPhoto) {
       var options = {
         share: true, // default is false
         closeButton: false, // default is true
@@ -84,7 +83,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
         headers: "", // If this is not provided, an exception will be triggered
         piccasoOptions: {}, // If this is not provided, an exception will be triggered
       };
-      PhotoViewer.show(photoUrl, "Optional Title", options);
+      PhotoViewer.show(receipt.photo, receipt.seller.name, options);
     }
   };
 
@@ -127,7 +126,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                         {receipt.hasPhoto ? (
                           <IonThumbnail
                             slot="start"
-                            onClick={() => veiwReceiptPhoto(receipt.photo)}
+                            onClick={() => veiwReceiptPhoto(receipt)}
                           >
                             <img alt="receipt" src={receipt.photo} />
                           </IonThumbnail>
