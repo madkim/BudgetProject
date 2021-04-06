@@ -2,6 +2,7 @@ import { receiptConstants } from "../_constants/receiptConstants";
 import { Action, Receipt } from "../_helpers/types";
 
 export const initState = {
+  upload: "",
   request: "",
   loading: false,
   receipt: {},
@@ -42,6 +43,24 @@ export function receiptsReducer(state = initState, action: Action) {
     return (state = {
       ...state,
       receipts: action.payload,
+    });
+  }
+  if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO) {
+    return (state = {
+      ...state,
+      upload: "uploading",
+    });
+  }
+  if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_FAILURE) {
+    return (state = {
+      ...state,
+      upload: "failure",
+    });
+  }
+  if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_SUCCESS) {
+    return (state = {
+      ...state,
+      upload: "success",
     });
   }
   if (action.type === receiptConstants.DELETE_RECEIPT) {

@@ -17,11 +17,7 @@ import {
   IonCardHeader,
   IonCardContent,
   IonRefresherContent,
-  IonMenu,
-  IonList,
-  IonItem,
-  IonSplitPane,
-  IonMenuButton,
+  IonProgressBar,
 } from "@ionic/react";
 
 import {
@@ -45,6 +41,7 @@ interface Props {
   receipts: Receipt[];
   loading: boolean;
   request: string;
+  upload: string;
 }
 
 const Receipts: React.FC<Props> = (props: Props) => {
@@ -129,7 +126,11 @@ const Receipts: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipt[]; loading: boolean; request: string };
+  receiptsReducer: {
+    receipts: Receipt[];
+    loading: boolean;
+    request: string;
+  };
 }) => {
   return {
     loading: state.receiptsReducer.loading,

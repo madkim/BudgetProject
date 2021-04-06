@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from "react";
-
-import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
-
+import { useHistory } from "react-router-dom";
 import { useTakePhoto } from "../../../_hooks/useTakePhoto";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { connect, useDispatch } from "react-redux";
 import { Receipt, Sellers, Seller } from "../../../_helpers/types";
+import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
-import AddReceiptDetails from "./AddReceiptDetails";
-import AddReceiptSeller from "./AddReceiptSeller";
 import moment from "moment";
+import AddReceiptSeller from "./AddReceiptSeller";
+import AddReceiptDetails from "./AddReceiptDetails";
 
 type Props = {
   dispatch: any;
@@ -21,6 +20,8 @@ type Props = {
 
 const AddReceipts: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+
+  const history = useHistory();
   const { photo, takePhoto } = useTakePhoto();
 
   const [step, setStep] = useState("ADD_RECEIPT_DETAILS");
@@ -30,14 +31,26 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   const [noPhoto, setNoPhoto] = useState(false);
 
   useEffect(() => {
+    history.listen(onRouteChange);
     dispatch(sellerActions.getAllSellers());
-
     takePhoto()
       .then(() => {})
       .catch((error) => {
         setNoPhoto(true);
       });
   }, []);
+
+  const onRouteChange = (route: any) => {
+    initUseStates();
+  };
+
+  const initUseStates = () => {
+    setStep("ADD_RECEIPT_DETAILS");
+    setDate(moment(new Date()).format());
+    setPrice(null);
+    setSeller(undefined);
+    setNoPhoto(false);
+  };
 
   const addReceipt = () => {
     if (seller !== undefined && price !== null) {
@@ -47,7 +60,8 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
           photo,
           price,
           seller,
-          props.receipts
+          props.receipts,
+          history
         )
       );
     }

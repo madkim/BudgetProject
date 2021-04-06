@@ -1,6 +1,7 @@
-import { Receipt, Seller, Photo } from "../_helpers/types";
+import { Receipt, Seller, Photo, Action } from "../_helpers/types";
 import { uploadPhoto } from "../_hooks/useTakePhoto";
 import { fireStorage } from "../_helpers/firebase";
+import { Dispatch } from "react";
 import { db } from "../_helpers/firebase";
 
 export const receiptsService = {
@@ -75,7 +76,8 @@ function addNew(
   photo: Photo | undefined,
   price: number | null,
   seller: Seller,
-  receipts: Receipt[]
+  receipts: Receipt[],
+  dispatch: Dispatch<Action>
 ) {
   return db
     .collection("receipts")
@@ -98,7 +100,8 @@ function addNew(
       let photoUrl = "";
 
       if (photo !== undefined) {
-        const url = await (await uploadPhoto(photo, receiptRef.id)).webPath;
+        const url = await (await uploadPhoto(photo, receiptRef.id, dispatch))
+          .webPath;
         photoUrl = url !== undefined ? url : "";
       }
       newReceipt.photo = photoUrl;

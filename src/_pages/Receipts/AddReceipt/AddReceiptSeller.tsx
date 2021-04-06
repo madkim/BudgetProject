@@ -12,20 +12,21 @@ import {
   IonRadioGroup,
   IonGrid,
   IonText,
+  IonProgressBar,
 } from "@ionic/react";
 import "./AddReceiptSeller.css";
 
 import React, { useState, useRef, useEffect } from "react";
 
 import { useHaptics } from "../../../_hooks/useHaptics";
-import { useHistory } from "react-router-dom";
 import { addOutline } from "ionicons/icons";
-import { useDispatch } from "react-redux";
 import { sellerActions } from "../../../_actions/sellerActions";
+import { useDispatch, connect } from "react-redux";
 import { Sellers, Seller, Ref } from "../../../_helpers/types";
 
 type Props = {
   sellerOptions: Sellers;
+  uploadingPhoto: string;
   setStep: (step: string) => void;
   addReceipt: () => void;
   setParentSeller: (seller: Seller | undefined) => void;
@@ -61,7 +62,6 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
     Z: useRef(null),
   };
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const [error, setError] = useState("");
@@ -121,138 +121,157 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
 
   const validate = () => {
     setError("");
-
-    if (!seller) {
-      setError("seller");
-    } else {
-      addReceipt();
-      history.push("/");
-    }
+    !seller ? setError("seller") : addReceipt();
   };
 
   const listHeight = window.screen.height / 2;
   const addNewSellerInput: Ref = useRef(null);
 
   return (
-    <IonContent className="ion-padding-end">
-      <IonGrid>
-        <IonRow>
-          <IonCol>
-            <IonItem>
-              <IonLabel position="stacked">Sellers:</IonLabel>
-              <IonRow style={{ width: "100%" }}>
-                <IonCol className="ion-no-padding">
-                  <IonInput
-                    ref={addNewSellerInput}
-                    type="text"
-                    value={newSeller}
-                    placeholder="Add New Seller"
-                    onIonChange={(e) => setNewSeller(e.detail.value!)}
-                    onKeyPress={(e) =>
-                      e.key === "Enter" ? blurIonInput(addNewSellerInput) : ""
-                    }
-                  ></IonInput>
-                </IonCol>
-              </IonRow>
-            </IonItem>
-          </IonCol>
-          <IonCol size="auto" className="ion-text-right ion-margin-top">
-            <IonCol size="auto" className="ion-no-padding">
-              <IonButton size="default" color="success" onClick={addNewSeller}>
-                <IonIcon icon={addOutline} />
-              </IonButton>
+    <>
+      {props.uploadingPhoto && props.uploadingPhoto === "uploading" && (
+        <IonProgressBar type="indeterminate"></IonProgressBar>
+      )}
+      <IonContent className="ion-padding-end">
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="stacked">Sellers:</IonLabel>
+                <IonRow style={{ width: "100%" }}>
+                  <IonCol className="ion-no-padding">
+                    <IonInput
+                      ref={addNewSellerInput}
+                      type="text"
+                      value={newSeller}
+                      placeholder="Add New Seller"
+                      onIonChange={(e) => setNewSeller(e.detail.value!)}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" ? blurIonInput(addNewSellerInput) : ""
+                      }
+                    ></IonInput>
+                  </IonCol>
+                </IonRow>
+              </IonItem>
             </IonCol>
-          </IonCol>
-        </IonRow>
-        {error === "newSeller" && (
+            <IonCol size="auto" className="ion-text-right ion-margin-top">
+              <IonCol size="auto" className="ion-no-padding">
+                <IonButton
+                  size="default"
+                  color="success"
+                  onClick={addNewSeller}
+                >
+                  <IonIcon icon={addOutline} />
+                </IonButton>
+              </IonCol>
+            </IonCol>
+          </IonRow>
+          {error === "newSeller" && (
+            <IonText color="danger">
+              <span className="ion-margin ion-padding">
+                Please add a seller name.
+              </span>
+            </IonText>
+          )}
+        </IonGrid>
+        <div className="wrapper">
+          <div className="container js-abc ion-padding-start">
+            <div style={{ touchAction: "none" }}>
+              <ul
+                id="alphaList"
+                onTouchMove={handlePan}
+                className="abc js-abc-nav"
+                style={{ height: listHeight }}
+              >
+                {Object.keys(alpha).map((letter) => {
+                  if (Object.keys(sellerOptions).includes(letter)) {
+                    return (
+                      <small key={letter}>
+                        <li>{letter}</li>
+                      </small>
+                    );
+                  }
+                })}
+              </ul>
+            </div>
+
+            <IonList style={{ height: listHeight, overflowY: "scroll" }}>
+              <IonRadioGroup
+                value={seller}
+                onIonChange={(e) => setSelectedSeller(e.detail.value)}
+              >
+                {Object.keys(sellerOptions).length > 0 &&
+                  Object.keys(sellerOptions).map((letter, i) => {
+                    return (
+                      <div key={i} className="ion-padding-start">
+                        <div className="text" ref={alpha[letter]}>
+                          {letter}
+                        </div>
+                        {sellerOptions[letter].map((seller, i) => {
+                          return (
+                            <IonItem lines="none" key={i}>
+                              <IonLabel className="ion-text-capitalize">
+                                {seller.name}
+                              </IonLabel>
+                              <IonRadio slot="start" value={seller.id} />
+                            </IonItem>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+              </IonRadioGroup>
+            </IonList>
+          </div>
+        </div>
+
+        <br />
+
+        {error === "seller" && (
           <IonText color="danger">
             <span className="ion-margin ion-padding">
-              Please add a seller name.
+              Please select a seller.
             </span>
           </IonText>
         )}
-      </IonGrid>
-      <div className="wrapper">
-        <div className="container js-abc ion-padding-start">
-          <div style={{ touchAction: "none" }}>
-            <ul
-              id="alphaList"
-              onTouchMove={handlePan}
-              className="abc js-abc-nav"
-              style={{ height: listHeight }}
+
+        <IonRow className="ion-padding-start ion-padding-top">
+          <IonCol size="12">
+            <IonButton
+              color="success"
+              expand="block"
+              onClick={validate}
+              disabled={props.uploadingPhoto === "uploading"}
             >
-              {Object.keys(alpha).map((letter) => {
-                if (Object.keys(sellerOptions).includes(letter)) {
-                  return (
-                    <small key={letter}>
-                      <li>{letter}</li>
-                    </small>
-                  );
-                }
-              })}
-            </ul>
-          </div>
-
-          <IonList style={{ height: listHeight, overflowY: "scroll" }}>
-            <IonRadioGroup
-              value={seller}
-              onIonChange={(e) => setSelectedSeller(e.detail.value)}
+              Save
+            </IonButton>
+          </IonCol>
+          <IonCol size="12">
+            <IonButton
+              fill="outline"
+              color="success"
+              expand="block"
+              onClick={() => setStep("ADD_RECEIPT_DETAILS")}
+              disabled={props.uploadingPhoto === "uploading"}
             >
-              {Object.keys(sellerOptions).length > 0 &&
-                Object.keys(sellerOptions).map((letter, i) => {
-                  return (
-                    <div key={i} className="ion-padding-start">
-                      <div className="text" ref={alpha[letter]}>
-                        {letter}
-                      </div>
-                      {sellerOptions[letter].map((seller, i) => {
-                        return (
-                          <IonItem lines="none" key={i}>
-                            <IonLabel className="ion-text-capitalize">
-                              {seller.name}
-                            </IonLabel>
-                            <IonRadio slot="start" value={seller.id} />
-                          </IonItem>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-            </IonRadioGroup>
-          </IonList>
-        </div>
-      </div>
-
-      <br />
-
-      {error === "seller" && (
-        <IonText color="danger">
-          <span className="ion-margin ion-padding">
-            Please select a seller.
-          </span>
-        </IonText>
-      )}
-
-      <IonRow className="ion-padding-start ion-padding-top">
-        <IonCol size="12">
-          <IonButton color="success" expand="block" onClick={validate}>
-            Save
-          </IonButton>
-        </IonCol>
-        <IonCol size="12">
-          <IonButton
-            fill="outline"
-            color="success"
-            expand="block"
-            onClick={() => setStep("ADD_RECEIPT_DETAILS")}
-          >
-            Back
-          </IonButton>
-        </IonCol>
-      </IonRow>
-      <br />
-    </IonContent>
+              Back
+            </IonButton>
+          </IonCol>
+        </IonRow>
+        <br />
+      </IonContent>
+    </>
   );
 };
 
-export default AddReceiptSeller;
+const mapStateToProps = (state: {
+  receiptsReducer: {
+    upload: string;
+  };
+}) => {
+  return {
+    uploadingPhoto: state.receiptsReducer.upload,
+  };
+};
+
+export default connect(mapStateToProps)(AddReceiptSeller);
