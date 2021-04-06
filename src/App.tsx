@@ -7,11 +7,14 @@ import {
   IonTabBar,
   IonTabButton,
   IonRouterOutlet,
+  IonSplitPane,
 } from "@ionic/react";
 
 import { IonReactRouter } from "@ionic/react-router";
 
 import { receiptOutline, statsChartOutline } from "ionicons/icons";
+
+import Menu from "./_components/Menu";
 
 import Receipts from "./_pages/Receipts";
 import Settings from "./_pages/Settings";
@@ -41,31 +44,33 @@ import "./theme/variables.css";
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/add" component={AddReceipt} />
-          <Route path="/view/:id" component={ViewReceipt} />
-          <Route path="/receipts" component={Receipts} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/manage/sellers" component={ManageSellers} />
-          <Route exact path="/deleted">
-            <Redirect to="/receipts" />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/receipts" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="receipts" href="/receipts">
-            <IonIcon icon={receiptOutline} />
-            <IonLabel>Receipts</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="stats" href="/stats">
-            <IonIcon icon={statsChartOutline} />
-            <IonLabel>Budget Stats</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
+      <IonSplitPane contentId="main">
+        <Menu />
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route path="/add" component={AddReceipt} />
+            <Route path="/view/:id" component={ViewReceipt} />
+            <Route path="/receipts" component={Receipts} />
+            <Route path="/settings" component={Settings} />
+            <Route path="/manage/sellers" component={ManageSellers} />
+            <Route exact path="/">
+              <Redirect to="/receipts" />
+            </Route>
+          </IonRouterOutlet>
+
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="receipts" href="/receipts">
+              <IonIcon icon={receiptOutline} />
+              <IonLabel>Receipts</IonLabel>
+            </IonTabButton>
+
+            <IonTabButton tab="stats" href="/stats">
+              <IonIcon icon={statsChartOutline} />
+              <IonLabel>Budget Stats</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </IonSplitPane>
     </IonReactRouter>
   </IonApp>
 );

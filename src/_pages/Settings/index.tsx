@@ -9,10 +9,11 @@ import {
   IonButton,
   IonContent,
   IonToolbar,
+  IonButtons,
 } from "@ionic/react";
 
 import React from "react";
-import { chevronForwardOutline, bagHandleOutline } from "ionicons/icons";
+import { chevronBackOutline, bagHandleOutline } from "ionicons/icons";
 
 const Settings: React.FC = () => {
   return (
@@ -20,21 +21,20 @@ const Settings: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader>
           <IonToolbar color="success">
+            <IonButtons slot="start">
+              <IonButton
+                slot="start"
+                fill="clear"
+                routerLink="/"
+                routerDirection="root"
+              >
+                <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
+              </IonButton>
+            </IonButtons>
+
             <IonTitle size="large" className="ion-text-center">
               Settings
             </IonTitle>
-
-            <IonButton
-              slot="end"
-              fill="clear"
-              routerLink="/"
-              routerDirection="root"
-            >
-              <IonIcon
-                icon={chevronForwardOutline}
-                style={{ color: "white" }}
-              />
-            </IonButton>
           </IonToolbar>
         </IonHeader>
 

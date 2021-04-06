@@ -3,6 +3,7 @@ import {
   IonCol,
   IonList,
   IonItem,
+  IonPage,
   IonIcon,
   IonGrid,
   IonText,
@@ -13,18 +14,17 @@ import {
   IonButton,
   IonContent,
   IonToolbar,
-  IonPage,
+  IonButtons,
 } from "@ionic/react";
 import "./ManageSellers.css";
 
 import React, { useState, useRef, useEffect } from "react";
 
 import { useHaptics } from "../../_hooks/useHaptics";
-import { useHistory } from "react-router-dom";
-import { addOutline } from "ionicons/icons";
+import { Sellers, Ref } from "../../_helpers/types";
 import { sellerActions } from "../../_actions/sellerActions";
-import { Sellers, Seller, Ref } from "../../_helpers/types";
 import { useDispatch, connect } from "react-redux";
+import { addOutline, chevronBackOutline } from "ionicons/icons";
 
 type Props = {
   sellerOptions: Sellers;
@@ -61,11 +61,9 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     Z: useRef(null),
   };
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const [error, setError] = useState("");
-  const [seller, setSeller] = useState("");
   const [letter, setLetter] = useState("");
   const [newSeller, setNewSeller] = useState("");
 
@@ -87,13 +85,6 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     } else {
       setError("newSeller");
     }
-  };
-
-  const setSelectedSeller = (id: string) => {
-    // const sellers = Object.values(sellerOptions).flat(1);
-    // const selectedSeller = sellers.find((current) => current.id === id);
-    // setSeller(id);
-    // setParentSeller(selectedSeller);
   };
 
   const handlePan = (e: any) => {
@@ -126,6 +117,17 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
       <IonContent>
         <IonHeader>
           <IonToolbar color="success">
+            <IonButtons slot="start">
+              <IonButton
+                slot="start"
+                fill="clear"
+                routerLink="/Settings"
+                routerDirection="root"
+              >
+                <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
+              </IonButton>
+            </IonButtons>
+
             <IonTitle size="large" className="ion-text-center">
               Manage Sellers
             </IonTitle>
@@ -206,11 +208,13 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                       {sellerOptions[letter].map((seller, i) => {
                         return (
                           <IonItem
+                            key={i}
                             button
                             lines="none"
                             detail={true}
-                            key={i}
                             className="ion-padding-end"
+                            routerLink={`/manage/seller/${seller.id}`}
+                            routerDirection="root"
                           >
                             <h5>
                               <IonLabel className="ion-text-capitalize">

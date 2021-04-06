@@ -17,6 +17,11 @@ import {
   IonCardHeader,
   IonCardContent,
   IonRefresherContent,
+  IonMenu,
+  IonList,
+  IonItem,
+  IonSplitPane,
+  IonMenuButton,
 } from "@ionic/react";
 
 import {
@@ -32,6 +37,7 @@ import sadMoney from "../../_assets/sadMoney.jpeg";
 import ListReceipts from "./ListReceipts";
 
 import { connect, useDispatch } from "react-redux";
+import { menuController } from "@ionic/core";
 import { receiptActions } from "../../_actions/receiptActions";
 import { Receipt } from "../../_helpers/types";
 
@@ -60,29 +66,25 @@ const Receipts: React.FC<Props> = (props: Props) => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="success">
-          <IonButtons slot="start" className="ion-padding">
-            <IonButton
-              fill="clear"
-              routerLink="/settings"
-              routerDirection="root"
-            >
-              <IonIcon icon={settingsOutline} style={{ color: "white" }} />
-            </IonButton>
-          </IonButtons>
-
-          <IonTitle size="large" className="ion-text-center">
-            💰 M👀LA&nbsp;
-          </IonTitle>
-
-          <IonButton slot="end" fill="clear">
-            <IonIcon icon={filterOutline} style={{ color: "white" }} />
-          </IonButton>
-        </IonToolbar>
-      </IonHeader>
-
       <IonContent>
+        <IonHeader>
+          <IonToolbar color="success">
+            <IonButtons slot="start" className="ion-padding">
+              <IonButton fill="clear" onClick={() => menuController.open()}>
+                <IonIcon icon={settingsOutline} style={{ color: "white" }} />
+              </IonButton>
+            </IonButtons>
+
+            <IonTitle size="large" className="ion-text-center">
+              💰 M👀LA&nbsp;
+            </IonTitle>
+
+            <IonButton slot="end" fill="clear">
+              <IonIcon icon={filterOutline} style={{ color: "white" }} />
+            </IonButton>
+          </IonToolbar>
+        </IonHeader>
+
         <IonRefresher slot="fixed" onIonRefresh={refreshReceipts}>
           <IonRefresherContent
             pullingIcon={chevronDownCircleOutline}
@@ -103,7 +105,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
           message={"Please wait..."}
         />
 
-        {!props.loading && props.request === "failed" && !props.receipts && (
+        {props.request === "failed" && receiptsNotRetrieved() && (
           <FadeIn>
             <IonCard className="ion-margin-top">
               <IonCardHeader>
