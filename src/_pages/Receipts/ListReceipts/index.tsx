@@ -132,12 +132,16 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                           </IonThumbnail>
                         ) : (
                           <IonIcon
-                            color="large"
                             icon={imageOutline}
                             className="ion-padding"
                           />
                         )}
-                        <IonLabel onClick={() => viewReceipt(receipt.id)}>
+                        <IonLabel
+                          onClick={() => viewReceipt(receipt.id)}
+                          className={
+                            receipt.hasPhoto ? "" : "ion-padding-start"
+                          }
+                        >
                           <IonRow>
                             <IonCol size="auto">
                               {moment(receipt.date).format("ddd, Do")}

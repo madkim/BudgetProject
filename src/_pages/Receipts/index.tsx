@@ -35,6 +35,7 @@ import ListReceipts from "./ListReceipts";
 import { connect, useDispatch } from "react-redux";
 import { menuController } from "@ionic/core";
 import { receiptActions } from "../../_actions/receiptActions";
+import { useHaptics } from "../../_hooks/useHaptics";
 import { Receipt } from "../../_helpers/types";
 
 interface Props {
@@ -46,6 +47,7 @@ interface Props {
 
 const Receipts: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const { impactMedium } = useHaptics();
 
   useEffect(() => {
     if (receiptsNotRetrieved()) {
@@ -58,6 +60,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
   };
 
   const refreshReceipts = (e: any) => {
+    impactMedium();
     dispatch(receiptActions.refreshReceipts(e));
   };
 
