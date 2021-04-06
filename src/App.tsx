@@ -14,12 +14,11 @@ import { IonReactRouter } from "@ionic/react-router";
 
 import { receiptOutline, statsChartOutline } from "ionicons/icons";
 
-import Menu from "./_components/Menu";
-
 import Receipts from "./_pages/Receipts";
 import Settings from "./_pages/Settings";
 import AddReceipt from "./_pages/Receipts/AddReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
+import EditSeller from "./_pages/Settings/EditSeller";
 import ManageSellers from "./_pages/Settings/ManageSellers";
 
 /* Core CSS required for Ionic components to work properly */
@@ -45,14 +44,16 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonSplitPane contentId="main">
-        <Menu />
+        <Settings />
+
         <IonTabs>
-          <IonRouterOutlet>
+          <IonRouterOutlet id="main">
             <Route path="/add" component={AddReceipt} />
             <Route path="/view/:id" component={ViewReceipt} />
             <Route path="/receipts" component={Receipts} />
             <Route path="/settings" component={Settings} />
             <Route path="/manage/sellers" component={ManageSellers} />
+            <Route path="/manage/seller/:id" component={EditSeller} />
             <Route exact path="/">
               <Redirect to="/receipts" />
             </Route>

@@ -1,61 +1,48 @@
+import React from "react";
+import { withRouter } from "react-router";
+
 import {
   IonIcon,
-  IonPage,
-  IonList,
   IonItem,
+  IonList,
+  IonMenu,
   IonLabel,
-  IonTitle,
   IonHeader,
-  IonButton,
-  IonContent,
   IonToolbar,
-  IonButtons,
+  IonContent,
+  IonMenuToggle,
 } from "@ionic/react";
 
-import React from "react";
-import { chevronBackOutline, bagHandleOutline } from "ionicons/icons";
+import { bagHandleOutline } from "ionicons/icons";
 
-const Settings: React.FC = () => {
+const Menu: React.FC = () => {
   return (
-    <IonPage>
-      <IonContent fullscreen>
-        <IonHeader>
-          <IonToolbar color="success">
-            <IonButtons slot="start">
-              <IonButton
-                slot="start"
-                fill="clear"
-                routerLink="/"
-                routerDirection="root"
-              >
-                <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
-              </IonButton>
-            </IonButtons>
-
-            <IonTitle size="large" className="ion-text-center">
-              Settings
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-
+    <IonMenu type="overlay" content-id="main">
+      <IonHeader>
+        <IonToolbar
+          color="success"
+          className="ion-padding-horizontal"
+          style={{ paddingBottom: ".2em" }}
+        >
+          <h1>
+            <IonLabel>Settings</IonLabel>
+          </h1>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
         <IonList>
-          <IonItem
-            button
-            detail={false}
-            routerLink="/manage/sellers"
-            routerDirection="root"
-          >
-            <h3>
-              <IonLabel>
-                <IonIcon icon={bagHandleOutline} />
-                &nbsp; Manage Sellers
-              </IonLabel>
-            </h3>
-          </IonItem>
+          <IonMenuToggle auto-hide="false">
+            <IonItem button routerLink="/manage/sellers" routerDirection="root">
+              <IonIcon slot="start" icon={bagHandleOutline}></IonIcon>
+              <h5>
+                <IonLabel>Manage Sellers</IonLabel>
+              </h5>
+            </IonItem>
+          </IonMenuToggle>
         </IonList>
       </IonContent>
-    </IonPage>
+    </IonMenu>
   );
 };
 
-export default Settings;
+export default withRouter(Menu);
