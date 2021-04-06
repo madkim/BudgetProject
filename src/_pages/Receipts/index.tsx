@@ -63,25 +63,25 @@ const Receipts: React.FC<Props> = (props: Props) => {
 
   return (
     <IonPage>
-      <IonContent>
-        <IonHeader>
-          <IonToolbar color="success">
-            <IonButtons slot="start" className="ion-padding">
-              <IonButton fill="clear" onClick={() => menuController.open()}>
-                <IonIcon icon={settingsOutline} style={{ color: "white" }} />
-              </IonButton>
-            </IonButtons>
-
-            <IonTitle size="large" className="ion-text-center">
-              💰 M👀LA&nbsp;
-            </IonTitle>
-
-            <IonButton slot="end" fill="clear">
-              <IonIcon icon={filterOutline} style={{ color: "white" }} />
+      <IonHeader>
+        <IonToolbar color="success">
+          <IonButtons slot="start" className="ion-padding">
+            <IonButton fill="clear" onClick={() => menuController.open()}>
+              <IonIcon icon={settingsOutline} style={{ color: "white" }} />
             </IonButton>
-          </IonToolbar>
-        </IonHeader>
+          </IonButtons>
 
+          <IonTitle size="large" className="ion-text-center">
+            💰 M👀LA&nbsp;
+          </IonTitle>
+
+          <IonButton slot="end" fill="clear">
+            <IonIcon icon={filterOutline} style={{ color: "white" }} />
+          </IonButton>
+        </IonToolbar>
+      </IonHeader>
+
+      <IonContent>
         <IonRefresher slot="fixed" onIonRefresh={refreshReceipts}>
           <IonRefresherContent
             pullingIcon={chevronDownCircleOutline}
