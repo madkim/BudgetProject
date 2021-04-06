@@ -45,6 +45,7 @@ const EditSeller: React.FC = () => {
       element.blur();
     });
   };
+  const buttonsMarginTop = window.screen.height / 2;
 
   return (
     <IonPage>
@@ -104,32 +105,35 @@ const EditSeller: React.FC = () => {
           </IonRow>
         </IonGrid>
 
-        <IonRow className="ion-padding-horizontal">
-          <IonCol size="12">
-            <IonButton
-              fill="outline"
-              color="danger"
-              expand="block"
-              onClick={deleteSeller}
-            >
-              Delete Seller
-            </IonButton>
-          </IonCol>
-        </IonRow>
+        <IonGrid style={{ marginTop: buttonsMarginTop }}>
+          <IonRow className="ion-padding-horizontal">
+            <IonCol size="12">
+              <IonButton
+                fill="outline"
+                color="danger"
+                expand="block"
+                onClick={deleteSeller}
+              >
+                Delete Seller
+              </IonButton>
+            </IonCol>
+          </IonRow>
 
-        <IonRow className="ion-padding-horizontal ion-padding-top">
-          <IonCol size="12">
-            <IonButton
-              fill="solid"
-              color="success"
-              expand="block"
-              routerLink="/manage/sellers"
-              routerDirection="root"
-            >
-              Back
-            </IonButton>
-          </IonCol>
-        </IonRow>
+          <IonRow className="ion-padding-horizontal ion-padding-top">
+            <IonCol size="12">
+              <IonButton
+                fill="solid"
+                color="success"
+                expand="block"
+                routerLink="/manage/sellers"
+                routerDirection="root"
+              >
+                Back
+              </IonButton>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+
         <br />
       </IonContent>
     </IonPage>

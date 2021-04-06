@@ -34,9 +34,9 @@ const Menu: React.FC = () => {
           <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/sellers" routerDirection="root">
               <IonIcon slot="start" icon={bagHandleOutline}></IonIcon>
-              <h5>
+              <h3>
                 <IonLabel>Manage Sellers</IonLabel>
-              </h5>
+              </h3>
             </IonItem>
           </IonMenuToggle>
         </IonList>
