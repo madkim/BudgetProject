@@ -118,7 +118,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const listHeight = window.screen.height / 1.6;
+  const listHeight = window.screen.height / 1.8;
   const addNewSellerInput: Ref = useRef(null);
 
   return (
@@ -243,7 +243,8 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
               fill="solid"
               color="success"
               expand="block"
-              onClick={() => props.setShowModal(false)}
+              routerLink="/settings"
+              routerDirection="root"
             >
               Done
             </IonButton>

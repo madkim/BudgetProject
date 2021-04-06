@@ -9,20 +9,12 @@ import {
   IonButton,
   IonContent,
   IonToolbar,
-  IonModal,
 } from "@ionic/react";
 
-import React, { useState } from "react";
-import ManageSellers from "./ManageSellers";
+import React from "react";
 import { chevronForwardOutline, bagHandleOutline } from "ionicons/icons";
 
-type Props = {
-  setShowModal: (value: boolean) => void;
-};
-
-const Settings: React.FC<Props> = (props: Props) => {
-  const [showManageSellersModal, setShowManageSellersModal] = useState(false);
-
+const Settings: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
@@ -35,7 +27,8 @@ const Settings: React.FC<Props> = (props: Props) => {
             <IonButton
               slot="end"
               fill="clear"
-              onClick={() => props.setShowModal(false)}
+              routerLink="/"
+              routerDirection="root"
             >
               <IonIcon
                 icon={chevronForwardOutline}
@@ -49,7 +42,8 @@ const Settings: React.FC<Props> = (props: Props) => {
           <IonItem
             button
             detail={false}
-            onClick={() => setShowManageSellersModal(true)}
+            routerLink="/manage/sellers"
+            routerDirection="root"
           >
             <h3>
               <IonLabel>
@@ -59,10 +53,6 @@ const Settings: React.FC<Props> = (props: Props) => {
             </h3>
           </IonItem>
         </IonList>
-
-        <IonModal isOpen={showManageSellersModal}>
-          <ManageSellers setShowModal={setShowManageSellersModal} />
-        </IonModal>
       </IonContent>
     </IonPage>
   );

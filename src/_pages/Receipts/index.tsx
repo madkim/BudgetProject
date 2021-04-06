@@ -16,9 +16,7 @@ import {
   IonRefresher,
   IonCardHeader,
   IonCardContent,
-  IonCardSubtitle,
   IonRefresherContent,
-  IonModal,
 } from "@ionic/react";
 
 import {
@@ -28,10 +26,9 @@ import {
   chevronDownCircleOutline,
 } from "ionicons/icons";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
 import sadMoney from "../../_assets/sadMoney.jpeg";
-import Settings from "../Settings";
 import ListReceipts from "./ListReceipts";
 
 import { connect, useDispatch } from "react-redux";
@@ -46,11 +43,16 @@ interface Props {
 
 const Receipts: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   useEffect(() => {
-    dispatch(receiptActions.getAllReceipts());
+    if (receiptsNotRetrieved()) {
+      dispatch(receiptActions.getAllReceipts());
+    }
   }, []);
+
+  const receiptsNotRetrieved = () => {
+    return Object.keys(props.receipts).length === 0;
+  };
 
   const refreshReceipts = (e: any) => {
     dispatch(receiptActions.refreshReceipts(e));
@@ -60,8 +62,12 @@ const Receipts: React.FC<Props> = (props: Props) => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="success">
-          <IonButtons slot="start" className="ion-padding-top">
-            <IonButton fill="clear" onClick={() => setShowSettingsModal(true)}>
+          <IonButtons slot="start" className="ion-padding">
+            <IonButton
+              fill="clear"
+              routerLink="/settings"
+              routerDirection="root"
+            >
               <IonIcon icon={settingsOutline} style={{ color: "white" }} />
             </IonButton>
           </IonButtons>
@@ -86,19 +92,18 @@ const Receipts: React.FC<Props> = (props: Props) => {
           ></IonRefresherContent>
         </IonRefresher>
 
-        <IonModal isOpen={showSettingsModal}>
-          <Settings setShowModal={setShowSettingsModal} />
-        </IonModal>
-
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
           <IonFabButton color="success" routerLink="/add">
             <IonIcon icon={add} />
           </IonFabButton>
         </IonFab>
 
-        <IonLoading isOpen={props.loading} message={"Please wait..."} />
+        <IonLoading
+          isOpen={props.loading && receiptsNotRetrieved()}
+          message={"Please wait..."}
+        />
 
-        {!props.loading && props.request === "failed" && (
+        {!props.loading && props.request === "failed" && !props.receipts && (
           <FadeIn>
             <IonCard className="ion-margin-top">
               <IonCardHeader>
