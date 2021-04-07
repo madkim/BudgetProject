@@ -16,6 +16,7 @@ import {
   IonToolbar,
   IonButtons,
   IonSpinner,
+  IonSearchbar,
 } from "@ionic/react";
 
 import {
@@ -73,6 +74,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
   const history = useHistory();
 
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const [letter, setLetter] = useState("");
   const [clicked, setClicked] = useState("");
   const [newSeller, setNewSeller] = useState("");
@@ -144,25 +146,24 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
 
   return (
     <IonPage>
-      <IonContent>
-        <IonHeader>
-          <IonToolbar color="success">
-            <IonButtons slot="start">
-              <IonButton
-                slot="start"
-                fill="clear"
-                routerLink="/"
-                routerDirection="root"
-              >
-                <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
-              </IonButton>
-            </IonButtons>
-            <IonTitle size="large" className="ion-text-center">
-              Manage Sellers
-            </IonTitle>
-          </IonToolbar>
-        </IonHeader>
-
+      <IonHeader>
+        <IonToolbar color="success">
+          <IonButtons slot="start">
+            <IonButton
+              slot="start"
+              fill="clear"
+              routerLink="/"
+              routerDirection="root"
+            >
+              <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle size="large" className="ion-text-center">
+            Manage Sellers
+          </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding-end">
         <IonGrid>
           <IonRow>
             <IonCol>
@@ -199,14 +200,27 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
           </IonRow>
 
           <IonText color="danger">
-            <span className="ion-margin ion-padding">
-              {error === "newSeller" && "Please add a seller name."}
-              {error === "sellerExists" &&
-                "A seller with this name already exists."}
-            </span>
+            {error === "newSeller" && (
+              <span className="ion-margin ion-padding">
+                Please add a seller name.
+              </span>
+            )}
+            {error === "sellerExists" && (
+              <span className="ion-margin ion-padding">
+                A seller with this name already exists.
+              </span>
+            )}
           </IonText>
         </IonGrid>
+
         <div className="wrapper">
+          <div className="ion-padding-horizontal">
+            <IonSearchbar
+              value={search}
+              onIonChange={(e) => setSearch(e.detail.value!)}
+              showCancelButton="never"
+            ></IonSearchbar>
+          </div>
           <div className="container js-abc ion-padding-start">
             <div style={{ touchAction: "none" }}>
               <ul
@@ -229,58 +243,62 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
 
             <IonList style={{ height: listHeight, overflowY: "scroll" }}>
               {Object.keys(sellerOptions).length > 0 &&
-                Object.keys(sellerOptions).map((letter, i) => {
-                  return (
-                    <div key={i} className="ion-padding-horizontal">
-                      <div className="text" ref={alpha[letter]}>
-                        {letter}
+                Object.keys(sellerOptions)
+                  .filter((seller) =>
+                    search !== ""
+                      ? seller.charAt(0).toLowerCase() ===
+                        search.charAt(0).toLowerCase()
+                      : seller
+                  )
+                  .map((letter, i) => {
+                    return (
+                      <div key={i} className="ion-padding-horizontal">
+                        <div className="text" ref={alpha[letter]}>
+                          {letter}
+                        </div>
+                        {sellerOptions[letter]
+                          .filter((seller) =>
+                            seller.name
+                              .toLowerCase()
+                              .trim()
+                              .includes(search.toLowerCase().trim())
+                          )
+                          .map((seller, i) => {
+                            return (
+                              <IonItem
+                                key={i}
+                                button
+                                lines="none"
+                                detail={false}
+                                className="ion-padding-end"
+                                onClick={() => editSeller(seller.id)}
+                              >
+                                <h5>
+                                  <IonLabel className="ion-text-capitalize">
+                                    {seller.name}
+                                  </IonLabel>
+                                </h5>
+                                <IonCol className="ion-text-end">
+                                  {props.loading && clicked === seller.id ? (
+                                    <IonSpinner name="lines-small" />
+                                  ) : (
+                                    <IonIcon
+                                      color="medium"
+                                      icon={chevronForwardOutline}
+                                    />
+                                  )}
+                                </IonCol>
+                              </IonItem>
+                            );
+                          })}
                       </div>
-                      {sellerOptions[letter].map((seller, i) => {
-                        return (
-                          <IonItem
-                            key={i}
-                            button
-                            lines="none"
-                            detail={false}
-                            className="ion-padding-end"
-                            onClick={() => editSeller(seller.id)}
-                          >
-                            <h5>
-                              <IonLabel className="ion-text-capitalize">
-                                {seller.name}
-                              </IonLabel>
-                            </h5>
-                            <IonCol className="ion-text-end">
-                              {props.loading && clicked === seller.id ? (
-                                <IonSpinner name="lines-small" />
-                              ) : (
-                                <IonIcon
-                                  color="medium"
-                                  icon={chevronForwardOutline}
-                                />
-                              )}
-                            </IonCol>
-                          </IonItem>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
             </IonList>
           </div>
         </div>
 
-        <br />
-
-        {error === "seller" && (
-          <IonText color="danger">
-            <span className="ion-margin ion-padding">
-              Please select a seller.
-            </span>
-          </IonText>
-        )}
-
-        <IonRow className="ion-padding-horizontal ion-padding-top">
+        <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
             <IonButton
               fill="solid"
