@@ -141,7 +141,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
     !seller ? setError("seller") : addReceipt();
   };
 
-  const listHeight = window.screen.height / 2.1;
+  const listHeight = window.screen.height / 2.2;
   const addNewSellerInput: Ref = useRef(null);
 
   return (
@@ -154,9 +154,10 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
           <IonRow>
             <IonCol>
               <IonItem>
-                <IonLabel position="stacked">Sellers:</IonLabel>
+                <br />
                 <IonRow style={{ width: "100%" }}>
                   <IonCol className="ion-no-padding">
+                    <br />
                     <IonInput
                       ref={addNewSellerInput}
                       type="text"

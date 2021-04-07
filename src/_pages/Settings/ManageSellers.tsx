@@ -141,7 +141,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     dispatch(sellerActions.getSellerByID(id, history));
   };
 
-  const listHeight = window.screen.height / 1.8;
+  const listHeight = window.screen.height / 2;
   const addNewSellerInput: Ref = useRef(null);
 
   return (
@@ -163,6 +163,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
           </IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="ion-padding-end">
         <IonGrid>
           <IonRow>
