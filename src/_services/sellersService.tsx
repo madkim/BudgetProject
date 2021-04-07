@@ -6,6 +6,7 @@ export const sellersService = {
   getByID,
   getAll,
   addNew,
+  remove,
   rename,
 };
 function getByID(id: string) {
@@ -60,6 +61,21 @@ function addNew(newSellerName: string, sellerOptions: Sellers) {
       }
       return sellers;
     });
+}
+
+async function remove(id: string) {
+  const sellerRef = db.collection("sellers").doc(id);
+
+  const receiptsWithSeller = await db
+    .collection("receipts")
+    .where("seller", "==", sellerRef)
+    .get();
+
+  if (receiptsWithSeller.docs.length > 0) {
+    throw new Error("receiptsWithSeller");
+  } else {
+    db.collection("sellers").doc(id).delete();
+  }
 }
 
 function rename(id: string, newName: string) {

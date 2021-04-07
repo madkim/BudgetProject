@@ -69,8 +69,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
     let answer = window.confirm("Are you sure you want to delete this seller?");
 
     if (answer) {
-      // Check seller is not connected to any receipts
-      console.log("delete");
+      dispatch(sellerActions.deleteSeller(props.seller.id, history));
     }
   };
 
@@ -90,7 +89,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
               slot="start"
               fill="clear"
               routerLink="/manage/sellers"
-              routerDirection="root"
+              routerDirection="back"
             >
               <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
             </IonButton>
@@ -169,7 +168,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
                 color="success"
                 expand="block"
                 routerLink="/manage/sellers"
-                routerDirection="root"
+                routerDirection="back"
               >
                 Back
               </IonButton>

@@ -7,6 +7,7 @@ export const sellerActions = {
   getSellerByID,
   getAllSellers,
   addNewSeller,
+  deleteSeller,
   renameSeller,
 };
 
@@ -63,6 +64,31 @@ function addNewSeller(newSellerName: string, sellerOptions: Sellers) {
       .catch((error: Error) => {
         alert("Could not create seller. Please try again.");
         console.error("Error writing seller: ", error);
+      });
+  };
+}
+
+function deleteSeller(id: string, history: any) {
+  return (dispatch: Dispatch<any>) => {
+    dispatch({ type: sellerConstants.GET_SELLER_REQUEST, payload: "" });
+    sellersService
+      .remove(id)
+      .then(() => {
+        dispatch(getAllSellers());
+        history.goBack();
+        alert("Seller deleted!");
+      })
+      .catch((error: Error) => {
+        if (error.message === "receiptsWithSeller") {
+          alert("Could not delete seller. Seller is linked to receipts.");
+        } else {
+          alert("Could not delete seller. Please try again.");
+        }
+        dispatch({
+          type: sellerConstants.GET_SELLER_REQUEST_FAILURE,
+          payload: "",
+        });
+        console.error("Error deleting seller: ", error);
       });
   };
 }
