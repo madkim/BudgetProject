@@ -1,12 +1,34 @@
-import { Action, Sellers } from "../_helpers/types";
+import { Action, Sellers, Seller } from "../_helpers/types";
 import { sellerConstants } from "../_constants/sellerConstants";
 import { sellersService } from "../_services/sellersService";
 import { Dispatch } from "react";
 
 export const sellerActions = {
+  getSellerByID,
   getAllSellers,
   addNewSeller,
 };
+
+function getSellerByID(id: string, history: any) {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({ type: sellerConstants.GET_SELLER_REQUEST, payload: "" });
+    sellersService
+      .getByID(id)
+      .then((seller: Seller) => {
+        dispatch(success(seller));
+        history.push(`/manage/seller/${id}`);
+      })
+      .catch(() => {
+        alert("Could not retrieve seller at this time. Please try again.");
+      });
+  };
+  function success(seller: Seller) {
+    return {
+      type: sellerConstants.GET_SELLER_BY_ID,
+      payload: seller,
+    };
+  }
+}
 
 function getAllSellers() {
   return (dispatch: Dispatch<Action>) => {

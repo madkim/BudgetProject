@@ -42,6 +42,7 @@ export function receiptsReducer(state = initState, action: Action) {
   if (action.type === receiptConstants.ADD_NEW_RECEIPT) {
     return (state = {
       ...state,
+      loading: false,
       receipts: action.payload,
     });
   }
@@ -49,18 +50,21 @@ export function receiptsReducer(state = initState, action: Action) {
     return (state = {
       ...state,
       upload: "uploading",
+      loading: false,
     });
   }
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_FAILURE) {
     return (state = {
       ...state,
       upload: "failure",
+      loading: false,
     });
   }
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_SUCCESS) {
     return (state = {
       ...state,
       upload: "success",
+      loading: false,
     });
   }
   if (action.type === receiptConstants.DELETE_RECEIPT) {

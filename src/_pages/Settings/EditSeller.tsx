@@ -1,30 +1,42 @@
 import {
-  IonIcon,
+  IonRow,
+  IonCol,
+  IonItem,
+  IonGrid,
   IonPage,
+  IonIcon,
   IonTitle,
+  IonInput,
   IonHeader,
   IonButton,
   IonContent,
   IonToolbar,
   IonButtons,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonItem,
-  IonLabel,
-  IonInput,
 } from "@ionic/react";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { useDispatch, connect } from "react-redux";
 import { chevronBackOutline } from "ionicons/icons";
-import { Ref } from "../../_helpers/types";
+import { sellerActions } from "../../_actions/sellerActions";
+import { Seller, Ref } from "../../_helpers/types";
 
-const EditSeller: React.FC = () => {
-  const [seller, setSeller] = useState("Forever 21");
+interface Props {
+  seller: Seller;
+}
+
+const EditSeller: React.FC<Props> = (props: Props) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { id } = useParams<{ id: string }>();
+
+  const [seller, setSeller] = useState(props.seller.name);
   const renameInput: Ref = useRef(null);
 
   useEffect(() => {
-    // get seller by id
+    if (Object.keys(props.seller).length === 0) {
+      dispatch(sellerActions.getSellerByID(id, history));
+    }
   }, []);
 
   const renameSeller = () => {
@@ -75,7 +87,7 @@ const EditSeller: React.FC = () => {
               <IonItem>
                 <br />
                 <IonRow style={{ width: "100%" }}>
-                  <IonCol className="ion-no-padding">
+                  <IonCol className="ion-no-padding ion-text-capitalize">
                     <br />
                     <IonInput
                       ref={renameInput}
@@ -140,4 +152,10 @@ const EditSeller: React.FC = () => {
   );
 };
 
-export default EditSeller;
+const mapStateToProps = (state: { sellersReducer: { seller: Seller } }) => {
+  return {
+    seller: state.sellersReducer.seller,
+  };
+};
+
+export default connect(mapStateToProps)(EditSeller);

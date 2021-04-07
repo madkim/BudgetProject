@@ -15,18 +15,26 @@ import {
   IonContent,
   IonToolbar,
   IonButtons,
+  IonSpinner,
 } from "@ionic/react";
-import "./ManageSellers.css";
+
+import {
+  addOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+} from "ionicons/icons";
 
 import React, { useState, useRef, useEffect } from "react";
-
+import { useHistory } from "react-router-dom";
 import { useHaptics } from "../../_hooks/useHaptics";
 import { Sellers, Ref } from "../../_helpers/types";
 import { sellerActions } from "../../_actions/sellerActions";
 import { useDispatch, connect } from "react-redux";
-import { addOutline, chevronBackOutline } from "ionicons/icons";
+
+import "./ManageSellers.css";
 
 type Props = {
+  loading: boolean;
   sellerOptions: Sellers;
   setShowModal: (value: boolean) => void;
 };
@@ -62,9 +70,11 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
   };
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [error, setError] = useState("");
   const [letter, setLetter] = useState("");
+  const [clicked, setClicked] = useState("");
   const [newSeller, setNewSeller] = useState("");
 
   const { impactLight } = useHaptics();
@@ -109,6 +119,11 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     });
   };
 
+  const editSeller = (id: string) => {
+    setClicked(id);
+    dispatch(sellerActions.getSellerByID(id, history));
+  };
+
   const listHeight = window.screen.height / 1.8;
   const addNewSellerInput: Ref = useRef(null);
 
@@ -117,6 +132,16 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
       <IonContent>
         <IonHeader>
           <IonToolbar color="success">
+            <IonButtons slot="start">
+              <IonButton
+                slot="start"
+                fill="clear"
+                routerLink="/"
+                routerDirection="root"
+              >
+                <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
+              </IonButton>
+            </IonButtons>
             <IonTitle size="large" className="ion-text-center">
               Manage Sellers
             </IonTitle>
@@ -200,16 +225,25 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                             key={i}
                             button
                             lines="none"
-                            detail={true}
+                            detail={false}
                             className="ion-padding-end"
-                            routerLink={`/manage/seller/${seller.id}`}
-                            routerDirection="root"
+                            onClick={() => editSeller(seller.id)}
                           >
                             <h5>
                               <IonLabel className="ion-text-capitalize">
                                 {seller.name}
                               </IonLabel>
                             </h5>
+                            <IonCol className="ion-text-end">
+                              {props.loading && clicked === seller.id ? (
+                                <IonSpinner name="lines-small" />
+                              ) : (
+                                <IonIcon
+                                  color="medium"
+                                  icon={chevronForwardOutline}
+                                />
+                              )}
+                            </IonCol>
                           </IonItem>
                         );
                       })}
@@ -250,9 +284,10 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  sellersReducer: { sellerOptions: Sellers };
+  sellersReducer: { sellerOptions: Sellers; loading: boolean };
 }) => {
   return {
+    loading: state.sellersReducer.loading,
     sellerOptions: state.sellersReducer.sellerOptions,
   };
 };

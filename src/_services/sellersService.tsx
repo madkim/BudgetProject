@@ -3,9 +3,19 @@ import { Sellers } from "../_helpers/types";
 import { db } from "../_helpers/firebase";
 
 export const sellersService = {
+  getByID,
   getAll,
   addNew,
 };
+function getByID(id: string) {
+  return db
+    .collection("sellers")
+    .doc(id)
+    .get()
+    .then((seller) => {
+      return { id: seller.id, name: seller.data()!.name };
+    });
+}
 
 function getAll() {
   const data: Sellers = {};

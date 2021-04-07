@@ -199,7 +199,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
             <IonCol>
               <IonItem>
                 <IonLabel position="stacked">Seller:</IonLabel>
-                <IonLabel position="stacked">
+                <IonLabel position="stacked" className="ion-text-capitalize">
                   {receipt.seller && receipt.seller.name}
                 </IonLabel>
               </IonItem>
