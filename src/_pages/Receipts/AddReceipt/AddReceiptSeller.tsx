@@ -13,6 +13,7 @@ import {
   IonGrid,
   IonText,
   IonProgressBar,
+  IonSearchbar,
 } from "@ionic/react";
 import "./AddReceiptSeller.css";
 
@@ -65,6 +66,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
 
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const [seller, setSeller] = useState("");
   const [letter, setLetter] = useState("");
   const [newSeller, setNewSeller] = useState("");
@@ -139,7 +141,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
     !seller ? setError("seller") : addReceipt();
   };
 
-  const listHeight = window.screen.height / 2;
+  const listHeight = window.screen.height / 2.1;
   const addNewSellerInput: Ref = useRef(null);
 
   return (
@@ -183,14 +185,27 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
           </IonRow>
 
           <IonText color="danger">
-            <span className="ion-margin ion-padding">
-              {error === "newSeller" && "Please add a seller name."}
-              {error === "sellerExists" &&
-                "A seller with this name already exists."}
-            </span>
+            {error === "newSeller" && (
+              <span className="ion-margin ion-padding">
+                Please add a seller name.
+              </span>
+            )}
+            {error === "sellerExists" && (
+              <span className="ion-margin ion-padding">
+                A seller with this name already exists.
+              </span>
+            )}
           </IonText>
         </IonGrid>
+
         <div className="wrapper">
+          <div className="ion-padding-horizontal">
+            <IonSearchbar
+              value={search}
+              onIonChange={(e) => setSearch(e.detail.value!)}
+              showCancelButton="never"
+            ></IonSearchbar>
+          </div>
           <div className="container js-abc ion-padding-start">
             <div style={{ touchAction: "none" }}>
               <ul
@@ -217,25 +232,39 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
                 onIonChange={(e) => setSelectedSeller(e.detail.value)}
               >
                 {Object.keys(sellerOptions).length > 0 &&
-                  Object.keys(sellerOptions).map((letter, i) => {
-                    return (
-                      <div key={i} className="ion-padding-start">
-                        <div className="text" ref={alpha[letter]}>
-                          {letter}
+                  Object.keys(sellerOptions)
+                    .filter((seller) =>
+                      search !== ""
+                        ? seller.charAt(0).toLowerCase() ===
+                          search.charAt(0).toLowerCase()
+                        : seller
+                    )
+                    .map((letter, i) => {
+                      return (
+                        <div key={i} className="ion-padding-start">
+                          <div className="text" ref={alpha[letter]}>
+                            {letter}
+                          </div>
+                          {sellerOptions[letter]
+                            .filter((seller) =>
+                              seller.name
+                                .toLowerCase()
+                                .trim()
+                                .includes(search.toLowerCase().trim())
+                            )
+                            .map((seller, i) => {
+                              return (
+                                <IonItem lines="none" key={i}>
+                                  <IonLabel className="ion-text-capitalize">
+                                    {seller.name}
+                                  </IonLabel>
+                                  <IonRadio slot="start" value={seller.id} />
+                                </IonItem>
+                              );
+                            })}
                         </div>
-                        {sellerOptions[letter].map((seller, i) => {
-                          return (
-                            <IonItem lines="none" key={i}>
-                              <IonLabel className="ion-text-capitalize">
-                                {seller.name}
-                              </IonLabel>
-                              <IonRadio slot="start" value={seller.id} />
-                            </IonItem>
-                          );
-                        })}
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
               </IonRadioGroup>
             </IonList>
           </div>
@@ -251,7 +280,7 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
           </IonText>
         )}
 
-        <IonRow className="ion-padding-start ion-padding-top">
+        <IonRow className="ion-padding-start ">
           <IonCol size="12">
             <IonButton
               color="success"
