@@ -12,6 +12,8 @@ import {
   IonContent,
   IonToolbar,
   IonButtons,
+  IonText,
+  IonLoading,
 } from "@ionic/react";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -19,35 +21,55 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, connect } from "react-redux";
 import { chevronBackOutline } from "ionicons/icons";
 import { sellerActions } from "../../_actions/sellerActions";
-import { Seller, Ref } from "../../_helpers/types";
+import { Seller, Sellers, Ref } from "../../_helpers/types";
 
 interface Props {
   seller: Seller;
+  sellers: Sellers;
+  loading: boolean;
 }
 
 const EditSeller: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { id } = useParams<{ id: string }>();
-
-  const [seller, setSeller] = useState(props.seller.name);
   const renameInput: Ref = useRef(null);
+
+  const [error, setError] = useState("");
+  const [seller, setSeller] = useState(props.seller.name);
+
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     if (Object.keys(props.seller).length === 0) {
-      dispatch(sellerActions.getSellerByID(id, history));
+      dispatch(sellerActions.getSellerByID(id, history, setSeller));
+    }
+    if (Object.keys(props.sellers).length === 0) {
+      dispatch(sellerActions.getAllSellers());
     }
   }, []);
 
   const renameSeller = () => {
-    // rename the seller name.
-    // check that seller doesn't already exist
+    setError("");
+    const { sellers } = props;
+    const sellerList = Object.values(sellers).flat(1);
+
+    if (
+      sellerList.find(
+        (current) =>
+          current.name.toLowerCase().trim() === seller.toLowerCase().trim()
+      )
+    ) {
+      setError("sellerExists");
+    } else {
+      dispatch(sellerActions.renameSeller(props.seller.id, seller));
+    }
   };
 
   const deleteSeller = () => {
     let answer = window.confirm("Are you sure you want to delete this seller?");
 
     if (answer) {
+      // Check seller is not connected to any receipts
       console.log("delete");
     }
   };
@@ -115,7 +137,16 @@ const EditSeller: React.FC<Props> = (props: Props) => {
               </IonCol>
             </IonCol>
           </IonRow>
+          {error === "sellerExists" && (
+            <IonText color="danger">
+              <span className="ion-margin ion-padding">
+                A seller with this name already exists.
+              </span>
+            </IonText>
+          )}
         </IonGrid>
+
+        <IonLoading isOpen={props.loading} message={"Please wait..."} />
 
         <IonGrid style={{ marginTop: buttonsMarginTop }}>
           <IonRow className="ion-padding-horizontal">
@@ -152,9 +183,13 @@ const EditSeller: React.FC<Props> = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: { sellersReducer: { seller: Seller } }) => {
+const mapStateToProps = (state: {
+  sellersReducer: { seller: Seller; sellerOptions: Sellers; loading: boolean };
+}) => {
   return {
     seller: state.sellersReducer.seller,
+    sellers: state.sellersReducer.sellerOptions,
+    loading: state.sellersReducer.loading,
   };
 };
 

@@ -79,14 +79,29 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
   }, [dispatch]);
 
   const addNewSeller = () => {
+    setError("");
     if (newSeller) {
-      setError("");
-      dispatch(sellerActions.addNewSeller(newSeller, sellerOptions));
-      blurIonInput(addNewSellerInput);
-      setNewSeller("");
+      if (nameUnique(newSeller)) {
+        dispatch(sellerActions.addNewSeller(newSeller, sellerOptions));
+        blurIonInput(addNewSellerInput);
+        setNewSeller("");
+      } else {
+        setError("sellerExists");
+      }
     } else {
       setError("newSeller");
     }
+  };
+
+  const nameUnique = (newSeller: string) => {
+    const sellerList = Object.values(sellerOptions).flat(1);
+
+    return sellerList.find(
+      (current) =>
+        current.name.toLowerCase().trim() === newSeller.toLowerCase().trim()
+    )
+      ? false
+      : true;
   };
 
   const setSelectedSeller = (id: string) => {
@@ -166,13 +181,14 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
               </IonCol>
             </IonCol>
           </IonRow>
-          {error === "newSeller" && (
-            <IonText color="danger">
-              <span className="ion-margin ion-padding">
-                Please add a seller name.
-              </span>
-            </IonText>
-          )}
+
+          <IonText color="danger">
+            <span className="ion-margin ion-padding">
+              {error === "newSeller" && "Please add a seller name."}
+              {error === "sellerExists" &&
+                "A seller with this name already exists."}
+            </span>
+          </IonText>
         </IonGrid>
         <div className="wrapper">
           <div className="container js-abc ion-padding-start">

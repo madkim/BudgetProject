@@ -1,21 +1,27 @@
+import { Dispatch, SetStateAction } from "react";
 import { Action, Sellers, Seller } from "../_helpers/types";
 import { sellerConstants } from "../_constants/sellerConstants";
 import { sellersService } from "../_services/sellersService";
-import { Dispatch } from "react";
 
 export const sellerActions = {
   getSellerByID,
   getAllSellers,
   addNewSeller,
+  renameSeller,
 };
 
-function getSellerByID(id: string, history: any) {
+function getSellerByID(
+  id: string,
+  history: any,
+  setSeller: Dispatch<SetStateAction<string>> = () => {}
+) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: sellerConstants.GET_SELLER_REQUEST, payload: "" });
     sellersService
       .getByID(id)
       .then((seller: Seller) => {
         dispatch(success(seller));
+        setSeller(seller.name);
         history.push(`/manage/seller/${id}`);
       })
       .catch(() => {
@@ -57,6 +63,26 @@ function addNewSeller(newSellerName: string, sellerOptions: Sellers) {
       .catch((error: Error) => {
         alert("Could not create seller. Please try again.");
         console.error("Error writing seller: ", error);
+      });
+  };
+}
+
+function renameSeller(id: string, newName: string) {
+  return (dispatch: Dispatch<any>) => {
+    dispatch({ type: sellerConstants.GET_SELLER_REQUEST, payload: "" });
+    sellersService
+      .rename(id, newName)
+      .then(() => {
+        dispatch(getAllSellers());
+        alert("Seller renamed!");
+      })
+      .catch((error: Error) => {
+        dispatch({
+          type: sellerConstants.GET_SELLER_REQUEST_FAILURE,
+          payload: "",
+        });
+        alert("Could not rename seller. Please try again.");
+        console.error("Error renaming seller: ", error);
       });
   };
 }

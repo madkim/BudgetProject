@@ -6,6 +6,7 @@ export const sellersService = {
   getByID,
   getAll,
   addNew,
+  rename,
 };
 function getByID(id: string) {
   return db
@@ -59,4 +60,8 @@ function addNew(newSellerName: string, sellerOptions: Sellers) {
       }
       return sellers;
     });
+}
+
+function rename(id: string, newName: string) {
+  return db.collection("sellers").doc(id).update({ name: newName });
 }

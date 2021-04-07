@@ -10,14 +10,13 @@ import {
   IonContent,
   IonToolbar,
   IonLoading,
-  IonFabButton,
   IonButtons,
+  IonFabButton,
   IonCardTitle,
   IonRefresher,
   IonCardHeader,
   IonCardContent,
   IonRefresherContent,
-  IonProgressBar,
 } from "@ionic/react";
 
 import {
