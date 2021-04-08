@@ -71,7 +71,11 @@ function addNew(newSellerName: any, sellerOptions: Sellers) {
           sellers = alphaSortKey(sellers);
         }
       } else {
-        sellers["#"].push(newSeller);
+        if ("#" in sellers) {
+          sellers["#"].push(newSeller);
+        } else {
+          sellers["#"] = [newSeller];
+        }
       }
 
       return sellers;
