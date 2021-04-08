@@ -131,8 +131,8 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const blurIonInput = (input: Ref) => {
-    input.current?.getInputElement().then((element) => {
+  const blurIonInput = (input: any) => {
+    input.current?.getInputElement().then((element: typeof input) => {
       element.blur();
     });
   };
@@ -144,6 +144,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
 
   const listHeight = window.screen.height / 2;
   const addNewSellerInput: Ref = useRef(null);
+  const searchInput: React.Ref<HTMLIonSearchbarElement> = useRef(null);
 
   return (
     <IonPage>
@@ -218,8 +219,12 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
         <div className="wrapper">
           <div className="ion-padding-horizontal">
             <IonSearchbar
+              ref={searchInput}
               value={search}
               onIonChange={(e) => setSearch(e.detail.value!)}
+              onKeyPress={(e) =>
+                e.key === "Enter" ? blurIonInput(searchInput) : ""
+              }
               showCancelButton="never"
             ></IonSearchbar>
           </div>

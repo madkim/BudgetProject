@@ -131,7 +131,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
         <IonCol>
           <IonItem lines="none">
             <IonThumbnail
-              style={{ height: "35vh", width: "100vw" }}
+              style={{ height: "30vh", width: "100vw" }}
               onClick={() =>
                 receipt.hasPhoto ? "veiwReceiptPhoto(receipt.photo)" : ""
               }

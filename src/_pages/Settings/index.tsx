@@ -15,7 +15,7 @@ import {
 
 import { bagHandleOutline } from "ionicons/icons";
 
-const Menu: React.FC = () => {
+const Settings: React.FC = () => {
   return (
     <IonMenu type="overlay" content-id="main">
       <IonHeader>
@@ -45,4 +45,4 @@ const Menu: React.FC = () => {
   );
 };
 
-export default withRouter(Menu);
+export default withRouter(Settings);
