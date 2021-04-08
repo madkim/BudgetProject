@@ -73,8 +73,8 @@ const Receipts: React.FC<Props> = (props: Props) => {
             </IonButton>
           </IonButtons>
 
-          <IonTitle size="large" className="ion-text-center">
-            💰 M👀LA&nbsp;
+          <IonTitle className="ion-text-center">
+            <h2>💰 M👀LA&nbsp;</h2>
           </IonTitle>
 
           <IonButton slot="end" fill="clear">

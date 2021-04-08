@@ -14,9 +14,10 @@ import { IonReactRouter } from "@ionic/react-router";
 
 import { receiptOutline, statsChartOutline } from "ionicons/icons";
 
-import Receipts from "./_pages/Receipts";
 import Settings from "./_pages/Settings";
+import Receipts from "./_pages/Receipts";
 import AddReceipt from "./_pages/Receipts/AddReceipt";
+import EditReceipt from "./_pages/Receipts/EditReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
 import EditSeller from "./_pages/Settings/EditSeller";
 import ManageSellers from "./_pages/Settings/ManageSellers";
@@ -50,6 +51,7 @@ const App: React.FC = () => (
           <IonRouterOutlet id="main">
             <Route path="/add" component={AddReceipt} />
             <Route path="/view/:id" component={ViewReceipt} />
+            <Route path="/edit/:id" component={EditReceipt} />
             <Route path="/receipts" component={Receipts} />
             <Route path="/settings" component={Settings} />
             <Route path="/manage/sellers" component={ManageSellers} />

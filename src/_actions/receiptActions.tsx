@@ -10,16 +10,19 @@ export const receiptActions = {
   getAllReceipts,
   addNewReceipt,
   deleteReceipt,
+  updateReceipt,
 };
 
-function getReceiptByID(id: string, history: any) {
+function getReceiptByID(id: string, history: any = "") {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
     receiptsService
       .getByID(id)
       .then((receipt: Receipt) => {
         dispatch(success(receipt));
-        history.push(`/view/${id}`);
+        if (history) {
+          history.push(`/view/${id}`);
+        }
       })
       .catch(() => {
         alert("Could not retrieve receipt at this time. Please try again.");
@@ -107,6 +110,8 @@ function addNewReceipt(
     };
   }
 }
+
+function updateReceipt(receipt: Receipt) {}
 
 function deleteReceipt(receipt: Receipt, goBack: any) {
   return (dispatch: Dispatch<Action>) => {

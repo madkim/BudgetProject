@@ -77,6 +77,10 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const dismissPopover = () => {
+    setShowPopover({ showPopover: false, event: undefined });
+  };
+
   const veiwReceiptPhoto = (photoUrl: string) => {
     if (photoUrl) {
       var options = {
@@ -97,7 +101,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
     if (answer) {
       dispatch(receiptActions.deleteReceipt(receipt, goBack));
     }
-    setShowPopover({ showPopover: false, event: undefined });
+    dismissPopover();
   };
 
   const { receipt } = props;
@@ -119,16 +123,15 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
           <IonPopover
             event={popoverState.event}
             isOpen={popoverState.showPopover}
-            onDidDismiss={() =>
-              setShowPopover({ showPopover: false, event: undefined })
-            }
+            onDidDismiss={() => dismissPopover()}
           >
             <IonList>
               <IonListHeader>Receipt</IonListHeader>
               <IonItem
                 button
                 detailIcon={createOutline}
-                href={`/edit/${receipt.id}`}
+                routerLink={`/edit/${receipt.id}`}
+                onClick={() => dismissPopover()}
               >
                 Edit
               </IonItem>
@@ -239,7 +242,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
               routerLink="/"
               routerDirection="back"
             >
-              Back
+              Done
             </IonButton>
           </IonCol>
         </IonRow>
