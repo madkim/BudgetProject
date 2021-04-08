@@ -1,5 +1,5 @@
 import { alphaSortValue, alphaSortKey } from "../_helpers/alphasort";
-import { Sellers } from "../_helpers/types";
+import { Sellers, Seller } from "../_helpers/types";
 import { db } from "../_helpers/firebase";
 
 export const sellersService = {
@@ -21,6 +21,7 @@ function getByID(id: string) {
 
 function getAll() {
   const data: Sellers = {};
+  const numbers: Seller[] = [];
   return db
     .collection("sellers")
     .orderBy("name", "asc")
@@ -31,34 +32,48 @@ function getAll() {
         const letter = name.charAt(0).toUpperCase();
         const curSeller = { id: seller.id, name: name };
 
-        if (data[letter]) {
-          data[letter].push(curSeller);
-          data[letter].sort(alphaSortValue);
+        if (isNaN(letter)) {
+          if (data[letter]) {
+            data[letter].push(curSeller);
+            data[letter].sort(alphaSortValue);
+          } else {
+            data[letter] = [curSeller];
+          }
         } else {
-          data[letter] = [curSeller];
+          numbers.push(curSeller);
         }
       });
       const unsorted = Object.assign({}, data);
-      return alphaSortKey(unsorted);
+      const sorted = alphaSortKey(unsorted);
+
+      if (numbers.length > 0) {
+        sorted["#"] = numbers;
+      }
+      return sorted;
     });
 }
 
-function addNew(newSellerName: string, sellerOptions: Sellers) {
+function addNew(newSellerName: any, sellerOptions: Sellers) {
   return db
     .collection("sellers")
     .add({ name: newSellerName.toLowerCase() })
     .then((sellerRef) => {
       let sellers = { ...sellerOptions };
-      const letter = newSellerName.charAt(0).toUpperCase();
+      let letter = newSellerName.charAt(0).toUpperCase();
       const newSeller = { id: sellerRef.id, name: newSellerName };
 
-      if (sellers[letter]) {
-        sellers[letter].push(newSeller);
-        sellers[letter].sort(alphaSortValue);
+      if (isNaN(letter)) {
+        if (sellers[letter]) {
+          sellers[letter].push(newSeller);
+          sellers[letter].sort(alphaSortValue);
+        } else {
+          sellers[letter] = [newSeller];
+          sellers = alphaSortKey(sellers);
+        }
       } else {
-        sellers[letter] = [newSeller];
-        sellers = alphaSortKey(sellers);
+        sellers["#"].push(newSeller);
       }
+
       return sellers;
     });
 }

@@ -68,6 +68,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     X: useRef(null),
     Y: useRef(null),
     Z: useRef(null),
+    "#": useRef(null),
   };
 
   const dispatch = useDispatch();
