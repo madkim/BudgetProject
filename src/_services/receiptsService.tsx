@@ -87,6 +87,8 @@ function addNew(
       price: price,
       seller: db.collection("sellers").doc(seller.id),
       hasPhoto: photo !== undefined ? true : false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     })
     .then(async (receiptRef) => {
       const newReceipt = {
@@ -122,6 +124,7 @@ async function update(
     fields.hasPhoto = true;
   }
   if (Object.keys(fields).length > 0) {
+    fields.updatedAt = new Date();
     return db
       .collection("receipts")
       .doc(id)
