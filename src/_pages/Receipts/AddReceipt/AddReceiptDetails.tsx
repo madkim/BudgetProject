@@ -127,7 +127,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
                   </IonCol>
                   <IonCol className="ion-no-padding">
                     <IonButton
-                      expand="full"
+                      expand="block"
                       size="default"
                       onClick={props.takePhoto}
                     >

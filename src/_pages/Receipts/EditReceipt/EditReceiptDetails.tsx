@@ -148,7 +148,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
           <IonCol size="12">
             <IonItem lines="none" style={{ float: "right" }}>
               <IonButton
-                expand="full"
+                expand="block"
                 size="default"
                 onClick={props.retakePhoto}
               >
@@ -183,7 +183,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
                     </IonCol>
                     <IonCol className="ion-no-padding">
                       <IonButton
-                        expand="full"
+                        expand="block"
                         size="default"
                         onClick={props.retakePhoto}
                       >

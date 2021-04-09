@@ -84,7 +84,11 @@ const Receipts: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={refreshReceipts}>
+        <IonRefresher
+          slot="fixed"
+          className="ion-padding"
+          onIonRefresh={refreshReceipts}
+        >
           <IonRefresherContent
             pullingIcon={chevronDownCircleOutline}
             pullingText="Pull to refresh"
