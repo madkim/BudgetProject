@@ -33,11 +33,7 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     history.listen(onRouteChange);
     dispatch(sellerActions.getAllSellers());
-    takePhoto()
-      .then(() => {})
-      .catch((error) => {
-        setNoPhoto(true);
-      });
+    takeReceiptPhoto();
   }, []);
 
   const onRouteChange = (route: any) => {
@@ -50,6 +46,16 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
     setPrice(null);
     setSeller(undefined);
     setNoPhoto(false);
+  };
+
+  const takeReceiptPhoto = () => {
+    takePhoto()
+      .then(() => {
+        setNoPhoto(false);
+      })
+      .catch((error) => {
+        setNoPhoto(true);
+      });
   };
 
   const addReceipt = () => {
@@ -90,6 +96,7 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
           setStep={setStep}
           setDate={setDate}
           setPrice={setPrice}
+          takePhoto={takeReceiptPhoto}
         />
       )}
 
