@@ -151,7 +151,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                                 ${receipt.price}
                               </IonBadge>
                             </IonCol>
-                            <IonCol size="4">
+                            <IonCol size="3">
                               {receipt.seller && (
                                 <IonLabel className="ion-text-capitalize">
                                   {receipt.seller.name}

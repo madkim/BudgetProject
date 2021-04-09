@@ -67,6 +67,13 @@ export function receiptsReducer(state = initState, action: Action) {
       loading: false,
     });
   }
+  if (action.type === receiptConstants.UPDATE_RECEIPT) {
+    return (state = {
+      ...state,
+      loading: false,
+      receipt: action.payload,
+    });
+  }
   if (action.type === receiptConstants.DELETE_RECEIPT) {
     const receiptId = action.payload;
     return (state = {

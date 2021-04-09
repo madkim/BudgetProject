@@ -8,6 +8,7 @@ export const receiptsService = {
   getByID,
   getAll,
   addNew,
+  update,
   remove,
 };
 
@@ -28,7 +29,7 @@ function getByID(id: string) {
         date: receipt.data()!.date.toDate(),
         photo: photoUrl,
         price: receipt.data()!.price,
-        seller: { id: seller.data().id, name: seller.data().name },
+        seller: { id: seller.id, name: seller.data().name },
         hasPhoto: photoUrl !== "" ? true : false,
       };
     });
@@ -107,6 +108,16 @@ function addNew(
       newReceipt.photo = photoUrl;
 
       return [...receipts, newReceipt];
+    });
+}
+
+function update(id: string, fields: object) {
+  return db
+    .collection("receipts")
+    .doc(id)
+    .update(fields)
+    .then(() => {
+      return getByID(id);
     });
 }
 

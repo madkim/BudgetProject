@@ -16,16 +16,24 @@ import {
 
 import React, { useState, useRef } from "react";
 import { alertCircleOutline, cameraReverseOutline } from "ionicons/icons";
-import { Receipt, Photo, Ref } from "../../../_helpers/types";
+import { Seller, Photo, Ref } from "../../../_helpers/types";
 import momentTZ from "moment-timezone";
+import moment from "moment";
 
 interface Props {
-  date: string;
+  id: string;
+  date: Date;
+  price: number | null;
   photo: Photo | undefined;
-  receipt: Receipt;
-  setDate: (date: string) => void;
+  seller: Seller | undefined;
+  hasPhoto: boolean;
+  receiptPhoto: string;
+
+  setDate: (date: Date) => void;
   setStep: (step: string) => void;
   setPrice: (price: number) => void;
+  retakePhoto: () => void;
+  updateReceipt: () => void;
 }
 
 const EditReceiptDetails: React.FC<Props> = (props: Props) => {
@@ -44,12 +52,13 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
 
   const validate = () => {
     setError("");
-    !props.receipt.price
-      ? setError("price")
-      : props.setStep("ADD_RECEIPT_SELLER");
-  };
 
-  const { date, photo, receipt } = props;
+    if (!props.price) {
+      setError("price");
+    } else {
+      props.updateReceipt();
+    }
+  };
 
   return (
     <IonContent className="ion-padding-end">
@@ -59,8 +68,10 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
             <IonItem>
               <IonLabel position="stacked">Date:</IonLabel>
               <IonDatetime
-                value={date}
-                onIonChange={(e) => props.setDate(e.detail.value!)}
+                value={moment(props.date).format()}
+                onIonChange={(e) =>
+                  props.setDate(moment(e.detail.value!).toDate())
+                }
                 display-timezone={timezone}
               ></IonDatetime>
             </IonItem>
@@ -80,7 +91,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
                   <IonInput
                     ref={priceInput}
                     type="number"
-                    value={receipt.price}
+                    value={props.price}
                     onIonBlur={() => setPriceInputFocus(false)}
                     onIonFocus={() => setPriceInputFocus(true)}
                     placeholder="Enter Total"
@@ -118,22 +129,21 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
             <IonItem>
               <IonLabel position="stacked">Seller:</IonLabel>
               <IonLabel position="stacked" className="ion-text-capitalize">
-                {receipt.seller && receipt.seller.name}
+                {props.seller && props.seller.name}
               </IonLabel>
             </IonItem>
           </IonCol>
         </IonRow>
       </IonGrid>
 
-      {receipt.hasPhoto && (
+      {(props.hasPhoto || props.photo) && (
         <IonRow>
           <IonCol size="12">
             <IonItem lines="none" style={{ float: "right" }}>
               <IonButton
                 expand="full"
                 size="default"
-                // onClick={validate}
-                // disabled={props.uploadingPhoto === "uploading"}
+                onClick={props.retakePhoto}
               >
                 <IonIcon icon={cameraReverseOutline} />
                 &nbsp; Retake Photo
@@ -148,15 +158,14 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
           <IonItem lines="none">
             <IonThumbnail
               style={{
-                height: receipt.hasPhoto ? "28vh" : "32vh",
+                height: props.hasPhoto || props.photo ? "28vh" : "32vh",
                 width: "100vw",
               }}
-              onClick={() =>
-                receipt.hasPhoto ? "veiwReceiptPhoto(receipt.photo)" : ""
-              }
             >
-              {receipt.hasPhoto ? (
-                receipt.photo && <IonImg src={receipt.photo} />
+              {props.hasPhoto || props.photo ? (
+                <IonImg
+                  src={props.photo ? props.photo.webPath : props.receiptPhoto}
+                />
               ) : (
                 <>
                   <IonRow>
@@ -168,8 +177,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
                       <IonButton
                         expand="full"
                         size="default"
-                        // onClick={validate}
-                        // disabled={props.uploadingPhoto === "uploading"}
+                        onClick={props.retakePhoto}
                       >
                         <IonIcon icon={cameraReverseOutline} />
                         &nbsp; Take Photo
@@ -186,12 +194,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
       </IonRow>
       <IonRow className="ion-padding-start ">
         <IonCol size="12">
-          <IonButton
-            color="success"
-            expand="block"
-            // onClick={validate}
-            // disabled={props.uploadingPhoto === "uploading"}
-          >
+          <IonButton color="success" expand="block" onClick={validate}>
             Update
           </IonButton>
         </IonCol>
@@ -200,7 +203,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
             fill="outline"
             color="success"
             expand="block"
-            routerLink={`/view/${receipt.id}`}
+            routerLink={`/view/${props.id}`}
             routerDirection="back"
           >
             Cancel

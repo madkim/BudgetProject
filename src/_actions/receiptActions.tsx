@@ -111,7 +111,31 @@ function addNewReceipt(
   }
 }
 
-function updateReceipt(receipt: Receipt) {}
+function updateReceipt(
+  id: string,
+  photo: Photo | undefined,
+  fields: object,
+  goBack: (path: string) => void
+) {
+  return (dispatch: Dispatch<Action>) => {
+    receiptsService
+      .update(id, fields)
+      .then((receipt) => {
+        dispatch(success(receipt));
+        goBack(`/view/${id}`);
+      })
+      .catch((error: Error) => {
+        alert("Could not update receipt. Please try again.");
+        console.error("Error updating receipt: ", error);
+      });
+    function success(receipt: Receipt) {
+      return {
+        type: receiptConstants.UPDATE_RECEIPT,
+        payload: receipt,
+      };
+    }
+  };
+}
 
 function deleteReceipt(receipt: Receipt, goBack: any) {
   return (dispatch: Dispatch<Action>) => {
