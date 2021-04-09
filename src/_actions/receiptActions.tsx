@@ -122,7 +122,6 @@ function updateReceipt(
     receiptsService
       .update(id, fields, photo, dispatch)
       .then((receipt) => {
-        alert("Receipt updated!");
         dispatch(success(receipt));
         goBack(`/view/${id}`);
       })

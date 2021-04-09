@@ -4,7 +4,7 @@ import { useTakePhoto } from "../../../_hooks/useTakePhoto";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { connect, useDispatch } from "react-redux";
-import { Receipt, Sellers, Seller } from "../../../_helpers/types";
+import { Receipt, Sellers, Seller, Photo } from "../../../_helpers/types";
 import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
 import moment from "moment";
@@ -29,6 +29,9 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   const [price, setPrice] = useState<number | null>(null);
   const [seller, setSeller] = useState<Seller | undefined>(undefined);
   const [noPhoto, setNoPhoto] = useState(false);
+  const [receiptPhoto, setReceiptPhoto] = useState<Photo | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     history.listen(onRouteChange);
@@ -46,14 +49,17 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
     setPrice(null);
     setSeller(undefined);
     setNoPhoto(false);
+    setReceiptPhoto(undefined);
   };
 
   const takeReceiptPhoto = () => {
     takePhoto()
       .then(() => {
+        setReceiptPhoto(photo);
         setNoPhoto(false);
       })
       .catch((error) => {
+        setReceiptPhoto(undefined);
         setNoPhoto(true);
       });
   };
@@ -63,7 +69,7 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
       dispatch(
         receiptActions.addNewReceipt(
           moment(date).toDate(),
-          photo,
+          receiptPhoto,
           price,
           seller,
           props.receipts,
@@ -91,7 +97,7 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
         <AddReceiptDetails
           date={date}
           price={price}
-          photo={photo}
+          photo={receiptPhoto}
           noPhoto={noPhoto}
           setStep={setStep}
           setDate={setDate}

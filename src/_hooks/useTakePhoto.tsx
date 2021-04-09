@@ -33,7 +33,7 @@ export const uploadPhoto = async (
   dispatch({ type: receiptConstants.UPLOAD_RECEIPT_PHOTO, payload: "" });
   const base64Data = await base64FromPath(photo.webPath!);
 
-  fireStorage
+  await fireStorage
     .child("receipts/" + fileName)
     .putString(base64Data, "data_url")
     .then(() => {
