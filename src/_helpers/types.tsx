@@ -27,6 +27,10 @@ export interface Action {
   payload: any;
 }
 
+export interface DynObject {
+  [k: string]: any;
+}
+
 export type Ref = React.RefObject<HTMLIonInputElement>;
 
 export type Photo = CameraPhoto;

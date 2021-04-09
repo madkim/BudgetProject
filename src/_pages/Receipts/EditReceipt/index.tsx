@@ -14,18 +14,20 @@ import { NavContext } from "@ionic/react";
 import { useTakePhoto } from "../../../_hooks/useTakePhoto";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { receiptActions } from "../../../_actions/receiptActions";
-import { Receipt, Sellers } from "../../../_helpers/types";
 import { chevronBackOutline } from "ionicons/icons";
 import { connect, useDispatch } from "react-redux";
+import { Receipt, Sellers, DynObject } from "../../../_helpers/types";
 
 import moment from "moment";
 // import AddReceiptSeller from "./AddReceiptSeller";
 import EditReceiptDetails from "./EditReceiptDetails";
 
 type Props = {
-  dispatch: any;
-  location: any;
+  upload: string;
   receipt: Receipt;
+  loading: boolean;
+  location: any;
+  dispatch: any;
   receipts: Receipt[];
   sellerOptions: Sellers;
 };
@@ -54,22 +56,28 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
 
   const updateReceipt = () => {
     if (seller !== undefined && price !== null) {
-      let fields: { [k: string]: any } = {};
+      let fields: DynObject = {};
 
       if (!moment(date).isSame(props.receipt.date)) {
         fields.date = date;
       }
+
       if (price !== props.receipt.price) {
         fields.price = price;
       }
+
       if (
         seller.id !== props.receipt.seller.id &&
         seller.name !== props.receipt.seller.name
       ) {
         fields.seller = seller;
       }
-      console.log(fields);
-      dispatch(receiptActions.updateReceipt(id, photo, fields, goBack));
+
+      if (Object.keys(fields).length === 0 && photo === undefined) {
+        alert("No fields changed, nothing to update.");
+      } else {
+        dispatch(receiptActions.updateReceipt(id, photo, fields, goBack));
+      }
     }
   };
 
@@ -105,6 +113,8 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
           price={price}
           photo={photo}
           seller={seller}
+          upload={props.upload}
+          loading={props.loading}
           hasPhoto={props.receipt.hasPhoto}
           receiptPhoto={props.receipt.photo}
           setStep={setStep}
@@ -128,11 +138,13 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipt: Receipt };
+  receiptsReducer: { receipt: Receipt; upload: string; loading: boolean };
   sellersReducer: { sellerOptions: Sellers };
 }) => {
   return {
+    upload: state.receiptsReducer.upload,
     receipt: state.receiptsReducer.receipt,
+    loading: state.receiptsReducer.loading,
     sellerOptions: state.sellersReducer.sellerOptions,
   };
 };

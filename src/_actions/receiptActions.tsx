@@ -118,13 +118,19 @@ function updateReceipt(
   goBack: (path: string) => void
 ) {
   return (dispatch: Dispatch<Action>) => {
+    dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
     receiptsService
-      .update(id, fields)
+      .update(id, fields, photo, dispatch)
       .then((receipt) => {
+        alert("Receipt updated!");
         dispatch(success(receipt));
         goBack(`/view/${id}`);
       })
       .catch((error: Error) => {
+        dispatch({
+          type: receiptConstants.GET_RECEIPT_REQUEST_FAILURE,
+          payload: "",
+        });
         alert("Could not update receipt. Please try again.");
         console.error("Error updating receipt: ", error);
       });

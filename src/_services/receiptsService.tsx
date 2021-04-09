@@ -1,4 +1,4 @@
-import { Receipt, Seller, Photo, Action } from "../_helpers/types";
+import { Receipt, Seller, Photo, Action, DynObject } from "../_helpers/types";
 import { uploadPhoto } from "../_hooks/useTakePhoto";
 import { fireStorage } from "../_helpers/firebase";
 import { Dispatch } from "react";
@@ -111,14 +111,27 @@ function addNew(
     });
 }
 
-function update(id: string, fields: object) {
-  return db
-    .collection("receipts")
-    .doc(id)
-    .update(fields)
-    .then(() => {
-      return getByID(id);
-    });
+async function update(
+  id: string,
+  fields: DynObject,
+  photo: Photo | undefined,
+  dispatch: any
+) {
+  if (photo !== undefined) {
+    await uploadPhoto(photo, id, dispatch);
+    fields.hasPhoto = true;
+  }
+  if (Object.keys(fields).length > 0) {
+    return db
+      .collection("receipts")
+      .doc(id)
+      .update(fields)
+      .then(() => {
+        return getByID(id);
+      });
+  } else {
+    return getByID(id);
+  }
 }
 
 function remove(receipt: Receipt) {

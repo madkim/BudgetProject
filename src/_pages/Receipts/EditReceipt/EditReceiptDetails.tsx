@@ -12,6 +12,7 @@ import {
   IonContent,
   IonDatetime,
   IonThumbnail,
+  IonLoading,
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
@@ -26,6 +27,8 @@ interface Props {
   price: number | null;
   photo: Photo | undefined;
   seller: Seller | undefined;
+  upload: string;
+  loading: boolean;
   hasPhoto: boolean;
   receiptPhoto: string;
 
@@ -62,6 +65,10 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
 
   return (
     <IonContent className="ion-padding-end">
+      <IonLoading
+        isOpen={props.loading || props.upload === "uploading"}
+        message={"Please wait..."}
+      />
       <IonGrid>
         <IonRow>
           <IonCol>
