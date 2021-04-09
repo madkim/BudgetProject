@@ -216,7 +216,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
           <IonCol>
             <IonItem lines="none">
               <IonThumbnail
-                style={{ height: "35vh", width: "100vw" }}
+                style={{ height: "34vh", width: "100vw" }}
                 onClick={() =>
                   receipt.hasPhoto ? veiwReceiptPhoto(receipt.photo) : ""
                 }

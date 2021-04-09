@@ -15,8 +15,8 @@ import {
 } from "@ionic/react";
 
 import React, { useState, useRef } from "react";
+import { alertCircleOutline, cameraReverseOutline } from "ionicons/icons";
 import { Receipt, Photo, Ref } from "../../../_helpers/types";
-import { alertCircleOutline } from "ionicons/icons";
 import momentTZ from "moment-timezone";
 
 interface Props {
@@ -125,13 +125,32 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
         </IonRow>
       </IonGrid>
 
-      <br />
+      {receipt.hasPhoto && (
+        <IonRow>
+          <IonCol size="12">
+            <IonItem lines="none" style={{ float: "right" }}>
+              <IonButton
+                expand="full"
+                size="default"
+                // onClick={validate}
+                // disabled={props.uploadingPhoto === "uploading"}
+              >
+                <IonIcon icon={cameraReverseOutline} />
+                &nbsp; Retake Photo
+              </IonButton>
+            </IonItem>
+          </IonCol>
+        </IonRow>
+      )}
 
       <IonRow>
         <IonCol>
           <IonItem lines="none">
             <IonThumbnail
-              style={{ height: "30vh", width: "100vw" }}
+              style={{
+                height: receipt.hasPhoto ? "28vh" : "32vh",
+                width: "100vw",
+              }}
               onClick={() =>
                 receipt.hasPhoto ? "veiwReceiptPhoto(receipt.photo)" : ""
               }
@@ -140,15 +159,31 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
                 receipt.photo && <IonImg src={receipt.photo} />
               ) : (
                 <>
-                  <IonIcon icon={alertCircleOutline} />
-                  <small> No Photo</small>
+                  <IonRow>
+                    <IonCol>
+                      <IonIcon icon={alertCircleOutline} />
+                      <small> No Photo</small>
+                    </IonCol>
+                    <IonCol className="ion-no-padding">
+                      <IonButton
+                        expand="full"
+                        size="default"
+                        // onClick={validate}
+                        // disabled={props.uploadingPhoto === "uploading"}
+                      >
+                        <IonIcon icon={cameraReverseOutline} />
+                        &nbsp; Take Photo
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+
+                  <br />
                 </>
               )}
             </IonThumbnail>
           </IonItem>
         </IonCol>
       </IonRow>
-
       <IonRow className="ion-padding-start ">
         <IonCol size="12">
           <IonButton
@@ -157,7 +192,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
             // onClick={validate}
             // disabled={props.uploadingPhoto === "uploading"}
           >
-            Save
+            Update
           </IonButton>
         </IonCol>
         <IonCol size="12">
@@ -168,11 +203,10 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
             routerLink={`/view/${receipt.id}`}
             routerDirection="back"
           >
-            Back
+            Cancel
           </IonButton>
         </IonCol>
       </IonRow>
-
       <br />
     </IonContent>
   );

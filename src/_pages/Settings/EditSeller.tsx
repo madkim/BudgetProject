@@ -78,7 +78,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
       element.blur();
     });
   };
-  const buttonsMarginTop = window.screen.height / 2;
+  const buttonsMarginTop = window.screen.height / 1.9;
 
   return (
     <IonPage>
@@ -161,7 +161,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
             </IonCol>
           </IonRow>
 
-          <IonRow className="ion-padding-horizontal ion-padding-top">
+          <IonRow className="ion-padding-horizontal">
             <IonCol size="12">
               <IonButton
                 fill="solid"
