@@ -171,6 +171,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
             >
               {props.hasPhoto || props.photo ? (
                 <IonImg
+                  onClick={props.retakePhoto}
                   src={props.photo ? props.photo.webPath : props.receiptPhoto}
                 />
               ) : (
