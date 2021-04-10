@@ -22,7 +22,7 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
 
   const history = useHistory();
-  const { photo, takePhoto } = useTakePhoto();
+  const { takePhoto } = useTakePhoto();
 
   const [step, setStep] = useState("ADD_RECEIPT_DETAILS");
   const [date, setDate] = useState(moment(new Date()).format());
@@ -54,11 +54,12 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
 
   const takeReceiptPhoto = () => {
     takePhoto()
-      .then(() => {
+      .then((photo) => {
         setReceiptPhoto(photo);
         setNoPhoto(false);
       })
       .catch((error) => {
+        console.log(error);
         setReceiptPhoto(undefined);
         setNoPhoto(true);
       });

@@ -17,6 +17,7 @@ export function useTakePhoto() {
       quality: 100,
     });
     setPhoto(cameraPhoto);
+    return cameraPhoto;
   };
 
   return {

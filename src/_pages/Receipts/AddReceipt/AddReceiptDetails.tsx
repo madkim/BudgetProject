@@ -137,7 +137,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
                   </IonCol>
                 </IonRow>
               ) : (
-                photo && <IonImg src={photo.webPath} />
+                photo !== undefined && <IonImg src={photo.webPath} />
               )}
             </IonThumbnail>
           </IonItem>
