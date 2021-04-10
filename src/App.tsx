@@ -19,8 +19,8 @@ import Receipts from "./_pages/Receipts";
 import AddReceipt from "./_pages/Receipts/AddReceipt";
 import EditReceipt from "./_pages/Receipts/EditReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
-import EditSeller from "./_pages/Settings/EditSeller";
-import ManageSellers from "./_pages/Settings/ManageSellers";
+import EditSeller from "./_pages/Sellers/EditSeller";
+import ManageSellers from "./_pages/Sellers/ManageSellers";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";

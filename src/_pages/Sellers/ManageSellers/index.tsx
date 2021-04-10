@@ -3,37 +3,44 @@ import {
   IonCol,
   IonList,
   IonItem,
+  IonPage,
   IonIcon,
-  IonLabel,
-  IonInput,
-  IonRadio,
-  IonButton,
-  IonContent,
-  IonRadioGroup,
   IonGrid,
   IonText,
-  IonProgressBar,
+  IonTitle,
+  IonLabel,
+  IonInput,
+  IonHeader,
+  IonButton,
+  IonContent,
+  IonToolbar,
+  IonButtons,
+  IonSpinner,
   IonSearchbar,
 } from "@ionic/react";
-import "./AddReceiptSeller.css";
+
+import {
+  addOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+} from "ionicons/icons";
 
 import React, { useState, useRef, useEffect } from "react";
-
+import { useHistory } from "react-router-dom";
 import { useHaptics } from "../../../_hooks/useHaptics";
-import { addOutline } from "ionicons/icons";
+import { Sellers, Ref } from "../../../_helpers/types";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { useDispatch, connect } from "react-redux";
-import { Sellers, Seller, Ref } from "../../../_helpers/types";
+
+import "./ManageSellers.css";
 
 type Props = {
+  loading: boolean;
   sellerOptions: Sellers;
-  uploadingPhoto: string;
-  setStep: (step: string) => void;
-  addReceipt: () => void;
-  setParentSeller: (seller: Seller | undefined) => void;
+  setShowModal: (value: boolean) => void;
 };
 
-const AddReceiptSeller: React.FC<Props> = (props: Props) => {
+const ManageSellers: React.FC<Props> = (props: Props) => {
   const alpha: any = {
     A: useRef(null),
     B: useRef(null),
@@ -65,15 +72,16 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
   };
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [seller, setSeller] = useState("");
   const [letter, setLetter] = useState("");
+  const [clicked, setClicked] = useState("");
   const [newSeller, setNewSeller] = useState("");
 
   const { impactLight } = useHaptics();
-  const { sellerOptions, setStep, addReceipt, setParentSeller } = props;
+  const { sellerOptions } = props;
 
   useEffect(() => {
     if (Object.keys(sellerOptions).length === 0) {
@@ -107,14 +115,6 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
       : true;
   };
 
-  const setSelectedSeller = (id: string) => {
-    const sellers = Object.values(sellerOptions).flat(1);
-    const selectedSeller = sellers.find((current) => current.id === id);
-
-    setSeller(id);
-    setParentSeller(selectedSeller);
-  };
-
   const handlePan = (e: any) => {
     const X = e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
     const Y = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
@@ -137,20 +137,35 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const validate = () => {
-    setError("");
-    !seller ? setError("seller") : addReceipt();
+  const editSeller = (id: string) => {
+    setClicked(id);
+    dispatch(sellerActions.getSellerByID(id, history));
   };
 
-  const listHeight = window.screen.height / 2.2;
+  const listHeight = window.screen.height / 2;
   const addNewSellerInput: Ref = useRef(null);
   const searchInput: React.Ref<HTMLIonSearchbarElement> = useRef(null);
 
   return (
-    <>
-      {props.uploadingPhoto && props.uploadingPhoto === "uploading" && (
-        <IonProgressBar type="indeterminate"></IonProgressBar>
-      )}
+    <IonPage>
+      <IonHeader>
+        <IonToolbar color="success">
+          <IonButtons slot="start">
+            <IonButton
+              slot="start"
+              fill="clear"
+              routerLink="/"
+              routerDirection="root"
+            >
+              <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle size="large" className="ion-text-center">
+            Manage Sellers
+          </IonTitle>
+        </IonToolbar>
+      </IonHeader>
+
       <IonContent className="ion-padding-end">
         <IonGrid>
           <IonRow>
@@ -234,96 +249,88 @@ const AddReceiptSeller: React.FC<Props> = (props: Props) => {
             </div>
 
             <IonList style={{ height: listHeight, overflowY: "scroll" }}>
-              <IonRadioGroup
-                value={seller}
-                onIonChange={(e) => setSelectedSeller(e.detail.value)}
-              >
-                {Object.keys(sellerOptions).length > 0 &&
-                  Object.keys(sellerOptions)
-                    .filter((seller) =>
-                      search !== ""
-                        ? seller.charAt(0).toLowerCase() ===
-                          search.charAt(0).toLowerCase()
-                        : seller
-                    )
-                    .map((letter, i) => {
-                      return (
-                        <div key={i} className="ion-padding-start">
-                          <div className="text" ref={alpha[letter]}>
-                            {letter}
-                          </div>
-                          {sellerOptions[letter]
-                            .filter((seller) =>
-                              seller.name
-                                .toLowerCase()
-                                .trim()
-                                .includes(search.toLowerCase().trim())
-                            )
-                            .map((seller, i) => {
-                              return (
-                                <IonItem lines="none" key={i}>
+              {Object.keys(sellerOptions).length > 0 &&
+                Object.keys(sellerOptions)
+                  .filter((seller) =>
+                    search !== ""
+                      ? seller.charAt(0).toLowerCase() ===
+                        search.charAt(0).toLowerCase()
+                      : seller
+                  )
+                  .map((letter, i) => {
+                    return (
+                      <div key={i} className="ion-padding-horizontal">
+                        <div className="text" ref={alpha[letter]}>
+                          {letter}
+                        </div>
+                        {sellerOptions[letter]
+                          .filter((seller) =>
+                            seller.name
+                              .toLowerCase()
+                              .trim()
+                              .includes(search.toLowerCase().trim())
+                          )
+                          .map((seller, i) => {
+                            return (
+                              <IonItem
+                                key={i}
+                                button
+                                lines="none"
+                                detail={false}
+                                className="ion-padding-end"
+                                onClick={() => editSeller(seller.id)}
+                              >
+                                <h5>
                                   <IonLabel className="ion-text-capitalize">
                                     {seller.name}
                                   </IonLabel>
-                                  <IonRadio slot="start" value={seller.id} />
-                                </IonItem>
-                              );
-                            })}
-                        </div>
-                      );
-                    })}
-              </IonRadioGroup>
+                                </h5>
+                                <IonCol className="ion-text-end">
+                                  {props.loading && clicked === seller.id ? (
+                                    <IonSpinner name="lines-small" />
+                                  ) : (
+                                    <IonIcon
+                                      color="medium"
+                                      icon={chevronForwardOutline}
+                                    />
+                                  )}
+                                </IonCol>
+                              </IonItem>
+                            );
+                          })}
+                      </div>
+                    );
+                  })}
             </IonList>
           </div>
         </div>
 
-        <br />
-
-        {error === "seller" && (
-          <IonText color="danger">
-            <span className="ion-margin ion-padding">
-              Please select a seller.
-            </span>
-          </IonText>
-        )}
-
-        <IonRow className="ion-padding-start ">
+        <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
             <IonButton
+              fill="solid"
               color="success"
               expand="block"
-              onClick={validate}
-              disabled={props.uploadingPhoto === "uploading"}
+              routerLink="/"
+              routerDirection="root"
             >
-              Save
-            </IonButton>
-          </IonCol>
-          <IonCol size="12">
-            <IonButton
-              fill="outline"
-              color="success"
-              expand="block"
-              onClick={() => setStep("ADD_RECEIPT_DETAILS")}
-              disabled={props.uploadingPhoto === "uploading"}
-            >
-              Back
+              Done
             </IonButton>
           </IonCol>
         </IonRow>
         <br />
       </IonContent>
-    </>
+    </IonPage>
   );
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: {
-    upload: string;
-  };
+  sellersReducer: { sellerOptions: Sellers; loading: boolean };
 }) => {
   return {
-    uploadingPhoto: state.receiptsReducer.upload,
+    loading: state.sellersReducer.loading,
+    sellerOptions: state.sellersReducer.sellerOptions,
   };
 };
 
-export default connect(mapStateToProps)(AddReceiptSeller);
+export default connect(mapStateToProps)(ManageSellers);

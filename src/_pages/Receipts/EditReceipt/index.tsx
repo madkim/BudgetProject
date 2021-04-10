@@ -6,6 +6,7 @@ import {
   IonButtons,
   IonButton,
   IonIcon,
+  IonModal,
 } from "@ionic/react";
 
 import React, { useState, useEffect, useContext } from "react";
@@ -16,10 +17,10 @@ import { sellerActions } from "../../../_actions/sellerActions";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { chevronBackOutline } from "ionicons/icons";
 import { connect, useDispatch } from "react-redux";
-import { Receipt, Sellers, DynObject } from "../../../_helpers/types";
+import { Receipt, Sellers, Seller, DynObject } from "../../../_helpers/types";
 
 import moment from "moment";
-// import AddReceiptSeller from "./AddReceiptSeller";
+import SelectSeller from "../../Sellers/SelectSeller";
 import EditReceiptDetails from "./EditReceiptDetails";
 
 type Props = {
@@ -35,10 +36,10 @@ type Props = {
 const EditReceipt: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
 
-  const [step, setStep] = useState("EDIT_RECEIPT_DETAILS");
   const [date, setDate] = useState(props.receipt.date);
   const [price, setPrice] = useState(props.receipt.price);
   const [seller, setSeller] = useState(props.receipt.seller);
+  const [showModal, setShowModal] = useState(false);
 
   const { goBack } = useContext(NavContext);
   const { id } = useParams<{ id: string }>();
@@ -81,10 +82,21 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
     }
   };
 
-  enum STEP {
-    EDIT_RECEIPT_DETAILS = "EDIT_RECEIPT_DETAILS",
-    ADD_RECEIPT_SELLER = "UPDATE_RECEIPT_SELLER",
-  }
+  const handleSetSeller = (seller: Seller | undefined) => {
+    if (seller !== undefined) {
+      setSeller(seller);
+    }
+  };
+
+  const handleBack = () => {
+    setSeller(props.receipt.seller);
+    setShowModal(false);
+  };
+
+  const handleSave = () => {
+    setShowModal(false);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -99,40 +111,48 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
             </IonButton>
           </IonButtons>
           <IonTitle size="large" className="ion-text-center">
-            {step === STEP.EDIT_RECEIPT_DETAILS
-              ? "Edit Details"
-              : "Update Seller"}
+            Edit Receipt
           </IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      {step === STEP.EDIT_RECEIPT_DETAILS && (
-        <EditReceiptDetails
-          id={id}
-          date={date}
-          price={price}
-          photo={photo}
-          seller={seller}
-          upload={props.upload}
-          loading={props.loading}
-          hasPhoto={props.receipt.hasPhoto}
-          receiptPhoto={props.receipt.photo}
-          setStep={setStep}
-          setDate={setDate}
-          setPrice={setPrice}
-          retakePhoto={retakePhoto}
-          updateReceipt={updateReceipt}
-        />
-      )}
+      <EditReceiptDetails
+        id={id}
+        date={date}
+        price={price}
+        photo={photo}
+        seller={seller}
+        upload={props.upload}
+        loading={props.loading}
+        hasPhoto={props.receipt.hasPhoto}
+        receiptPhoto={props.receipt.photo}
+        setDate={setDate}
+        setPrice={setPrice}
+        retakePhoto={retakePhoto}
+        showSellers={setShowModal}
+        updateReceipt={updateReceipt}
+      />
 
-      {/* {step === STEP.ADD_RECEIPT_SELLER && (
-        <AddReceiptSeller
-          setStep={setStep}
-          addReceipt={addReceipt}
-          setParentSeller={setSeller}
-          sellerOptions={props.sellerOptions}
-        />
-      )} */}
+      <IonModal isOpen={showModal} cssClass="my-custom-class">
+        <IonHeader>
+          <IonToolbar color="success">
+            <IonTitle size="large" className="ion-text-center">
+              Edit Seller
+            </IonTitle>
+          </IonToolbar>
+        </IonHeader>
+
+        {showModal && (
+          <SelectSeller
+            default={seller}
+            stepBack={null}
+            handleNext={handleSave}
+            handleNextText="Select"
+            setParentSeller={handleSetSeller}
+            sellerOptions={props.sellerOptions}
+          />
+        )}
+      </IonModal>
     </IonPage>
   );
 };

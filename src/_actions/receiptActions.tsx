@@ -91,6 +91,7 @@ function addNewReceipt(
   history: any
 ) {
   return (dispatch: Dispatch<Action>) => {
+    dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
     receiptsService
       .addNew(date, photo, price, seller, receipts, dispatch)
       .then(async (updatedReceipts) => {
@@ -98,6 +99,10 @@ function addNewReceipt(
         history.push("/");
       })
       .catch((error: Error) => {
+        dispatch({
+          type: receiptConstants.GET_RECEIPT_REQUEST_FAILURE,
+          payload: "",
+        });
         alert("Could not create receipt. Please try again.");
         console.error("Error writing receipt: ", error);
         history.push("/");
@@ -123,6 +128,7 @@ function updateReceipt(
       .update(id, fields, photo, dispatch)
       .then((receipt) => {
         dispatch(success(receipt));
+        alert("Receipt updated!");
         goBack(`/view/${id}`);
       })
       .catch((error: Error) => {

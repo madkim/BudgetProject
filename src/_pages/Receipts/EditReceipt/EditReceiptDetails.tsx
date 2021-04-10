@@ -33,8 +33,8 @@ interface Props {
   receiptPhoto: string;
 
   setDate: (date: Date) => void;
-  setStep: (step: string) => void;
   setPrice: (price: number) => void;
+  showSellers: (value: boolean) => void;
   retakePhoto: () => void;
   updateReceipt: () => void;
 }
@@ -133,7 +133,11 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
 
         <IonRow>
           <IonCol>
-            <IonItem>
+            <IonItem
+              button
+              detail={false}
+              onClick={() => props.showSellers(true)}
+            >
               <IonLabel position="stacked">Seller:</IonLabel>
               <IonLabel position="stacked" className="ion-text-capitalize">
                 {props.seller && props.seller.name}

@@ -8,7 +8,7 @@ import { Receipt, Sellers, Seller, Photo } from "../../../_helpers/types";
 import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 
 import moment from "moment";
-import AddReceiptSeller from "./AddReceiptSeller";
+import SelectSellers from "../../Sellers/SelectSeller";
 import AddReceiptDetails from "./AddReceiptDetails";
 
 type Props = {
@@ -79,6 +79,10 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const handleStepBack = () => {
+    setStep("ADD_RECEIPT_DETAILS");
+  };
+
   enum STEP {
     ADD_RECEIPT_DETAILS = "ADD_RECEIPT_DETAILS",
     ADD_RECEIPT_SELLER = "ADD_RECEIPT_SELLER",
@@ -107,9 +111,11 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
       )}
 
       {step === STEP.ADD_RECEIPT_SELLER && (
-        <AddReceiptSeller
-          setStep={setStep}
-          addReceipt={addReceipt}
+        <SelectSellers
+          default={undefined}
+          stepBack={handleStepBack}
+          handleNext={addReceipt}
+          handleNextText="Save"
           setParentSeller={setSeller}
           sellerOptions={props.sellerOptions}
         />

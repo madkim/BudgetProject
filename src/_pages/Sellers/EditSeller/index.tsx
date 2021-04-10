@@ -20,8 +20,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, connect } from "react-redux";
 import { chevronBackOutline } from "ionicons/icons";
-import { sellerActions } from "../../_actions/sellerActions";
-import { Seller, Sellers, Ref } from "../../_helpers/types";
+import { sellerActions } from "../../../_actions/sellerActions";
+import { Seller, Sellers, Ref } from "../../../_helpers/types";
 
 interface Props {
   seller: Seller;

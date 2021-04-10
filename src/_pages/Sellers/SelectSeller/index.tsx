@@ -3,44 +3,40 @@ import {
   IonCol,
   IonList,
   IonItem,
-  IonPage,
   IonIcon,
-  IonGrid,
-  IonText,
-  IonTitle,
   IonLabel,
   IonInput,
-  IonHeader,
+  IonRadio,
   IonButton,
   IonContent,
-  IonToolbar,
-  IonButtons,
-  IonSpinner,
+  IonRadioGroup,
+  IonGrid,
+  IonText,
   IonSearchbar,
+  IonLoading,
 } from "@ionic/react";
-
-import {
-  addOutline,
-  chevronBackOutline,
-  chevronForwardOutline,
-} from "ionicons/icons";
+import "./SelectSeller.css";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { useHaptics } from "../../_hooks/useHaptics";
-import { Sellers, Ref } from "../../_helpers/types";
-import { sellerActions } from "../../_actions/sellerActions";
-import { useDispatch, connect } from "react-redux";
 
-import "./ManageSellers.css";
+import { useHaptics } from "../../../_hooks/useHaptics";
+import { addOutline } from "ionicons/icons";
+import { sellerActions } from "../../../_actions/sellerActions";
+import { useDispatch, connect } from "react-redux";
+import { Sellers, Seller, Ref } from "../../../_helpers/types";
 
 type Props = {
   loading: boolean;
+  default: Seller | undefined;
   sellerOptions: Sellers;
-  setShowModal: (value: boolean) => void;
+  uploadingPhoto: string;
+  handleNextText: string;
+  stepBack: (() => void) | null;
+  handleNext: () => void;
+  setParentSeller: (seller: Seller | undefined) => void;
 };
 
-const ManageSellers: React.FC<Props> = (props: Props) => {
+const SelectSeller: React.FC<Props> = (props: Props) => {
   const alpha: any = {
     A: useRef(null),
     B: useRef(null),
@@ -72,22 +68,43 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
   };
 
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [seller, setSeller] = useState("");
   const [letter, setLetter] = useState("");
-  const [clicked, setClicked] = useState("");
   const [newSeller, setNewSeller] = useState("");
+  const [initLoad, setInitLoad] = useState(true);
+  const [initLoading, setInitLoading] = useState(false);
 
   const { impactLight } = useHaptics();
-  const { sellerOptions } = props;
+  const { sellerOptions, stepBack, handleNext, setParentSeller } = props;
 
   useEffect(() => {
     if (Object.keys(sellerOptions).length === 0) {
       dispatch(sellerActions.getAllSellers());
     }
-  }, [dispatch]);
+    if (props.default !== undefined) {
+      setSeller(props.default.id);
+    }
+  }, [dispatch, props.default]);
+
+  useEffect(() => {
+    if (props.default !== undefined && seller !== "" && initLoad) {
+      setInitLoading(true);
+      const intervalFunc = () => {
+        const sellerPos = document.getElementById(seller);
+        if (sellerPos !== null) {
+          const topPos = sellerPos.offsetTop;
+          document.getElementById("IonSellerList")!.scrollTop = topPos;
+          clearInterval(interval);
+          setInitLoading(false);
+          setInitLoad(false);
+        }
+      };
+      const interval = setInterval(intervalFunc, 1000);
+    }
+  }, [seller]);
 
   const addNewSeller = () => {
     setError("");
@@ -115,6 +132,14 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
       : true;
   };
 
+  const setSelectedSeller = (id: string) => {
+    const sellers = Object.values(sellerOptions).flat(1);
+    const selectedSeller = sellers.find((current) => current.id === id);
+
+    setSeller(id);
+    setParentSeller(selectedSeller);
+  };
+
   const handlePan = (e: any) => {
     const X = e.touches && e.touches.length ? e.touches[0].clientX : e.clientX;
     const Y = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
@@ -137,36 +162,27 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const editSeller = (id: string) => {
-    setClicked(id);
-    dispatch(sellerActions.getSellerByID(id, history));
+  const validate = () => {
+    setError("");
+    if (!seller) {
+      setError("seller");
+    } else {
+      setInitLoad(true);
+      handleNext();
+    }
   };
 
-  const listHeight = window.screen.height / 2;
+  const listHeight = window.screen.height / 2.2;
   const addNewSellerInput: Ref = useRef(null);
   const searchInput: React.Ref<HTMLIonSearchbarElement> = useRef(null);
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar color="success">
-          <IonButtons slot="start">
-            <IonButton
-              slot="start"
-              fill="clear"
-              routerLink="/"
-              routerDirection="root"
-            >
-              <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
-            </IonButton>
-          </IonButtons>
-          <IonTitle size="large" className="ion-text-center">
-            Manage Sellers
-          </IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
+    <>
       <IonContent className="ion-padding-end">
+        <IonLoading
+          isOpen={props.loading || initLoading}
+          message={"Please wait..."}
+        />
         <IonGrid>
           <IonRow>
             <IonCol>
@@ -248,89 +264,105 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
               </ul>
             </div>
 
-            <IonList style={{ height: listHeight, overflowY: "scroll" }}>
-              {Object.keys(sellerOptions).length > 0 &&
-                Object.keys(sellerOptions)
-                  .filter((seller) =>
-                    search !== ""
-                      ? seller.charAt(0).toLowerCase() ===
-                        search.charAt(0).toLowerCase()
-                      : seller
-                  )
-                  .map((letter, i) => {
-                    return (
-                      <div key={i} className="ion-padding-horizontal">
-                        <div className="text" ref={alpha[letter]}>
-                          {letter}
-                        </div>
-                        {sellerOptions[letter]
-                          .filter((seller) =>
-                            seller.name
-                              .toLowerCase()
-                              .trim()
-                              .includes(search.toLowerCase().trim())
-                          )
-                          .map((seller, i) => {
-                            return (
-                              <IonItem
-                                key={i}
-                                button
-                                lines="none"
-                                detail={false}
-                                className="ion-padding-end"
-                                onClick={() => editSeller(seller.id)}
-                              >
-                                <h5>
+            <IonList
+              id="IonSellerList"
+              style={{ height: listHeight, overflowY: "scroll" }}
+            >
+              <IonRadioGroup
+                value={seller}
+                onIonChange={(e) => setSelectedSeller(e.detail.value)}
+              >
+                {Object.keys(sellerOptions).length > 0 &&
+                  Object.keys(sellerOptions)
+                    .filter((seller) =>
+                      search !== ""
+                        ? seller.charAt(0).toLowerCase() ===
+                          search.charAt(0).toLowerCase()
+                        : seller
+                    )
+                    .map((letter, i) => {
+                      return (
+                        <div key={i} className="ion-padding-start">
+                          <div className="text" ref={alpha[letter]}>
+                            {letter}
+                          </div>
+                          {sellerOptions[letter]
+                            .filter((seller) =>
+                              seller.name
+                                .toLowerCase()
+                                .trim()
+                                .includes(search.toLowerCase().trim())
+                            )
+                            .map((seller, i) => {
+                              return (
+                                <IonItem id={seller.id} lines="none" key={i}>
                                   <IonLabel className="ion-text-capitalize">
                                     {seller.name}
                                   </IonLabel>
-                                </h5>
-                                <IonCol className="ion-text-end">
-                                  {props.loading && clicked === seller.id ? (
-                                    <IonSpinner name="lines-small" />
-                                  ) : (
-                                    <IonIcon
-                                      color="medium"
-                                      icon={chevronForwardOutline}
-                                    />
-                                  )}
-                                </IonCol>
-                              </IonItem>
-                            );
-                          })}
-                      </div>
-                    );
-                  })}
+                                  <IonRadio slot="start" value={seller.id} />
+                                </IonItem>
+                              );
+                            })}
+                        </div>
+                      );
+                    })}
+              </IonRadioGroup>
             </IonList>
           </div>
         </div>
 
-        <IonRow className="ion-padding-start ion-padding-top">
+        <br />
+
+        {error === "seller" && (
+          <IonText color="danger">
+            <span className="ion-margin ion-padding">
+              Please select a seller.
+            </span>
+          </IonText>
+        )}
+
+        <IonRow className="ion-padding-start ">
           <IonCol size="12">
             <IonButton
-              fill="solid"
               color="success"
               expand="block"
-              routerLink="/"
-              routerDirection="root"
+              onClick={validate}
+              disabled={props.uploadingPhoto === "uploading"}
             >
-              Done
+              {props.handleNextText}
             </IonButton>
           </IonCol>
+
+          {stepBack !== null && (
+            <IonCol size="12">
+              <IonButton
+                fill="outline"
+                color="success"
+                expand="block"
+                onClick={stepBack}
+                disabled={props.uploadingPhoto === "uploading"}
+              >
+                Back
+              </IonButton>
+            </IonCol>
+          )}
         </IonRow>
         <br />
       </IonContent>
-    </IonPage>
+    </>
   );
 };
 
 const mapStateToProps = (state: {
-  sellersReducer: { sellerOptions: Sellers; loading: boolean };
+  receiptsReducer: {
+    upload: string;
+    loading: boolean;
+  };
 }) => {
   return {
-    loading: state.sellersReducer.loading,
-    sellerOptions: state.sellersReducer.sellerOptions,
+    uploadingPhoto: state.receiptsReducer.upload,
+    loading: state.receiptsReducer.loading,
   };
 };
 
-export default connect(mapStateToProps)(ManageSellers);
+export default connect(mapStateToProps)(SelectSeller);
