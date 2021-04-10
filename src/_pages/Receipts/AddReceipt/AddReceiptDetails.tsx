@@ -16,7 +16,8 @@ import {
 
 import React, { useState, useRef } from "react";
 import { alertCircleOutline, cameraReverseOutline } from "ionicons/icons";
-import { Photo, Ref } from "../../../_helpers/types";
+import { Photo, Receipt, Ref } from "../../../_helpers/types";
+import { PhotoViewer } from "@ionic-native/photo-viewer";
 import momentTZ from "moment-timezone";
 
 interface Props {
@@ -42,6 +43,17 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
       element.blur();
     });
     setPriceInputFocus(false);
+  };
+
+  const veiwReceiptPhoto = (photo: Photo) => {
+    var options = {
+      share: true, // default is false
+      closeButton: false, // default is true
+      copyToReference: true, // default is false
+      headers: "", // If this is not provided, an exception will be triggered
+      piccasoOptions: {}, // If this is not provided, an exception will be triggered
+    };
+    PhotoViewer.show(photo.path!, "", options);
   };
 
   const validate = () => {
@@ -137,7 +149,12 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
                   </IonCol>
                 </IonRow>
               ) : (
-                photo !== undefined && <IonImg src={photo.webPath} />
+                photo !== undefined && (
+                  <IonImg
+                    src={photo.webPath}
+                    onClick={() => veiwReceiptPhoto(photo)}
+                  />
+                )
               )}
             </IonThumbnail>
           </IonItem>
