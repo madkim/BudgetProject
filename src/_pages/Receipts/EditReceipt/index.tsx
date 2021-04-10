@@ -88,15 +88,6 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const handleBack = () => {
-    setSeller(props.receipt.seller);
-    setShowModal(false);
-  };
-
-  const handleSave = () => {
-    setShowModal(false);
-  };
-
   return (
     <IonPage>
       <IonHeader>
@@ -146,7 +137,7 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
           <SelectSeller
             default={seller}
             stepBack={null}
-            handleNext={handleSave}
+            handleNext={() => setShowModal(false)}
             handleNextText="Select"
             setParentSeller={handleSetSeller}
             sellerOptions={props.sellerOptions}
