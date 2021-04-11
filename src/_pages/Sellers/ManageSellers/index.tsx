@@ -261,11 +261,8 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                   )
                   .map((letter, i) => {
                     return (
-                      <div key={i}>
-                        <div
-                          ref={alpha[letter]}
-                          className="text ion-margin-start"
-                        >
+                      <div key={i} className="ion-padding-horizontal">
+                        <div className="text" ref={alpha[letter]}>
                           {letter}
                         </div>
                         {sellerOptions[letter]
