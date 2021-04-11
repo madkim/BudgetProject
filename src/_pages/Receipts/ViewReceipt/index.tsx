@@ -110,14 +110,14 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="success">
-          <IonButtons slot="start" className="ion-padding-top">
+          <IonButtons slot="start">
             <IonButton fill="clear" routerLink="/" routerDirection="back">
               <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
             </IonButton>
           </IonButtons>
 
-          <IonTitle size="large" className="ion-text-center">
-            View Receipt
+          <IonTitle className="ion-text-center">
+            <h2>View Receipt</h2>
           </IonTitle>
 
           <IonPopover

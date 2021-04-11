@@ -91,9 +91,11 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="success">
-          <IonTitle size="large" className="ion-text-center">
-            {step === STEP.ADD_RECEIPT_DETAILS ? "Add Details" : "Add Seller"}
+        <IonToolbar color="success" className="ion-padding">
+          <IonTitle className="ion-text-center">
+            <h2>
+              {step === STEP.ADD_RECEIPT_DETAILS ? "Add Receipt" : "Add Seller"}
+            </h2>
           </IonTitle>
         </IonToolbar>
       </IonHeader>

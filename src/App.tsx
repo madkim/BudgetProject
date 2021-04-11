@@ -21,6 +21,7 @@ import EditReceipt from "./_pages/Receipts/EditReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
 import EditSeller from "./_pages/Sellers/EditSeller";
 import ManageSellers from "./_pages/Sellers/ManageSellers";
+import BudgetStats from "./_pages/BudgetStats";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -50,6 +51,7 @@ const App: React.FC = () => (
         <IonTabs>
           <IonRouterOutlet id="main">
             <Route path="/add" component={AddReceipt} />
+            <Route path="/budget" component={BudgetStats} />
             <Route path="/view/:id" component={ViewReceipt} />
             <Route path="/edit/:id" component={EditReceipt} />
             <Route path="/receipts" component={Receipts} />
@@ -67,7 +69,7 @@ const App: React.FC = () => (
               <IonLabel>Receipts</IonLabel>
             </IonTabButton>
 
-            <IonTabButton tab="stats" href="/stats">
+            <IonTabButton tab="budget" href="/budget">
               <IonIcon icon={statsChartOutline} />
               <IonLabel>Budget Stats</IonLabel>
             </IonTabButton>

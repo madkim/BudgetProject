@@ -83,7 +83,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="success">
+        <IonToolbar color="success" className="ion-padding-top">
           <IonButtons slot="start">
             <IonButton
               slot="start"
@@ -95,8 +95,8 @@ const EditSeller: React.FC<Props> = (props: Props) => {
             </IonButton>
           </IonButtons>
 
-          <IonTitle size="large" className="ion-text-center">
-            Edit Seller
+          <IonTitle className="ion-text-center">
+            <h2>Edit Seller</h2>
           </IonTitle>
         </IonToolbar>
       </IonHeader>
