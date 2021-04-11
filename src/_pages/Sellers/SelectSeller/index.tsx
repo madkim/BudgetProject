@@ -20,7 +20,7 @@ import "./SelectSeller.css";
 import React, { useState, useRef, useEffect } from "react";
 
 import { useHaptics } from "../../../_hooks/useHaptics";
-import { addOutline } from "ionicons/icons";
+import { addOutline, starOutline } from "ionicons/icons";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { useDispatch, connect } from "react-redux";
 import { Sellers, Seller, Ref } from "../../../_helpers/types";
@@ -295,12 +295,36 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                             )
                             .map((seller, i) => {
                               return (
-                                <IonItem id={seller.id} lines="none" key={i}>
-                                  <IonLabel className="ion-text-capitalize">
-                                    {seller.name}
-                                  </IonLabel>
-                                  <IonRadio slot="start" value={seller.id} />
-                                </IonItem>
+                                <IonRow>
+                                  <IonCol size="9" className="ion-no-padding">
+                                    <IonItem
+                                      id={seller.id}
+                                      lines="none"
+                                      key={i}
+                                    >
+                                      <IonLabel className="ion-text-capitalize">
+                                        {seller.name}
+                                      </IonLabel>
+                                      <IonRadio
+                                        slot="start"
+                                        value={seller.id}
+                                      />
+                                    </IonItem>
+                                  </IonCol>
+                                  <IonCol
+                                    size="auto"
+                                    className="ion-text-right ion-no-padding"
+                                  >
+                                    <IonButton
+                                      fill="clear"
+                                      className="ion-padding-end"
+                                    >
+                                      <small>
+                                        <IonIcon icon={starOutline} />
+                                      </small>
+                                    </IonButton>
+                                  </IonCol>
+                                </IonRow>
                               );
                             })}
                         </div>
