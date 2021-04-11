@@ -2,6 +2,7 @@ import { budgetConstants } from "../_constants/budgetConstants";
 import { Action } from "../_helpers/types";
 
 export const initState = {
+  days: {},
   loading: false,
   totalSpent: 0,
 };
@@ -24,6 +25,20 @@ export function budgetReducer(state = initState, action: Action) {
       ...state,
       loading: false,
       totalSpent: action.payload,
+    });
+  }
+  if (action.type === budgetConstants.GET_TOTAL_SPENT) {
+    return (state = {
+      ...state,
+      loading: false,
+      totalSpent: action.payload,
+    });
+  }
+  if (action.type === budgetConstants.GET_TOTAL_SPENT_BY_DAY) {
+    return (state = {
+      ...state,
+      loading: false,
+      days: action.payload,
     });
   }
   return state;

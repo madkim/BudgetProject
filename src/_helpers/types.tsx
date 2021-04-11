@@ -23,6 +23,10 @@ export interface Sellers {
   [key: string]: Seller[];
 }
 
+export interface Days {
+  [key: string]: number;
+}
+
 export interface Action {
   type: string;
   payload: any;

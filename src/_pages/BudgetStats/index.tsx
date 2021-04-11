@@ -12,6 +12,7 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonItem,
+  IonGrid,
 } from "@ionic/react";
 
 import React, { useEffect } from "react";
@@ -22,6 +23,8 @@ import { connect } from "react-redux";
 import { Receipt } from "../../_helpers/types";
 import { useDispatch } from "react-redux";
 import { budgetActions } from "../../_actions/budgetActions";
+
+import SpentPerDay from "./SpentPerDay";
 
 interface Props {
   loading: boolean;
@@ -49,51 +52,49 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
         <IonLoading isOpen={props.loading} message={"Please wait..."} />
 
         <FadeIn>
-          <IonCard className="ion-text-center">
-            <IonCardHeader
-              className="ion-no-padding"
-              style={{ paddingBottom: "1vh" }}
-            >
-              <IonCardTitle>
-                <h1>{moment().format("MMMM Do YYYY")}</h1>
-              </IonCardTitle>
-            </IonCardHeader>
-          </IonCard>
           <IonCard>
-            <IonRow className="ion-text-center">
-              <IonCol>
-                <IonCardHeader>
+            <IonGrid className="ion-padding-start">
+              <IonRow>
+                <IonCol className="ion-padding-vertical">
+                  <IonCardTitle style={{ fontWeight: "300" }}>
+                    {moment().format("MMMM Do YYYY")}
+                  </IonCardTitle>
+                </IonCol>
+              </IonRow>
+
+              <IonRow className="ion-padding-bottom">
+                <IonCol>
                   <IonCardSubtitle>Allowance</IonCardSubtitle>
-                  <IonCardTitle>
+                  <IonCardTitle style={{ fontWeight: "300" }}>
                     ${(428.5 - props.totalSpent).toFixed(1)}
                   </IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-              <IonCol>
-                <IonCardHeader>
+                </IonCol>
+                <IonCol>
                   <IonCardSubtitle>Saved</IonCardSubtitle>
-                  <IonCardTitle>${(1200 - 155.79).toFixed(1)}</IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-            </IonRow>
-            <IonRow className="ion-text-center">
-              <IonCol>
-                <IonCardHeader>
+                  <IonCardTitle style={{ fontWeight: "300" }}>
+                    ${(1200 - 155.79).toFixed(1)}
+                  </IonCardTitle>
+                </IonCol>
+              </IonRow>
+
+              <IonRow className="ion-padding-bottom">
+                <IonCol>
                   <IonCardSubtitle>Days Left</IonCardSubtitle>
-                  <IonCardTitle>
+                  <IonCardTitle style={{ fontWeight: "300" }}>
                     {moment().endOf("month").diff(moment(), "days")}
                   </IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-              <IonCol>
-                <IonCardHeader>
+                </IonCol>
+                <IonCol>
                   <IonCardSubtitle>Spent</IonCardSubtitle>
-                  <IonCardTitle>${props.totalSpent}</IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-            </IonRow>
+                  <IonCardTitle style={{ fontWeight: "300" }}>
+                    ${props.totalSpent}
+                  </IonCardTitle>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
           </IonCard>
         </FadeIn>
+        <SpentPerDay />
       </IonContent>
     </IonPage>
   );
