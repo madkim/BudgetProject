@@ -29,7 +29,11 @@ function getByID(id: string) {
         date: receipt.data()!.date.toDate(),
         photo: photoUrl,
         price: receipt.data()!.price,
-        seller: { id: seller.id, name: seller.data().name },
+        seller: {
+          id: seller.id,
+          name: seller.data().name,
+          favorite: seller.data().favorite,
+        },
         hasPhoto: photoUrl !== "" ? true : false,
       };
     });
@@ -64,7 +68,11 @@ function getAll() {
           date: receipt.data().date.toDate(),
           photo: photos[index] !== undefined ? photos[index] : "",
           price: receipt.data().price,
-          seller: { id: sellers[index].id, name: sellers[index].data().name },
+          seller: {
+            id: sellers[index].id,
+            name: sellers[index].data().name,
+            favorite: sellers[index].data().favorite,
+          },
           hasPhoto: photos[index] !== undefined ? true : false,
         };
       });
@@ -96,7 +104,7 @@ function addNew(
         date: date,
         photo: "",
         price: price,
-        seller: { id: seller.id, name: seller.name },
+        seller: { id: seller.id, name: seller.name, favorite: seller.favorite },
         hasPhoto: photo !== undefined ? true : false,
       };
 

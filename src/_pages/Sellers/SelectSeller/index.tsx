@@ -20,10 +20,10 @@ import "./SelectSeller.css";
 import React, { useState, useRef, useEffect } from "react";
 
 import { useHaptics } from "../../../_hooks/useHaptics";
-import { addOutline, starOutline } from "ionicons/icons";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { useDispatch, connect } from "react-redux";
 import { Sellers, Seller, Ref } from "../../../_helpers/types";
+import { addOutline, starOutline, star } from "ionicons/icons";
 
 type Props = {
   loading: boolean;
@@ -295,13 +295,9 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                             )
                             .map((seller, i) => {
                               return (
-                                <IonRow>
+                                <IonRow key={i}>
                                   <IonCol size="9" className="ion-no-padding">
-                                    <IonItem
-                                      id={seller.id}
-                                      lines="none"
-                                      key={i}
-                                    >
+                                    <IonItem id={seller.id} lines="none">
                                       <IonLabel className="ion-text-capitalize">
                                         {seller.name}
                                       </IonLabel>
@@ -320,7 +316,11 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                                       className="ion-padding-end"
                                     >
                                       <small>
-                                        <IonIcon icon={starOutline} />
+                                        <IonIcon
+                                          icon={
+                                            seller.favorite ? star : starOutline
+                                          }
+                                        />
                                       </small>
                                     </IonButton>
                                   </IonCol>

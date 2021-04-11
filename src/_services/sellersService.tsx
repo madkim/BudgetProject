@@ -15,7 +15,11 @@ function getByID(id: string) {
     .doc(id)
     .get()
     .then((seller) => {
-      return { id: seller.id, name: seller.data()!.name };
+      return {
+        id: seller.id,
+        name: seller.data()!.name,
+        favorite: seller.data()!.favorite,
+      };
     });
 }
 
@@ -30,7 +34,12 @@ function getAll() {
       sellers.docs.map((seller) => {
         const name = seller.data().name;
         const letter = name.charAt(0).toUpperCase();
-        const curSeller = { id: seller.id, name: name };
+
+        const curSeller = {
+          id: seller.id,
+          name: name,
+          favorite: seller.data().favorite,
+        };
 
         if (isNaN(letter)) {
           if (data[letter]) {
@@ -56,11 +65,15 @@ function getAll() {
 function addNew(newSellerName: any, sellerOptions: Sellers) {
   return db
     .collection("sellers")
-    .add({ name: newSellerName.toLowerCase() })
+    .add({ name: newSellerName.toLowerCase(), favorite: false })
     .then((sellerRef) => {
       let sellers = { ...sellerOptions };
       let letter = newSellerName.charAt(0).toUpperCase();
-      const newSeller = { id: sellerRef.id, name: newSellerName };
+      const newSeller = {
+        id: sellerRef.id,
+        name: newSellerName,
+        favorite: false,
+      };
 
       if (isNaN(letter)) {
         if (sellers[letter]) {

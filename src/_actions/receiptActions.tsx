@@ -128,7 +128,6 @@ function updateReceipt(
       .update(id, fields, photo, dispatch)
       .then((receipt) => {
         dispatch(success(receipt));
-        alert("Receipt updated!");
         goBack(`/view/${id}`);
       })
       .catch((error: Error) => {

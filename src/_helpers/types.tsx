@@ -16,6 +16,7 @@ export interface Receipts {
 export interface Seller {
   id: string;
   name: string;
+  favorite: boolean;
 }
 
 export interface Sellers {
