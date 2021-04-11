@@ -49,6 +49,16 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
         <IonLoading isOpen={props.loading} message={"Please wait..."} />
 
         <FadeIn>
+          <IonCard className="ion-text-center">
+            <IonCardHeader
+              className="ion-no-padding"
+              style={{ paddingBottom: "1vh" }}
+            >
+              <IonCardTitle>
+                <h1>{moment().format("MMMM Do YYYY")}</h1>
+              </IonCardTitle>
+            </IonCardHeader>
+          </IonCard>
           <IonCard>
             <IonRow className="ion-text-center">
               <IonCol>
