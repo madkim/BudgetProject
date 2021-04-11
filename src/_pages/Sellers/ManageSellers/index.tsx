@@ -20,7 +20,9 @@ import {
 } from "@ionic/react";
 
 import {
+  star,
   addOutline,
+  starOutline,
   chevronBackOutline,
   chevronForwardOutline,
 } from "ionicons/icons";
@@ -259,8 +261,11 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                   )
                   .map((letter, i) => {
                     return (
-                      <div key={i} className="ion-padding-horizontal">
-                        <div className="text" ref={alpha[letter]}>
+                      <div key={i}>
+                        <div
+                          ref={alpha[letter]}
+                          className="text ion-margin-start"
+                        >
                           {letter}
                         </div>
                         {sellerOptions[letter]
@@ -280,11 +285,25 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                                 className="ion-padding-end"
                                 onClick={() => editSeller(seller.id)}
                               >
-                                <h5>
-                                  <IonLabel className="ion-text-capitalize">
-                                    {seller.name}
-                                  </IonLabel>
-                                </h5>
+                                <IonCol
+                                  size="2"
+                                  className="ion-text-right ion-no-padding"
+                                >
+                                  <IonButton fill="clear">
+                                    <IonIcon
+                                      icon={
+                                        seller.favorite ? star : starOutline
+                                      }
+                                    />
+                                  </IonButton>
+                                </IonCol>
+                                <IonCol size="8">
+                                  <h5>
+                                    <IonLabel className="ion-text-capitalize">
+                                      {seller.name}
+                                    </IonLabel>
+                                  </h5>
+                                </IonCol>
                                 <IonCol className="ion-text-end">
                                   {props.loading && clicked === seller.id ? (
                                     <IonSpinner name="lines-small" />
