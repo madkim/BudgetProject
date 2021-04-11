@@ -13,7 +13,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { NavContext } from "@ionic/react";
 import { useTakePhoto } from "../../../_hooks/useTakePhoto";
-import { sellerActions } from "../../../_actions/sellerActions";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { chevronBackOutline } from "ionicons/icons";
 import { connect, useDispatch } from "react-redux";

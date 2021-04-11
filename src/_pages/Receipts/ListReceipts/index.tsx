@@ -20,7 +20,7 @@ import moment from "moment";
 import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { receiptActions } from "../../../_actions/receiptActions";
-import { Receipt, Receipts } from "../../../_helpers/types";
+import { Receipt, Receipts, DynObject } from "../../../_helpers/types";
 import { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
 import { imageOutline, chevronForwardOutline } from "ionicons/icons";
@@ -33,6 +33,8 @@ interface Props {
 const ListRecepts: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const [totals, setTotals] = useState<DynObject>({});
   const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
 
@@ -60,16 +62,20 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   };
 
   const addMonthAsKey = () => {
+    const totals: DynObject = {};
     const receipts: Receipts = {};
     if (props.receipts) {
       props.receipts.map((receipt) => {
         const date = moment(receipt.date).format("YYYY-MM");
         if (receipts[date]) {
+          totals[date] += receipt.price;
           receipts[date].push(receipt);
         } else {
+          totals[date] = receipt.price;
           receipts[date] = [receipt];
         }
       });
+      setTotals(totals);
       setReceipts(receipts);
     }
   };
@@ -107,6 +113,9 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                 <IonItemDivider sticky>
                   <IonLabel>
                     <h1>{date.format("MMMM YYYY")}</h1>
+                  </IonLabel>
+                  <IonLabel slot="end" className="ion-padding-horizontal">
+                    <small>total: {totals && totals[month]}</small>
                   </IonLabel>
                 </IonItemDivider>
                 {receipts[month].map((receipt) => {
