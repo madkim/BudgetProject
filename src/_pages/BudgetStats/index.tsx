@@ -1,4 +1,6 @@
 import {
+  IonRow,
+  IonCol,
   IonPage,
   IonCard,
   IonTitle,
@@ -8,27 +10,30 @@ import {
   IonLoading,
   IonCardTitle,
   IonCardHeader,
-  IonCardContent,
   IonCardSubtitle,
-  IonGrid,
-  IonRow,
-  IonCol,
 } from "@ionic/react";
 
-import React from "react";
+import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
+import moment from "moment";
 
 import { connect } from "react-redux";
 import { Receipt } from "../../_helpers/types";
+import { useDispatch } from "react-redux";
+import { budgetActions } from "../../_actions/budgetActions";
 
 interface Props {
-  receipts: Receipt[];
   loading: boolean;
-  request: string;
-  upload: string;
+  totalSpent: number;
 }
 
 const BudgetStats: React.FC<Props> = (props: Props) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(budgetActions.getTotalSpent());
+  }, []);
+
   return (
     <IonPage>
       <IonHeader>
@@ -62,63 +67,35 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
               <IonCol>
                 <IonCardHeader>
                   <IonCardSubtitle>Days Left</IonCardSubtitle>
-                  <IonCardTitle>20</IonCardTitle>
+                  <IonCardTitle>
+                    {moment().endOf("month").diff(moment(), "days")}
+                  </IonCardTitle>
                 </IonCardHeader>
               </IonCol>
               <IonCol>
                 <IonCardHeader>
                   <IonCardSubtitle>Spent</IonCardSubtitle>
-                  <IonCardTitle>$333</IonCardTitle>
+                  <IonCardTitle>${props.totalSpent}</IonCardTitle>
                 </IonCardHeader>
               </IonCol>
             </IonRow>
           </IonCard>
         </FadeIn>
-        {/* <FadeIn>
-          <IonCard>
-            <IonRow>
-              <IonCol>
-                <IonCardHeader>
-                  <IonCardSubtitle>Monthly Allowance</IonCardSubtitle>
-                  <IonCardTitle>$95.50</IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-            </IonRow>
-          </IonCard>
-          <IonCard>
-            <IonRow>
-              <IonCol>
-                <IonCardHeader>
-                  <IonCardSubtitle>Saved This Month</IonCardSubtitle>
-                  <IonCardTitle>$1,044</IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-            </IonRow>
-          </IonCard>
-          <IonCard>
-            <IonRow>
-              <IonCol>
-                <IonCardHeader>
-                  <IonCardSubtitle>Spent This Month</IonCardSubtitle>
-                  <IonCardTitle>$333</IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-            </IonRow>
-          </IonCard>
-          <IonCard>
-            <IonRow>
-              <IonCol>
-                <IonCardHeader>
-                  <IonCardSubtitle>Days Left This Month</IonCardSubtitle>
-                  <IonCardTitle>20</IonCardTitle>
-                </IonCardHeader>
-              </IonCol>
-            </IonRow>
-          </IonCard>
-        </FadeIn> */}
       </IonContent>
     </IonPage>
   );
 };
 
-export default connect()(BudgetStats);
+const mapStateToProps = (state: {
+  budgetReducer: {
+    loading: boolean;
+    totalSpent: number;
+  };
+}) => {
+  return {
+    loading: state.budgetReducer.loading,
+    totalSpent: state.budgetReducer.totalSpent,
+  };
+};
+
+export default connect(mapStateToProps)(BudgetStats);

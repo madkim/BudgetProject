@@ -115,7 +115,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                     <h1>{date.format("MMMM YYYY")}</h1>
                   </IonLabel>
                   <IonLabel slot="end" className="ion-padding-horizontal">
-                    <small>total: {totals && totals[month]}</small>
+                    <small>${totals && totals[month].toFixed(2)} / 428.5</small>
                   </IonLabel>
                 </IonItemDivider>
                 {receipts[month].map((receipt) => {

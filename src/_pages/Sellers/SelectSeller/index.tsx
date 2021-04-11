@@ -307,23 +307,19 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                                       />
                                     </IonItem>
                                   </IonCol>
-                                  <IonCol
-                                    size="auto"
-                                    className="ion-text-right ion-no-padding"
+
+                                  <IonButton
+                                    fill="clear"
+                                    className="ion-padding-end"
                                   >
-                                    <IonButton
-                                      fill="clear"
-                                      className="ion-padding-end"
-                                    >
-                                      <small>
-                                        <IonIcon
-                                          icon={
-                                            seller.favorite ? star : starOutline
-                                          }
-                                        />
-                                      </small>
-                                    </IonButton>
-                                  </IonCol>
+                                    <small>
+                                      <IonIcon
+                                        icon={
+                                          seller.favorite ? star : starOutline
+                                        }
+                                      />
+                                    </small>
+                                  </IonButton>
                                 </IonRow>
                               );
                             })}
