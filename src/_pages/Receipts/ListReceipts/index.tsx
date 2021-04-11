@@ -19,8 +19,9 @@ import moment from "moment";
 
 import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
+import { budgetActions } from "../../../_actions/budgetActions";
 import { receiptActions } from "../../../_actions/receiptActions";
-import { Receipt, Receipts, DynObject } from "../../../_helpers/types";
+import { Receipt, Receipts } from "../../../_helpers/types";
 import { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
 import { imageOutline, chevronForwardOutline } from "ionicons/icons";
@@ -28,13 +29,13 @@ import { imageOutline, chevronForwardOutline } from "ionicons/icons";
 interface Props {
   loading: boolean;
   receipts: Receipt[];
+  totalSpent: number;
 }
 
 const ListRecepts: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [totals, setTotals] = useState<DynObject>({});
   const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
 
@@ -62,20 +63,20 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   };
 
   const addMonthAsKey = () => {
-    const totals: DynObject = {};
+    // const totals: DynObject = {};
     const receipts: Receipts = {};
     if (props.receipts) {
       props.receipts.map((receipt) => {
         const date = moment(receipt.date).format("YYYY-MM");
         if (receipts[date]) {
-          totals[date] += receipt.price;
+          // totals[date] += receipt.price;
           receipts[date].push(receipt);
         } else {
-          totals[date] = receipt.price;
+          // totals[date] = receipt.price;
           receipts[date] = [receipt];
         }
       });
-      setTotals(totals);
+      // setTotals(totals);
       setReceipts(receipts);
     }
   };
@@ -99,6 +100,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    dispatch(budgetActions.getTotalSpent());
     addMonthAsKey();
   }, [props.receipts]);
 
@@ -115,7 +117,9 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                     <h1>{date.format("MMMM YYYY")}</h1>
                   </IonLabel>
                   <IonLabel slot="end" className="ion-padding-horizontal">
-                    <small>${totals && totals[month].toFixed(2)} / 428.5</small>
+                    <small>
+                      ${props.totalSpent && props.totalSpent.toFixed(2)} / 428.5
+                    </small>
                   </IonLabel>
                 </IonItemDivider>
                 {receipts[month].map((receipt) => {
@@ -191,9 +195,13 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: { receiptsReducer: { loading: boolean } }) => {
+const mapStateToProps = (state: {
+  budgetReducer: { totalSpent: number };
+  receiptsReducer: { loading: boolean };
+}) => {
   return {
     loading: state.receiptsReducer.loading,
+    totalSpent: state.budgetReducer.totalSpent,
   };
 };
 

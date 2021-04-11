@@ -11,6 +11,7 @@ import {
   IonCardTitle,
   IonCardHeader,
   IonCardSubtitle,
+  IonItem,
 } from "@ionic/react";
 
 import React, { useEffect } from "react";
@@ -32,7 +33,7 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     dispatch(budgetActions.getTotalSpent());
-  }, []);
+  }, [props.totalSpent]);
 
   return (
     <IonPage>
@@ -53,13 +54,15 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
               <IonCol>
                 <IonCardHeader>
                   <IonCardSubtitle>Allowance</IonCardSubtitle>
-                  <IonCardTitle>$95.50</IonCardTitle>
+                  <IonCardTitle>
+                    ${(428.5 - props.totalSpent).toFixed(1)}
+                  </IonCardTitle>
                 </IonCardHeader>
               </IonCol>
               <IonCol>
                 <IonCardHeader>
                   <IonCardSubtitle>Saved</IonCardSubtitle>
-                  <IonCardTitle>$1,044</IonCardTitle>
+                  <IonCardTitle>${(1200 - 155.79).toFixed(1)}</IonCardTitle>
                 </IonCardHeader>
               </IonCol>
             </IonRow>
