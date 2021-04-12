@@ -156,15 +156,15 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                           }
                         >
                           <IonRow>
-                            <IonCol size="auto">
+                            <IonCol size="3">
                               {moment(receipt.date).format("ddd, Do")}
                             </IonCol>
-                            <IonCol className="ion-text-right ion-padding-end">
+                            <IonCol className="ion-text-left ion-padding-start">
                               <IonBadge color={getBadgeColor(receipt.price)}>
                                 ${receipt.price?.toFixed(2)}
                               </IonBadge>
                             </IonCol>
-                            <IonCol size="3">
+                            <IonCol size="4">
                               {receipt.seller && (
                                 <IonLabel className="ion-text-capitalize">
                                   {receipt.seller.name}

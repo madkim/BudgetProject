@@ -53,14 +53,20 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
                 <IonRow key={day}>
                   <IonCol>
                     <IonItem button>
-                      <IonLabel className="ion-text-capitalize">
-                        {moment(day).format("dddd, Do")}
-                      </IonLabel>
-                      <IonLabel className="ion-text-center">
-                        <IonBadge color={getBadgeColor(days[day])}>
-                          ${days[day].toFixed(2)}
-                        </IonBadge>
-                      </IonLabel>
+                      <IonRow style={{ width: "100%" }}>
+                        <IonCol size="8">
+                          <IonLabel className="ion-text-capitalize">
+                            {moment(day).format("dddd, Do")}
+                          </IonLabel>
+                        </IonCol>
+                        <IonCol size="4">
+                          <IonLabel className="ion-text-left">
+                            <IonBadge color={getBadgeColor(days[day])}>
+                              ${days[day].toFixed(2)}
+                            </IonBadge>
+                          </IonLabel>
+                        </IonCol>
+                      </IonRow>
                     </IonItem>
                   </IonCol>
                 </IonRow>
