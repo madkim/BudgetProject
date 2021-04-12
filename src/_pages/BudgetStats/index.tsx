@@ -36,6 +36,7 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     dispatch(budgetActions.getTotalSpent());
+    dispatch(budgetActions.getDaysSpent());
   }, [props.totalSpent]);
 
   return (
