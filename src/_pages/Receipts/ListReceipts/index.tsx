@@ -159,7 +159,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                             <IonCol size="auto">
                               {moment(receipt.date).format("ddd, Do")}
                             </IonCol>
-                            <IonCol className="ion-text-center">
+                            <IonCol className="ion-text-right ion-padding-end">
                               <IonBadge color={getBadgeColor(receipt.price)}>
                                 ${receipt.price}
                               </IonBadge>
