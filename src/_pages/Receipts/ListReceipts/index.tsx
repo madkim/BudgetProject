@@ -161,7 +161,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                             </IonCol>
                             <IonCol className="ion-text-right ion-padding-end">
                               <IonBadge color={getBadgeColor(receipt.price)}>
-                                ${receipt.price}
+                                ${receipt.price?.toFixed(2)}
                               </IonBadge>
                             </IonCol>
                             <IonCol size="3">
