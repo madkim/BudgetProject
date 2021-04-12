@@ -3,17 +3,20 @@ import {
   IonCol,
   IonPage,
   IonCard,
+  IonGrid,
+  IonIcon,
   IonTitle,
   IonHeader,
+  IonButton,
+  IonButtons,
   IonContent,
   IonToolbar,
   IonLoading,
   IonCardTitle,
-  IonCardHeader,
   IonCardSubtitle,
-  IonItem,
-  IonGrid,
 } from "@ionic/react";
+
+import { settingsOutline } from "ionicons/icons";
 
 import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
@@ -23,6 +26,7 @@ import { connect } from "react-redux";
 import { Receipt } from "../../_helpers/types";
 import { useDispatch } from "react-redux";
 import { budgetActions } from "../../_actions/budgetActions";
+import { menuController } from "@ionic/core";
 
 import SpentPerDay from "./SpentPerDay";
 
@@ -42,9 +46,15 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="success" className="ion-padding">
+        <IonToolbar color="success">
+          <IonButtons slot="start" className="ion-padding">
+            <IonButton fill="clear" onClick={() => menuController.open()}>
+              <IonIcon icon={settingsOutline} style={{ color: "white" }} />
+            </IonButton>
+          </IonButtons>
+
           <IonTitle className="ion-text-center">
-            <h2>Budget Stats&nbsp;</h2>
+            <h2>💰 M👀LA&nbsp;</h2>
           </IonTitle>
         </IonToolbar>
       </IonHeader>

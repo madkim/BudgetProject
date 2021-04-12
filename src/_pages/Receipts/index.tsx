@@ -17,10 +17,6 @@ import {
   IonCardHeader,
   IonCardContent,
   IonRefresherContent,
-  IonCardSubtitle,
-  IonGrid,
-  IonRow,
-  IonCol,
 } from "@ionic/react";
 
 import {
