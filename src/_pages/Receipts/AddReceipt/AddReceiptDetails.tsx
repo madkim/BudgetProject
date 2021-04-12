@@ -172,7 +172,7 @@ const AddReceiptDetails: React.FC<Props> = (props: Props) => {
             fill="outline"
             color="success"
             expand="block"
-            routerLink="/"
+            routerLink="/receipts"
             routerDirection="back"
           >
             Delete

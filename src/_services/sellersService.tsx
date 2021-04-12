@@ -63,6 +63,7 @@ function getAll() {
 }
 
 function addNew(newSellerName: any, sellerOptions: Sellers) {
+  let numbers: Seller[] = [];
   return db
     .collection("sellers")
     .add({ name: newSellerName.toLowerCase(), favorite: false })
@@ -75,23 +76,28 @@ function addNew(newSellerName: any, sellerOptions: Sellers) {
         favorite: false,
       };
 
+      if ("#" in sellers) {
+        numbers = sellers["#"];
+        delete sellers["#"];
+      }
+
       if (isNaN(letter)) {
         if (sellers[letter]) {
           sellers[letter].push(newSeller);
           sellers[letter].sort(alphaSortValue);
         } else {
           sellers[letter] = [newSeller];
-          sellers = alphaSortKey(sellers);
         }
       } else {
-        if ("#" in sellers) {
-          sellers["#"].push(newSeller);
-        } else {
-          sellers["#"] = [newSeller];
-        }
+        numbers.push(newSeller);
       }
+      const unsorted = Object.assign({}, sellers);
+      const sorted = alphaSortKey(unsorted);
 
-      return sellers;
+      if (numbers.length > 0) {
+        sorted["#"] = numbers;
+      }
+      return sorted;
     });
 }
 

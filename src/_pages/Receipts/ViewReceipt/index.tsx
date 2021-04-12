@@ -111,7 +111,11 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
       <IonHeader>
         <IonToolbar color="success">
           <IonButtons slot="start">
-            <IonButton fill="clear" routerLink="/" routerDirection="back">
+            <IonButton
+              fill="clear"
+              routerLink="/receipts"
+              routerDirection="back"
+            >
               <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
             </IonButton>
           </IonButtons>
@@ -239,7 +243,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
             <IonButton
               color="success"
               expand="block"
-              routerLink="/"
+              routerLink="/receipts"
               routerDirection="back"
             >
               Done

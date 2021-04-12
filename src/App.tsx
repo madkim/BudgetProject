@@ -59,7 +59,7 @@ const App: React.FC = () => (
             <Route path="/manage/sellers" component={ManageSellers} />
             <Route path="/manage/seller/:id" component={EditSeller} />
             <Route exact path="/">
-              <Redirect to="/receipts" />
+              <Redirect to="/budget" />
             </Route>
           </IonRouterOutlet>
 

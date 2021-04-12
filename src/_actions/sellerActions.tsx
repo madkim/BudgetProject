@@ -76,7 +76,6 @@ function deleteSeller(id: string, history: any) {
       .then(() => {
         dispatch(getAllSellers());
         history.goBack();
-        alert("Seller deleted!");
       })
       .catch((error: Error) => {
         if (error.message === "receiptsWithSeller") {
