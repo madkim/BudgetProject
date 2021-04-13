@@ -23,7 +23,7 @@ import { useHaptics } from "../../../_hooks/useHaptics";
 import { sellerActions } from "../../../_actions/sellerActions";
 import { useDispatch, connect } from "react-redux";
 import { Sellers, Seller, Ref } from "../../../_helpers/types";
-import { addOutline, starOutline, star } from "ionicons/icons";
+import { addOutline } from "ionicons/icons";
 
 type Props = {
   loading: boolean;
