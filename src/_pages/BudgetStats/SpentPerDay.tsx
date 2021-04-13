@@ -6,6 +6,7 @@ import {
   IonLabel,
   IonContent,
   IonBadge,
+  IonGrid,
 } from "@ionic/react";
 
 import React, { useEffect } from "react";
@@ -45,31 +46,29 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <IonContent className="">
+      <IonContent className="ion-padding-start">
         <IonList className="ion-padding-end">
           {Object.keys(days).length > 0 &&
             Object.keys(days).map((day) => {
               return (
-                <IonRow key={day}>
-                  <IonCol>
-                    <IonItem button>
-                      <IonRow style={{ width: "100%" }}>
-                        <IonCol size="8">
-                          <IonLabel className="ion-text-capitalize">
-                            {moment(day).format("dddd, Do")}
-                          </IonLabel>
-                        </IonCol>
-                        <IonCol size="4">
-                          <IonLabel className="ion-text-left">
-                            <IonBadge color={getBadgeColor(days[day])}>
-                              ${days[day].toFixed(2)}
-                            </IonBadge>
-                          </IonLabel>
-                        </IonCol>
-                      </IonRow>
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
+                <IonItem button lines="full" key={day}>
+                  <IonGrid>
+                    <IonRow style={{ width: "100%", padding: "1vh" }}>
+                      <IonCol size="8">
+                        <IonLabel className="ion-text-capitalize">
+                          {moment(day).format("dddd, Do")}
+                        </IonLabel>
+                      </IonCol>
+                      <IonCol size="4">
+                        <IonLabel className="ion-text-left">
+                          <IonBadge color={getBadgeColor(days[day])}>
+                            ${days[day].toFixed(2)}
+                          </IonBadge>
+                        </IonLabel>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </IonItem>
               );
             })}
         </IonList>

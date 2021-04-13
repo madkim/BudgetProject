@@ -296,7 +296,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                             .map((seller, i) => {
                               return (
                                 <IonRow key={i}>
-                                  <IonCol size="9" className="ion-no-padding">
+                                  <IonCol className="ion-no-padding">
                                     <IonItem id={seller.id} lines="none">
                                       <IonLabel className="ion-text-capitalize">
                                         {seller.name}
@@ -307,19 +307,6 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                                       />
                                     </IonItem>
                                   </IonCol>
-
-                                  <IonButton
-                                    fill="clear"
-                                    className="ion-padding-end"
-                                  >
-                                    <small>
-                                      <IonIcon
-                                        icon={
-                                          seller.favorite ? star : starOutline
-                                        }
-                                      />
-                                    </small>
-                                  </IonButton>
                                 </IonRow>
                               );
                             })}

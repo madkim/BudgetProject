@@ -16,7 +16,7 @@ import {
   IonCardSubtitle,
 } from "@ionic/react";
 
-import { settingsOutline } from "ionicons/icons";
+import { settingsOutline, swapHorizontalOutline } from "ionicons/icons";
 
 import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
@@ -64,7 +64,7 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
 
         <FadeIn>
           <IonCard>
-            <IonGrid className="ion-padding-start">
+            <IonGrid className="ion-padding-start ion-text-center">
               <IonRow>
                 <IonCol className="ion-padding-vertical">
                   <IonCardTitle style={{ fontWeight: "300" }}>
@@ -74,31 +74,42 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
               </IonRow>
 
               <IonRow className="ion-padding-bottom">
-                <IonCol>
+                <IonCol size="4">
                   <IonCardSubtitle>Allowance</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${(428.5 - props.totalSpent).toFixed(1)}
+                    ${(428.5 - props.totalSpent).toFixed(0)}
                   </IonCardTitle>
                 </IonCol>
-                <IonCol>
+                <IonCol size="4">
+                  <IonButton fill="outline" color="dark" shape="round">
+                    <IonIcon icon={swapHorizontalOutline} />
+                  </IonButton>
+                </IonCol>
+                <IonCol size="4">
                   <IonCardSubtitle>Saved</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${(1200 - 155.79).toFixed(1)}
+                    ${(1200 - 155.79).toFixed(0)}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>
 
               <IonRow className="ion-padding-bottom">
-                <IonCol>
+                <IonCol size="4">
+                  <IonCardSubtitle>Budget</IonCardSubtitle>
+                  <IonCardTitle style={{ fontWeight: "300" }}>
+                    $428
+                  </IonCardTitle>
+                </IonCol>
+                <IonCol size="4">
                   <IonCardSubtitle>Days Left</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
                     {moment().endOf("month").diff(moment(), "days")}
                   </IonCardTitle>
                 </IonCol>
-                <IonCol>
+                <IonCol size="4">
                   <IonCardSubtitle>Spent</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${props.totalSpent}
+                    ${props.totalSpent.toFixed(0)}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>
