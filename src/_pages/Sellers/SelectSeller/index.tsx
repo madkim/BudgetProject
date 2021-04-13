@@ -295,9 +295,9 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                             )
                             .map((seller, i) => {
                               return (
-                                <IonRow key={i}>
+                                <IonRow key={i} id={seller.id}>
                                   <IonCol className="ion-no-padding">
-                                    <IonItem id={seller.id} lines="none">
+                                    <IonItem lines="none">
                                       <IonLabel className="ion-text-capitalize">
                                         {seller.name}
                                       </IonLabel>
