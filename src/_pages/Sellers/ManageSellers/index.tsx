@@ -17,6 +17,7 @@ import {
   IonButtons,
   IonSpinner,
   IonSearchbar,
+  IonCardTitle,
 } from "@ionic/react";
 
 import {
@@ -27,7 +28,7 @@ import {
   chevronForwardOutline,
 } from "ionicons/icons";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { useHaptics } from "../../../_hooks/useHaptics";
 import { Sellers, Ref } from "../../../_helpers/types";
@@ -291,38 +292,37 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                                 button
                                 lines="none"
                                 detail={false}
-                                className="ion-padding-end"
-                                onClick={() => editSeller(seller.id)}
                               >
-                                <IonCol
-                                  size="2"
-                                  className="ion-text-right ion-no-padding"
+                                <IonButton
+                                  fill="clear"
+                                  className="ion-no-padding"
                                 >
-                                  <IonButton fill="clear">
-                                    <IonIcon
-                                      icon={
-                                        seller.favorite ? star : starOutline
-                                      }
-                                    />
-                                  </IonButton>
-                                </IonCol>
-                                <IonCol size="8">
-                                  <h5>
+                                  <IonIcon
+                                    icon={seller.favorite ? star : starOutline}
+                                  />
+                                </IonButton>
+
+                                <IonRow
+                                  style={{ width: "100%", height: "7vh" }}
+                                  onClick={() => editSeller(seller.id)}
+                                  className="ion-padding"
+                                >
+                                  <IonCol size="10">
                                     <IonLabel className="ion-text-capitalize">
                                       {seller.name}
                                     </IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol className="ion-text-end">
-                                  {props.loading && clicked === seller.id ? (
-                                    <IonSpinner name="lines-small" />
-                                  ) : (
-                                    <IonIcon
-                                      color="medium"
-                                      icon={chevronForwardOutline}
-                                    />
-                                  )}
-                                </IonCol>
+                                  </IonCol>
+                                  <IonCol size="2">
+                                    {props.loading && clicked === seller.id ? (
+                                      <IonSpinner name="lines-small" />
+                                    ) : (
+                                      <IonIcon
+                                        color="medium"
+                                        icon={chevronForwardOutline}
+                                      />
+                                    )}
+                                  </IonCol>
+                                </IonRow>
                               </IonItem>
                             );
                           })}
