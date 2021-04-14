@@ -144,6 +144,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
   };
 
   const favoriteSeller = (id: string, current: boolean) => {
+    setClicked("");
     dispatch(sellerActions.setFavoriteSeller(id, current));
   };
 
@@ -177,7 +178,10 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent className="ion-padding-end">
-        <IonLoading isOpen={props.loading} message={"Please wait..."} />
+        <IonLoading
+          isOpen={props.loading && !clicked}
+          message={"Please wait..."}
+        />
         <IonGrid>
           <IonRow>
             <IonCol>

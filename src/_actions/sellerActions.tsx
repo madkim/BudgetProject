@@ -18,6 +18,7 @@ function setFavoriteSeller(id: string, current: boolean) {
     sellersService
       .setFave(id, current)
       .then(() => {
+        alert(`Seller ${current ? "unfavorited" : "favorited"}!`);
         dispatch(getAllSellers());
       })
       .catch(() => {

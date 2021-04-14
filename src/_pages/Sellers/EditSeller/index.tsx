@@ -36,6 +36,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
 
   const [error, setError] = useState("");
   const [seller, setSeller] = useState(props.seller.name);
+  const [isFavorite, setIsFavorite] = useState(props.seller.favorite);
 
   const { id } = useParams<{ id: string }>();
 
@@ -71,6 +72,11 @@ const EditSeller: React.FC<Props> = (props: Props) => {
     if (answer) {
       dispatch(sellerActions.deleteSeller(props.seller.id, history));
     }
+  };
+
+  const favoriteSeller = (id: string, current: boolean) => {
+    setIsFavorite(!isFavorite);
+    dispatch(sellerActions.setFavoriteSeller(id, current));
   };
 
   const blurIonInput = () => {
@@ -149,7 +155,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
 
         <IonGrid style={{ marginTop: buttonsMarginTop }}>
           <IonRow className="ion-padding-horizontal">
-            <IonCol size="12">
+            <IonCol size="9">
               <IonButton
                 fill="outline"
                 color="danger"
@@ -157,6 +163,18 @@ const EditSeller: React.FC<Props> = (props: Props) => {
                 onClick={deleteSeller}
               >
                 Delete Seller
+              </IonButton>
+            </IonCol>
+            <IonCol size="3">
+              <IonButton
+                fill="outline"
+                color="warning"
+                expand="block"
+                onClick={() => {
+                  favoriteSeller(props.seller.id, props.seller.favorite);
+                }}
+              >
+                {isFavorite ? <>&#9733;</> : <>&#9734;</>}
               </IonButton>
             </IonCol>
           </IonRow>
