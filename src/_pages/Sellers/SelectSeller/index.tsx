@@ -38,6 +38,7 @@ type Props = {
 
 const SelectSeller: React.FC<Props> = (props: Props) => {
   const alpha: any = {
+    "*": useRef(null),
     A: useRef(null),
     B: useRef(null),
     C: useRef(null),
@@ -145,7 +146,8 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
     const Y = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
     const realTarget = document.elementFromPoint(X, Y);
     if (realTarget !== null) {
-      const current = realTarget.innerHTML;
+      const target = realTarget;
+      const current = target.className === "*" ? "*" : target.innerHTML;
       if (current !== letter) {
         setLetter(current);
         if (alpha[current] !== undefined && alpha[current].current !== null) {
@@ -256,7 +258,13 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                   if (Object.keys(sellerOptions).includes(letter)) {
                     return (
                       <small key={letter}>
-                        <li>{letter}</li>
+                        {letter === "*" ? (
+                          <li className="*" style={{ color: "#ffc409" }}>
+                            &#9733;
+                          </li>
+                        ) : (
+                          <li>{letter}</li>
+                        )}
                       </small>
                     );
                   }
@@ -284,7 +292,11 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                       return (
                         <div key={i} className="ion-padding-start">
                           <div className="text" ref={alpha[letter]}>
-                            {letter}
+                            {letter === "*" ? (
+                              <li style={{ color: "#ffc409" }}>&#9733;</li>
+                            ) : (
+                              <li>{letter}</li>
+                            )}
                           </div>
                           {sellerOptions[letter]
                             .filter((seller) =>

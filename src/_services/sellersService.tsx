@@ -24,7 +24,7 @@ function getByID(id: string) {
 }
 
 function getAll() {
-  const data: Sellers = {};
+  const data: Sellers = { "*": [] };
   const numbers: Seller[] = [];
   return db
     .collection("sellers")
@@ -40,6 +40,10 @@ function getAll() {
           name: name,
           favorite: seller.data().favorite,
         };
+
+        if (seller.data().favorite) {
+          data["*"].push(curSeller);
+        }
 
         if (isNaN(letter)) {
           if (data[letter]) {
