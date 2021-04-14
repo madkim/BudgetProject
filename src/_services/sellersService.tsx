@@ -8,7 +8,9 @@ export const sellersService = {
   addNew,
   remove,
   rename,
+  setFave,
 };
+
 function getByID(id: string) {
   return db
     .collection("sellers")
@@ -122,4 +124,8 @@ async function remove(id: string) {
 
 function rename(id: string, newName: string) {
   return db.collection("sellers").doc(id).update({ name: newName });
+}
+
+function setFave(id: string, current: boolean) {
+  return db.collection("sellers").doc(id).update({ favorite: !current });
 }

@@ -18,6 +18,7 @@ import {
   IonSpinner,
   IonSearchbar,
   IonCardTitle,
+  IonLoading,
 } from "@ionic/react";
 
 import {
@@ -142,6 +143,10 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     });
   };
 
+  const favoriteSeller = (id: string, current: boolean) => {
+    dispatch(sellerActions.setFavoriteSeller(id, current));
+  };
+
   const editSeller = (id: string) => {
     setClicked(id);
     dispatch(sellerActions.getSellerByID(id, history));
@@ -172,6 +177,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent className="ion-padding-end">
+        <IonLoading isOpen={props.loading} message={"Please wait..."} />
         <IonGrid>
           <IonRow>
             <IonCol>
@@ -296,6 +302,9 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                                 <IonButton
                                   fill="clear"
                                   className="ion-no-padding"
+                                  onClick={() =>
+                                    favoriteSeller(seller.id, seller.favorite)
+                                  }
                                 >
                                   <IonIcon
                                     icon={seller.favorite ? star : starOutline}

@@ -4,12 +4,31 @@ import { sellerConstants } from "../_constants/sellerConstants";
 import { sellersService } from "../_services/sellersService";
 
 export const sellerActions = {
+  setFavoriteSeller,
   getSellerByID,
   getAllSellers,
   addNewSeller,
   deleteSeller,
   renameSeller,
 };
+
+function setFavoriteSeller(id: string, current: boolean) {
+  return (dispatch: Dispatch<any>) => {
+    dispatch({ type: sellerConstants.GET_SELLER_REQUEST, payload: "" });
+    sellersService
+      .setFave(id, current)
+      .then(() => {
+        dispatch(getAllSellers());
+      })
+      .catch(() => {
+        dispatch({
+          type: sellerConstants.GET_SELLER_REQUEST_FAILURE,
+          payload: "",
+        });
+        alert("Could not un/favorite seller at this time. Please try again.");
+      });
+  };
+}
 
 function getSellerByID(
   id: string,
@@ -26,6 +45,10 @@ function getSellerByID(
         history.push(`/manage/seller/${id}`);
       })
       .catch(() => {
+        dispatch({
+          type: sellerConstants.GET_SELLER_REQUEST_FAILURE,
+          payload: "",
+        });
         alert("Could not retrieve seller at this time. Please try again.");
       });
   };
