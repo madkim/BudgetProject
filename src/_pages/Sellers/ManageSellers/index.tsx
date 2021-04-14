@@ -44,6 +44,7 @@ type Props = {
 
 const ManageSellers: React.FC<Props> = (props: Props) => {
   const alpha: any = {
+    "*": useRef(null),
     A: useRef(null),
     B: useRef(null),
     C: useRef(null),
@@ -242,7 +243,13 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                   if (Object.keys(sellerOptions).includes(letter)) {
                     return (
                       <small key={letter}>
-                        <li>{letter}</li>
+                        {letter === "*" ? (
+                          <li className="*" style={{ color: "#ffc409" }}>
+                            &#9733;
+                          </li>
+                        ) : (
+                          <li>{letter}</li>
+                        )}
                       </small>
                     );
                   }
@@ -263,7 +270,11 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                     return (
                       <div key={i} className="ion-padding-horizontal">
                         <div className="text" ref={alpha[letter]}>
-                          {letter}
+                          {letter === "*" ? (
+                            <li style={{ color: "#ffc409" }}>&#9733;</li>
+                          ) : (
+                            <li>{letter}</li>
+                          )}
                         </div>
                         {sellerOptions[letter]
                           .filter((seller) =>
