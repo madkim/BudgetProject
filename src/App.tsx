@@ -12,7 +12,12 @@ import {
 
 import { IonReactRouter } from "@ionic/react-router";
 
-import { receiptOutline, barChartOutline } from "ionicons/icons";
+import {
+  cardOutline,
+  receiptOutline,
+  barChartOutline,
+  cellularOutline,
+} from "ionicons/icons";
 
 import Settings from "./_pages/Settings";
 import Receipts from "./_pages/Receipts";
@@ -64,6 +69,11 @@ const App: React.FC = () => (
           </IonRouterOutlet>
 
           <IonTabBar slot="bottom">
+            <IonTabButton tab="spending" href="/budget">
+              <IonIcon icon={cardOutline} />
+              <IonLabel>Spending</IonLabel>
+            </IonTabButton>
+
             <IonTabButton tab="budget" href="/budget">
               <IonIcon icon={barChartOutline} />
               <IonLabel>Budget</IonLabel>
