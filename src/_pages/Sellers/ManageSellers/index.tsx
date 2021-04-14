@@ -272,13 +272,18 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
             <IonList style={{ height: listHeight, overflowY: "scroll" }}>
               {Object.keys(sellerOptions).length > 0 &&
                 Object.keys(sellerOptions)
-                  .filter((seller) =>
+                  .filter((sellers) =>
                     search !== ""
-                      ? seller.charAt(0).toLowerCase() ===
-                        search.charAt(0).toLowerCase()
-                      : seller
+                      ? sellerOptions[sellers].find((seller) =>
+                          seller.name
+                            .toLowerCase()
+                            .trim()
+                            .includes(search.toLowerCase().trim())
+                        )
+                      : sellers
                   )
                   .map((letter, i) => {
+                    console.log(letter);
                     return (
                       <div key={i} className="ion-padding-horizontal">
                         <div className="text" ref={alpha[letter]}>
