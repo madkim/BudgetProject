@@ -182,7 +182,9 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
     <>
       <IonContent className="ion-padding-end">
         <IonLoading
-          isOpen={props.loading || initLoading}
+          isOpen={
+            initLoading || props.loading || props.uploadingPhoto === "uploading"
+          }
           message={"Please wait..."}
         />
         <IonGrid>
