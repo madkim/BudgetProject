@@ -301,6 +301,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                               >
                                 <IonButton
                                   fill="clear"
+                                  color="warning"
                                   className="ion-no-padding"
                                   onClick={() =>
                                     favoriteSeller(seller.id, seller.favorite)
