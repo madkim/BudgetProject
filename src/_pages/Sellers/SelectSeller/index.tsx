@@ -284,11 +284,15 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
               >
                 {Object.keys(sellerOptions).length > 0 &&
                   Object.keys(sellerOptions)
-                    .filter((seller) =>
+                    .filter((sellers) =>
                       search !== ""
-                        ? seller.charAt(0).toLowerCase() ===
-                          search.charAt(0).toLowerCase()
-                        : seller
+                        ? sellerOptions[sellers].find((seller) =>
+                            seller.name
+                              .toLowerCase()
+                              .trim()
+                              .includes(search.toLowerCase().trim())
+                          )
+                        : sellers
                     )
                     .map((letter, i) => {
                       return (
