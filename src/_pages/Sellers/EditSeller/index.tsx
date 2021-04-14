@@ -75,8 +75,8 @@ const EditSeller: React.FC<Props> = (props: Props) => {
   };
 
   const favoriteSeller = (id: string, current: boolean) => {
+    dispatch(sellerActions.setFavoriteSeller(id, isFavorite));
     setIsFavorite(!isFavorite);
-    dispatch(sellerActions.setFavoriteSeller(id, current));
   };
 
   const blurIonInput = () => {
