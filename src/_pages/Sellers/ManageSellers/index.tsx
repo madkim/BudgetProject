@@ -123,7 +123,8 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     const Y = e.touches && e.touches.length ? e.touches[0].clientY : e.clientY;
     const realTarget = document.elementFromPoint(X, Y);
     if (realTarget !== null) {
-      const current = realTarget.innerHTML;
+      const target = realTarget;
+      const current = target.className === "*" ? "*" : target.innerHTML;
       if (current !== letter) {
         setLetter(current);
         if (alpha[current] !== undefined && alpha[current].current !== null) {
