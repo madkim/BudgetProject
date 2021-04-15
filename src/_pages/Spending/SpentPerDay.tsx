@@ -45,8 +45,11 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <IonContent className="ion-padding-start">
-        <IonList className="ion-padding-end">
+      <IonContent>
+        <IonList
+          slot="fixed"
+          style={{ width: "100%", padding: "0em 1em 0 1em" }}
+        >
           {Object.keys(days).length > 0 &&
             Object.keys(days).map((day) => {
               return (
