@@ -52,8 +52,6 @@ function getDay(date: string) {
     .where("date", "<=", end.toDate())
     .get()
     .then(async (receipts) => {
-      console.log(receipts);
-
       let sellerPromises = await receipts.docs.map(async (receipt) => {
         return await receipt.data().seller.get();
       });

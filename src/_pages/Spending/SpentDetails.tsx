@@ -56,7 +56,7 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding-end">
+      <IonContent>
         <ListReceipts receipts={props.day} />
       </IonContent>
     </IonPage>

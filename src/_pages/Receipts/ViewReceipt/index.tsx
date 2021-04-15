@@ -29,15 +29,13 @@ import {
   ellipsisHorizontalOutline,
 } from "ionicons/icons";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
-import { Receipt } from "../../../_helpers/types";
-
-import { useContext } from "react";
 import { NavContext } from "@ionic/react";
+import { Receipt } from "../../../_helpers/types";
 
 import moment from "moment";
 
@@ -111,11 +109,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
       <IonHeader>
         <IonToolbar color="success">
           <IonButtons slot="start">
-            <IonButton
-              fill="clear"
-              routerLink="/receipts"
-              routerDirection="back"
-            >
+            <IonButton fill="clear" onClick={() => goBack()}>
               <IonIcon icon={chevronBackOutline} style={{ color: "white" }} />
             </IonButton>
           </IonButtons>
@@ -240,12 +234,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
 
         <IonRow className="ion-padding-start ion-padding-top">
           <IonCol size="12">
-            <IonButton
-              color="success"
-              expand="block"
-              routerLink="/receipts"
-              routerDirection="back"
-            >
+            <IonButton color="success" expand="block" onClick={() => goBack()}>
               Done
             </IonButton>
           </IonCol>
