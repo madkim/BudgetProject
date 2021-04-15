@@ -30,6 +30,7 @@ interface Props {
   loading: boolean;
   receipts: Receipt[];
   totalSpent: number;
+  showByDay: boolean;
 }
 
 const ListRecepts: React.FC<Props> = (props: Props) => {
@@ -155,16 +156,24 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
                             receipt.hasPhoto ? "" : "ion-padding-start"
                           }
                         >
-                          <IonRow>
-                            <IonCol size="3">
-                              {moment(receipt.date).format("ddd, Do")}
-                            </IonCol>
-                            <IonCol className="ion-text-left ion-padding-start">
+                          <IonRow style={{ width: "100%" }}>
+                            {props.showByDay === false && (
+                              <IonCol size="3">
+                                {moment(receipt.date).format("ddd, Do")}
+                              </IonCol>
+                            )}
+                            <IonCol
+                              size={props.showByDay ? "4" : ""}
+                              className="ion-text-left ion-padding-start"
+                            >
                               <IonBadge color={getBadgeColor(receipt.price)}>
                                 ${receipt.price?.toFixed(2)}
                               </IonBadge>
                             </IonCol>
-                            <IonCol size="4">
+                            <IonCol
+                              size={props.showByDay ? "6" : "4"}
+                              className={props.showByDay ? "ion-text-left" : ""}
+                            >
                               {receipt.seller && (
                                 <IonLabel className="ion-text-capitalize">
                                   {receipt.seller.name}

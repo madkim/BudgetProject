@@ -51,13 +51,13 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            <h2>Date</h2>
+            <h2>{moment(date).format("MMMM Do YYYY")}</h2>
           </IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
-        <ListReceipts receipts={props.day} />
+        <ListReceipts showByDay={true} receipts={props.day} />
       </IonContent>
     </IonPage>
   );
