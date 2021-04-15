@@ -68,7 +68,7 @@ const Spending: React.FC<Props> = (props: Props) => {
               <IonRow>
                 <IonCol className="ion-padding-vertical">
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    {moment().format("MMMM Do YYYY")}
+                    {moment().format("dddd MMMM Do ")}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>

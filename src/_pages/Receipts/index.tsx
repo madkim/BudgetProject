@@ -121,7 +121,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
           </FadeIn>
         )}
 
-        <ListReceipts showByDay={false} receipts={props.receipts} />
+        <ListReceipts day="" showByDay={false} receipts={props.receipts} />
       </IonContent>
     </IonPage>
   );

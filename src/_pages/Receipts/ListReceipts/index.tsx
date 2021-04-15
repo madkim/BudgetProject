@@ -21,12 +21,13 @@ import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { spendingActions } from "../../../_actions/spendingActions";
 import { receiptActions } from "../../../_actions/receiptActions";
-import { Receipt, Receipts } from "../../../_helpers/types";
 import { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
+import { Receipt, Receipts, DynObject } from "../../../_helpers/types";
 import { imageOutline, chevronForwardOutline } from "ionicons/icons";
 
 interface Props {
+  day: string;
   loading: boolean;
   receipts: Receipt[];
   totalSpent: number;
@@ -37,6 +38,7 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const [totals, setTotals] = useState<DynObject>({});
   const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
 
@@ -64,20 +66,20 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
   };
 
   const addMonthAsKey = () => {
-    // const totals: DynObject = {};
+    const totals: DynObject = {};
     const receipts: Receipts = {};
     if (props.receipts) {
       props.receipts.map((receipt) => {
         const date = moment(receipt.date).format("YYYY-MM");
         if (receipts[date]) {
-          // totals[date] += receipt.price;
+          totals[date] += receipt.price;
           receipts[date].push(receipt);
         } else {
-          // totals[date] = receipt.price;
+          totals[date] = receipt.price;
           receipts[date] = [receipt];
         }
       });
-      // setTotals(totals);
+      setTotals(totals);
       setReceipts(receipts);
     }
   };
@@ -113,19 +115,34 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
             const date = moment(month);
             return (
               <IonItemGroup key={`group-${date}`}>
-                {props.showByDay === false && (
-                  <IonItemDivider sticky>
-                    <IonLabel>
-                      <h1>{date.format("MMMM YYYY")}</h1>
-                    </IonLabel>
-                    <IonLabel slot="end" className="ion-padding-horizontal">
-                      <small>
-                        ${props.totalSpent && props.totalSpent.toFixed(2)} /
-                        428.5
-                      </small>
-                    </IonLabel>
-                  </IonItemDivider>
-                )}
+                <IonItemDivider sticky>
+                  {props.showByDay ? (
+                    <>
+                      <IonLabel>
+                        <h1>
+                          {`${moment(props.day).format("MMMM")} ${parseInt(
+                            props.day.split("-")[2]
+                          )}`}
+                        </h1>
+                      </IonLabel>
+                      <IonLabel slot="end" className="ion-padding-horizontal">
+                        <small>${totals && totals[month].toFixed(2)}</small>
+                      </IonLabel>
+                    </>
+                  ) : (
+                    <>
+                      <IonLabel>
+                        <h1>{date.format("MMMM YYYY")}</h1>
+                      </IonLabel>
+                      <IonLabel slot="end" className="ion-padding-horizontal">
+                        <small>
+                          ${totals && totals[month].toFixed(2)} / 428.5
+                        </small>
+                      </IonLabel>
+                    </>
+                  )}
+                </IonItemDivider>
+
                 {receipts[month].map((receipt) => {
                   return (
                     <IonItemSliding key={receipt.id}>
