@@ -10,11 +10,10 @@ import {
 } from "@ionic/react";
 
 import React, { useEffect } from "react";
-import moment from "moment";
-
-import { budgetActions } from "../../_actions/budgetActions";
+import { spendingActions } from "../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
 import { Days } from "../../_helpers/types";
+import moment from "moment";
 
 interface Props {
   days: Days;
@@ -25,7 +24,7 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(budgetActions.getDaysSpent());
+    dispatch(spendingActions.getDaysSpent());
   }, []);
 
   const getBadgeColor = (price: number | null) => {
@@ -51,7 +50,12 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
           {Object.keys(days).length > 0 &&
             Object.keys(days).map((day) => {
               return (
-                <IonItem button lines="full" key={day}>
+                <IonItem
+                  button
+                  key={day}
+                  lines="full"
+                  routerLink={`spent/${moment(day).format("YYYY-MM-DD")}`}
+                >
                   <IonGrid>
                     <IonRow style={{ width: "100%", padding: "1vh" }}>
                       <IonCol size="8">
@@ -78,15 +82,14 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  budgetReducer: {
+  spendingReducer: {
     loading: boolean;
     days: Days;
   };
 }) => {
-  console.log(state.budgetReducer);
   return {
-    loading: state.budgetReducer.loading,
-    days: state.budgetReducer.days,
+    loading: state.spendingReducer.loading,
+    days: state.spendingReducer.days,
   };
 };
 

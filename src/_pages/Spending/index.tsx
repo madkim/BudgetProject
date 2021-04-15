@@ -25,7 +25,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { Receipt } from "../../_helpers/types";
 import { useDispatch } from "react-redux";
-import { budgetActions } from "../../_actions/budgetActions";
+import { spendingActions } from "../../_actions/spendingActions";
 import { menuController } from "@ionic/core";
 
 import SpentPerDay from "./SpentPerDay";
@@ -35,12 +35,12 @@ interface Props {
   totalSpent: number;
 }
 
-const BudgetStats: React.FC<Props> = (props: Props) => {
+const Spending: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(budgetActions.getTotalSpent());
-    dispatch(budgetActions.getDaysSpent());
+    dispatch(spendingActions.getTotalSpent());
+    dispatch(spendingActions.getDaysSpent());
   }, [props.totalSpent]);
 
   return (
@@ -123,15 +123,15 @@ const BudgetStats: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  budgetReducer: {
+  spendingReducer: {
     loading: boolean;
     totalSpent: number;
   };
 }) => {
   return {
-    loading: state.budgetReducer.loading,
-    totalSpent: state.budgetReducer.totalSpent,
+    loading: state.spendingReducer.loading,
+    totalSpent: state.spendingReducer.totalSpent,
   };
 };
 
-export default connect(mapStateToProps)(BudgetStats);
+export default connect(mapStateToProps)(Spending);

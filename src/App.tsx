@@ -19,6 +19,7 @@ import {
   cellularOutline,
 } from "ionicons/icons";
 
+import Budget from "./_pages/Budget";
 import Settings from "./_pages/Settings";
 import Receipts from "./_pages/Receipts";
 import AddReceipt from "./_pages/Receipts/AddReceipt";
@@ -26,7 +27,8 @@ import EditReceipt from "./_pages/Receipts/EditReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
 import EditSeller from "./_pages/Sellers/EditSeller";
 import ManageSellers from "./_pages/Sellers/ManageSellers";
-import BudgetStats from "./_pages/BudgetStats";
+import Spending from "./_pages/Spending";
+import SpentDetails from "./_pages/Spending/SpentDetails";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -56,20 +58,22 @@ const App: React.FC = () => (
         <IonTabs>
           <IonRouterOutlet id="main">
             <Route path="/add" component={AddReceipt} />
-            <Route path="/budget" component={BudgetStats} />
+            <Route path="/budget" component={Budget} />
             <Route path="/view/:id" component={ViewReceipt} />
             <Route path="/edit/:id" component={EditReceipt} />
             <Route path="/receipts" component={Receipts} />
             <Route path="/settings" component={Settings} />
+            <Route path="/spending" component={Spending} />
+            <Route path="/spent/:date" component={SpentDetails} />
             <Route path="/manage/sellers" component={ManageSellers} />
             <Route path="/manage/seller/:id" component={EditSeller} />
             <Route exact path="/">
-              <Redirect to="/budget" />
+              <Redirect to="/spending" />
             </Route>
           </IonRouterOutlet>
 
           <IonTabBar slot="bottom">
-            <IonTabButton tab="spending" href="/budget">
+            <IonTabButton tab="spending" href="/spending">
               <IonIcon icon={cardOutline} />
               <IonLabel>Spending</IonLabel>
             </IonTabButton>

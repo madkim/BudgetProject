@@ -168,7 +168,7 @@ const EditSeller: React.FC<Props> = (props: Props) => {
             <IonCol size="3">
               <IonButton
                 fill="outline"
-                color="warning"
+                color={isFavorite ? "warning" : "medium"}
                 expand="block"
                 onClick={() => {
                   favoriteSeller(props.seller.id, props.seller.favorite);
