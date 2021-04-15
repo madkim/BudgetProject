@@ -51,7 +51,7 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            <h2>{moment(date).format("MMMM Do YYYY")}</h2>
+            <h2>{moment(date).format("dddd MMMM Do")}</h2>
           </IonTitle>
         </IonToolbar>
       </IonHeader>

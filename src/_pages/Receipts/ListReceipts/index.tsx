@@ -113,16 +113,19 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
             const date = moment(month);
             return (
               <IonItemGroup key={`group-${date}`}>
-                <IonItemDivider sticky>
-                  <IonLabel>
-                    <h1>{date.format("MMMM YYYY")}</h1>
-                  </IonLabel>
-                  <IonLabel slot="end" className="ion-padding-horizontal">
-                    <small>
-                      ${props.totalSpent && props.totalSpent.toFixed(2)} / 428.5
-                    </small>
-                  </IonLabel>
-                </IonItemDivider>
+                {props.showByDay === false && (
+                  <IonItemDivider sticky>
+                    <IonLabel>
+                      <h1>{date.format("MMMM YYYY")}</h1>
+                    </IonLabel>
+                    <IonLabel slot="end" className="ion-padding-horizontal">
+                      <small>
+                        ${props.totalSpent && props.totalSpent.toFixed(2)} /
+                        428.5
+                      </small>
+                    </IonLabel>
+                  </IonItemDivider>
+                )}
                 {receipts[month].map((receipt) => {
                   return (
                     <IonItemSliding key={receipt.id}>
