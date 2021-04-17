@@ -100,7 +100,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
         </IonFab>
 
         {props.loading && receiptsNotRetrieved() ? (
-          <LoadingReceipts count={12} />
+          <LoadingReceipts count={11} />
         ) : (
           <ListReceipts day="" showByDay={false} receipts={props.receipts} />
         )}
@@ -129,13 +129,13 @@ const Receipts: React.FC<Props> = (props: Props) => {
 const mapStateToProps = (state: {
   receiptsReducer: {
     receipts: Receipt[];
-    loading: boolean;
     request: string;
+    loading: boolean;
   };
 }) => {
   return {
-    loading: state.receiptsReducer.loading,
     request: state.receiptsReducer.request,
+    loading: state.receiptsReducer.loading,
     receipts: state.receiptsReducer.receipts,
   };
 };

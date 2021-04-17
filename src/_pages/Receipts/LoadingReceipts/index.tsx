@@ -17,7 +17,7 @@ interface Props {
 export default function LoadingReceipts(props: Props): ReactElement {
   const skeletonTextCount = () => {
     let loopCount = [];
-    for (let i = 1; i < props.count; i++) {
+    for (let i = 0; i < props.count; i++) {
       loopCount.push(i);
     }
     return loopCount;

@@ -2,9 +2,9 @@ import { sellerConstants } from "../_constants/sellerConstants";
 import { Action } from "../_helpers/types";
 
 export const initState = {
-  loading: false,
-  request: "",
   seller: {},
+  request: "",
+  loading: false,
   sellerOptions: {},
 };
 

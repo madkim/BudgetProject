@@ -201,7 +201,11 @@ const EditSeller: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  sellersReducer: { seller: Seller; sellerOptions: Sellers; loading: boolean };
+  sellersReducer: {
+    seller: Seller;
+    sellerOptions: Sellers;
+    loading: boolean;
+  };
 }) => {
   return {
     seller: state.sellersReducer.seller,

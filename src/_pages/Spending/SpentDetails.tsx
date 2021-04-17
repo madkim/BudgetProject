@@ -10,23 +10,24 @@ import {
 } from "@ionic/react";
 
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
 import { connect, useDispatch } from "react-redux";
 import { chevronBackOutline } from "ionicons/icons";
 import { spendingActions } from "../../_actions/spendingActions";
-import { Receipt } from "../../_helpers/types";
+import { Receipt, Days } from "../../_helpers/types";
+import { useParams } from "react-router-dom";
 
-import ListReceipts from "../Receipts/ListReceipts";
 import moment from "moment";
+import ListReceipts from "../Receipts/ListReceipts";
+import LoadingReceipts from "../Receipts/LoadingReceipts";
 
 interface Props {
-  loading: boolean;
   day: Receipt[];
+  loading: boolean;
 }
 
 const SpentDetails: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
-  const { date } = useParams<{ date: string }>();
+  const { date, days } = useParams<{ date: string; days: string }>();
 
   useEffect(() => {
     dispatch(spendingActions.getSpentByDay(date));
@@ -57,7 +58,11 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        <ListReceipts day={date} showByDay={true} receipts={props.day} />
+        {props.loading ? (
+          <LoadingReceipts count={parseInt(days)} />
+        ) : (
+          <ListReceipts day={date} showByDay={true} receipts={props.day} />
+        )}
       </IonContent>
     </IonPage>
   );
@@ -65,13 +70,13 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
 
 const mapStateToProps = (state: {
   spendingReducer: {
-    loading: boolean;
     day: Receipt[];
+    loading: boolean;
   };
 }) => {
   return {
-    loading: state.spendingReducer.loading,
     day: state.spendingReducer.day,
+    loading: state.spendingReducer.loading,
   };
 };
 

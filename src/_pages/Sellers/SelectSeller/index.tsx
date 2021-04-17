@@ -385,8 +385,8 @@ const mapStateToProps = (state: {
   };
 }) => {
   return {
-    uploadingPhoto: state.receiptsReducer.upload,
     loading: state.receiptsReducer.loading,
+    uploadingPhoto: state.receiptsReducer.upload,
   };
 };
 

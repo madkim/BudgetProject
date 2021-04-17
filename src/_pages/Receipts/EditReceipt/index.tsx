@@ -148,7 +148,11 @@ const EditReceipt: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipt: Receipt; upload: string; loading: boolean };
+  receiptsReducer: {
+    upload: string;
+    receipt: Receipt;
+    loading: boolean;
+  };
   sellersReducer: { sellerOptions: Sellers };
 }) => {
   return {

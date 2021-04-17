@@ -30,9 +30,9 @@ function getDays() {
       receipts.docs.forEach((receipt) => {
         let date = moment.unix(receipt.data().date.seconds).format("L");
         if (date in receiptsByDay) {
-          receiptsByDay[date] += receipt.data().price;
+          receiptsByDay[date].push(receipt.data().price);
         } else {
-          receiptsByDay[date] = receipt.data().price;
+          receiptsByDay[date] = [receipt.data().price];
         }
       });
       return dateSortKey(receiptsByDay);
@@ -42,9 +42,6 @@ function getDays() {
 function getDay(date: string) {
   const start = moment(date).set({ hour: 0, minute: 0 });
   const end = moment(date).set({ hour: 23, minute: 59 });
-
-  console.log(start.toDate());
-  console.log(end.toDate());
 
   return db
     .collection("receipts")

@@ -26,6 +26,7 @@ import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
 import moment from "moment";
 
+import { Days } from "../../_helpers/types";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import { menuController } from "@ionic/core";
@@ -35,6 +36,7 @@ import SpentPerDay from "./SpentPerDay";
 import LoadingSpent from "./LoadingSpent";
 
 interface Props {
+  days: Days;
   loading: boolean;
   totalSpent: number;
 }
@@ -68,8 +70,6 @@ const Spending: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        {/* <IonLoading isOpen={props.loading} message={"Please wait..."} /> */}
-
         <FadeIn>
           <IonCard>
             <IonGrid className="ion-padding-start ion-text-center">
@@ -124,10 +124,10 @@ const Spending: React.FC<Props> = (props: Props) => {
             </IonGrid>
           </IonCard>
         </FadeIn>
-        {props.loading && props.totalSpent === 0 ? (
+        {props.loading ? (
           <LoadingSpent count={7} />
         ) : (
-          <SpentPerDay />
+          <SpentPerDay days={props.days} />
         )}
       </IonContent>
     </IonPage>
@@ -136,11 +136,13 @@ const Spending: React.FC<Props> = (props: Props) => {
 
 const mapStateToProps = (state: {
   spendingReducer: {
+    days: Days;
     loading: boolean;
     totalSpent: number;
   };
 }) => {
   return {
+    days: state.spendingReducer.days,
     loading: state.spendingReducer.loading,
     totalSpent: state.spendingReducer.totalSpent,
   };

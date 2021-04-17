@@ -24,7 +24,7 @@ export interface Sellers {
 }
 
 export interface Days {
-  [key: string]: number;
+  [key: string]: number[];
 }
 
 export interface Action {

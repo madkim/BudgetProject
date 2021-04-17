@@ -9,24 +9,15 @@ import {
   IonGrid,
 } from "@ionic/react";
 
-import React, { useEffect } from "react";
-import { spendingActions } from "../../_actions/spendingActions";
-import { useDispatch, connect } from "react-redux";
-import { Days } from "../../_helpers/types";
+import React from "react";
 import moment from "moment";
+import { Days } from "../../_helpers/types";
 
 interface Props {
   days: Days;
-  loading: boolean;
 }
 
 const SpentPerDay: React.FC<Props> = (props: Props) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(spendingActions.getDaysSpent());
-  }, []);
-
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
       if (price < 30) {
@@ -39,6 +30,12 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
         return "danger";
       }
     }
+  };
+
+  const getTotal = (prices: number[]) => {
+    return prices.reduce((total: number, num: number) => {
+      return total + num;
+    });
   };
 
   const { days } = props;
@@ -57,7 +54,9 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
                   button
                   key={day}
                   lines="full"
-                  routerLink={`spent/${moment(day).format("YYYY-MM-DD")}`}
+                  routerLink={`spent/${moment(day).format("YYYY-MM-DD")}/${
+                    days[day].length
+                  }`}
                 >
                   <IonGrid>
                     <IonRow style={{ width: "100%", padding: "1vh" }}>
@@ -68,8 +67,8 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
                       </IonCol>
                       <IonCol size="4">
                         <IonLabel className="ion-text-left">
-                          <IonBadge color={getBadgeColor(days[day])}>
-                            ${days[day].toFixed(2)}
+                          <IonBadge color={getBadgeColor(getTotal(days[day]))}>
+                            ${getTotal(days[day]).toFixed(2)}
                           </IonBadge>
                         </IonLabel>
                       </IonCol>
@@ -84,16 +83,4 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: {
-  spendingReducer: {
-    loading: boolean;
-    days: Days;
-  };
-}) => {
-  return {
-    loading: state.spendingReducer.loading,
-    days: state.spendingReducer.days,
-  };
-};
-
-export default connect(mapStateToProps)(SpentPerDay);
+export default SpentPerDay;
