@@ -9,7 +9,7 @@ import {
   IonButtons,
 } from "@ionic/react";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { connect, useDispatch } from "react-redux";
 import { chevronBackOutline } from "ionicons/icons";
 import { spendingActions } from "../../_actions/spendingActions";
@@ -27,6 +27,7 @@ interface Props {
 
 const SpentDetails: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const topRef = useRef<HTMLIonListElement>(null);
   const { date, days } = useParams<{ date: string; days: string }>();
 
   useEffect(() => {
@@ -61,7 +62,12 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
         {props.loading ? (
           <LoadingReceipts count={parseInt(days)} />
         ) : (
-          <ListReceipts day={date} showByDay={true} receipts={props.day} />
+          <ListReceipts
+            day={date}
+            xref={topRef}
+            showByDay={true}
+            receipts={props.day}
+          />
         )}
       </IonContent>
     </IonPage>

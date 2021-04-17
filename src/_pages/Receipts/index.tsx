@@ -22,10 +22,11 @@ import {
   add,
   filterOutline,
   settingsOutline,
+  chevronUpOutline,
   chevronDownCircleOutline,
 } from "ionicons/icons";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import FadeIn from "react-fade-in";
 import sadMoney from "../../_assets/sadMoney.jpeg";
 import ListReceipts from "./ListReceipts";
@@ -45,6 +46,7 @@ interface Props {
 }
 
 const Receipts: React.FC<Props> = (props: Props) => {
+  const topRef = useRef<HTMLIonListElement>(null);
   const dispatch = useDispatch();
   const { impactMedium } = useHaptics();
 
@@ -61,6 +63,12 @@ const Receipts: React.FC<Props> = (props: Props) => {
   const refreshReceipts = (e: any) => {
     impactMedium();
     dispatch(receiptActions.refreshReceipts(e));
+  };
+
+  const scrollToTop = () => {
+    if (topRef.current !== null) {
+      topRef.current!.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -93,6 +101,17 @@ const Receipts: React.FC<Props> = (props: Props) => {
           ></IonRefresherContent>
         </IonRefresher>
 
+        <IonFab
+          slot="fixed"
+          vertical="bottom"
+          horizontal="end"
+          style={{ marginBottom: "8vh" }}
+        >
+          <IonFabButton color="success" onClick={() => scrollToTop()}>
+            <IonIcon icon={chevronUpOutline} />
+          </IonFabButton>
+        </IonFab>
+
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
           <IonFabButton color="success" routerLink="/add">
             <IonIcon icon={add} />
@@ -102,7 +121,12 @@ const Receipts: React.FC<Props> = (props: Props) => {
         {props.loading && receiptsNotRetrieved() ? (
           <LoadingReceipts count={11} />
         ) : (
-          <ListReceipts day="" showByDay={false} receipts={props.receipts} />
+          <ListReceipts
+            day=""
+            xref={topRef}
+            showByDay={false}
+            receipts={props.receipts}
+          />
         )}
 
         {props.request === "failed" && receiptsNotRetrieved() && (

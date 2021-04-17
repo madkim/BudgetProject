@@ -17,6 +17,7 @@ import {
 } from "@ionic/react";
 import moment from "moment";
 
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { receiptActions } from "../../../_actions/receiptActions";
@@ -27,12 +28,13 @@ import { imageOutline, chevronForwardOutline } from "ionicons/icons";
 
 interface Props {
   day: string;
+  xref: React.Ref<HTMLIonListElement>;
   loading: boolean;
   receipts: Receipt[];
   showByDay: boolean;
 }
 
-const ListRecepts: React.FC<Props> = (props: Props) => {
+const ListReceipts: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -106,7 +108,8 @@ const ListRecepts: React.FC<Props> = (props: Props) => {
 
   return (
     <IonContent>
-      <IonList>
+      <IonList ref={props.xref}>
+        {/* <IonItem ref={props.xref}></IonItem> */}
         {Object.keys(receipts).length > 0 &&
           Object.keys(receipts).map((month) => {
             const date = moment(month);
@@ -227,4 +230,4 @@ const mapStateToProps = (state: { receiptsReducer: { loading: boolean } }) => {
   };
 };
 
-export default connect(mapStateToProps)(ListRecepts);
+export default connect(mapStateToProps)(ListReceipts);
