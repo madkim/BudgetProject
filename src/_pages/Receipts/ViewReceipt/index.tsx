@@ -173,22 +173,29 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
           <IonRow>
             <IonCol>
               <IonItem>
-                <IonLabel position="stacked">Date:</IonLabel>
                 <IonLabel position="stacked">
-                  {receipt && moment(receipt.date).format("L")}
+                  <h2>Date:</h2>
+                </IonLabel>
+                <IonLabel position="stacked">
+                  <h1> {receipt && moment(receipt.date).format("L")}</h1>
                 </IonLabel>
               </IonItem>
             </IonCol>
           </IonRow>
 
-          <IonRow className="ion-margin-top">
+          <IonRow>
             <IonCol>
               <IonItem>
-                <IonLabel position="stacked">Total spent:</IonLabel>
+                <IonLabel position="stacked">
+                  <h2>Total spent:</h2>
+                </IonLabel>
                 <IonLabel position="stacked">
                   {receipt && (
-                    <IonBadge color={getBadgeColor(receipt.price)}>
-                      {receipt.price}
+                    <IonBadge
+                      color={getBadgeColor(receipt.price)}
+                      className="ion-margin-bottom"
+                    >
+                      <h2>${receipt.price?.toFixed(2)}</h2>
                     </IonBadge>
                   )}
                 </IonLabel>
@@ -196,19 +203,23 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
             </IonCol>
           </IonRow>
 
-          <IonRow className="ion-margin-top">
+          <IonRow>
             <IonCol>
               <IonItem>
-                <IonLabel position="stacked">Seller:</IonLabel>
-                <IonLabel position="stacked" className="ion-text-capitalize">
-                  {receipt.seller && receipt.seller.name}
+                <IonLabel position="stacked">
+                  <h2>Seller:</h2>
+                </IonLabel>
+                <IonLabel
+                  position="stacked"
+                  className="ion-text-capitalize"
+                  style={{ paddingBottom: "1vh" }}
+                >
+                  <h1>{receipt.seller && receipt.seller.name}</h1>
                 </IonLabel>
               </IonItem>
             </IonCol>
           </IonRow>
         </IonGrid>
-
-        <br />
 
         <IonRow>
           <IonCol>
