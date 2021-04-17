@@ -6,6 +6,7 @@ import {
   IonLabel,
   IonItemDivider,
   IonSkeletonText,
+  IonList,
 } from "@ionic/react";
 import React, { ReactElement } from "react";
 import { chevronForwardOutline } from "ionicons/icons";
@@ -24,35 +25,23 @@ export default function LoadingReceipts(props: Props): ReactElement {
   };
 
   return (
-    <>
-      <IonItemDivider></IonItemDivider>
+    <IonList style={{ width: "100%", padding: "0em 1em 0 1em" }}>
       {skeletonTextCount().map((index) => {
         return (
-          <IonItem key={index} className="ion-no-padding">
-            <IonSkeletonText
-              animated
-              style={{ width: "56px", height: "56px" }}
-              slot="start"
-            />
+          <IonItem detail lines="full" key={index} className="ion-no-padding">
             <IonLabel>
-              <IonRow>
-                <IonCol>
+              <IonRow style={{ width: "100%", padding: "1vh" }}>
+                <IonCol size="6" offset="1">
                   <IonSkeletonText animated style={{ width: "100%" }} />
                 </IonCol>
-                <IonCol>
+                <IonCol size="3" offset="1">
                   <IonSkeletonText animated style={{ width: "100%" }} />
-                </IonCol>
-                <IonCol>
-                  <IonSkeletonText animated style={{ width: "90%" }} />
-                </IonCol>
-                <IonCol size="1">
-                  <IonIcon color="medium" icon={chevronForwardOutline} />
                 </IonCol>
               </IonRow>
             </IonLabel>
           </IonItem>
         );
       })}
-    </>
+    </IonList>
   );
 }

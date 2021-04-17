@@ -9,7 +9,6 @@ import {
   IonButton,
   IonContent,
   IonToolbar,
-  IonLoading,
   IonButtons,
   IonFabButton,
   IonCardTitle,
@@ -101,7 +100,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
         </IonFab>
 
         {props.loading && receiptsNotRetrieved() ? (
-          <LoadingReceipts />
+          <LoadingReceipts count={12} />
         ) : (
           <ListReceipts day="" showByDay={false} receipts={props.receipts} />
         )}

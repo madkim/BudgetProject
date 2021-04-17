@@ -28,10 +28,11 @@ import moment from "moment";
 
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
-import { spendingActions } from "../../_actions/spendingActions";
 import { menuController } from "@ionic/core";
+import { spendingActions } from "../../_actions/spendingActions";
 
 import SpentPerDay from "./SpentPerDay";
+import LoadingSpent from "./LoadingSpent";
 
 interface Props {
   loading: boolean;
@@ -67,7 +68,7 @@ const Spending: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        <IonLoading isOpen={props.loading} message={"Please wait..."} />
+        {/* <IonLoading isOpen={props.loading} message={"Please wait..."} /> */}
 
         <FadeIn>
           <IonCard>
@@ -123,7 +124,11 @@ const Spending: React.FC<Props> = (props: Props) => {
             </IonGrid>
           </IonCard>
         </FadeIn>
-        <SpentPerDay />
+        {props.loading && props.totalSpent === 0 ? (
+          <LoadingSpent count={7} />
+        ) : (
+          <SpentPerDay />
+        )}
       </IonContent>
     </IonPage>
   );
