@@ -27,7 +27,7 @@ interface Props {
 
 const SpentDetails: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
-  const topRef = useRef<HTMLIonListElement>(null);
+  const topRef = useRef<HTMLIonContentElement>(null);
   const { date, days } = useParams<{ date: string; days: string }>();
 
   useEffect(() => {

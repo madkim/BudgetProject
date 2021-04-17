@@ -28,7 +28,7 @@ import { imageOutline, chevronForwardOutline } from "ionicons/icons";
 
 interface Props {
   day: string;
-  xref: React.Ref<HTMLIonListElement>;
+  xref: React.Ref<HTMLIonContentElement>;
   loading: boolean;
   receipts: Receipt[];
   showByDay: boolean;
@@ -107,9 +107,8 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   }, [props.receipts]);
 
   return (
-    <IonContent>
-      <IonList ref={props.xref}>
-        {/* <IonItem ref={props.xref}></IonItem> */}
+    <IonContent ref={props.xref} scrollEvents={true}>
+      <IonList>
         {Object.keys(receipts).length > 0 &&
           Object.keys(receipts).map((month) => {
             const date = moment(month);

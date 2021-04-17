@@ -46,7 +46,7 @@ interface Props {
 }
 
 const Receipts: React.FC<Props> = (props: Props) => {
-  const topRef = useRef<HTMLIonListElement>(null);
+  const topRef = useRef<HTMLIonContentElement>(null);
   const dispatch = useDispatch();
   const { impactMedium } = useHaptics();
 
@@ -67,7 +67,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
 
   const scrollToTop = () => {
     if (topRef.current !== null) {
-      topRef.current!.scrollIntoView({ behavior: "smooth" });
+      topRef.current!.scrollToTop(300);
     }
   };
 
