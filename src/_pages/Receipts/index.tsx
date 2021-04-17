@@ -92,14 +92,14 @@ const Receipts: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={refreshReceipts}>
+        {/* <IonRefresher slot="fixed" onIonRefresh={refreshReceipts}>
           <IonRefresherContent
             pullingIcon={chevronDownCircleOutline}
             pullingText="Pull to refresh"
             refreshingSpinner="circles"
             refreshingText="Refreshing..."
           ></IonRefresherContent>
-        </IonRefresher>
+        </IonRefresher> */}
 
         <IonFab
           slot="fixed"

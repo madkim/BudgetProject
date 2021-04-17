@@ -69,6 +69,18 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
             receipts={props.day}
           />
         )}
+
+        <IonButton
+          slot="fixed"
+          fill="solid"
+          color="success"
+          expand="block"
+          routerLink="/spending"
+          routerDirection="back"
+          style={{ top: "69vh", left: "5vw", width: "90%" }}
+        >
+          Back
+        </IonButton>
       </IonContent>
     </IonPage>
   );
