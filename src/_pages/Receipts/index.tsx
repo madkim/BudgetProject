@@ -30,12 +30,13 @@ import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
 import sadMoney from "../../_assets/sadMoney.jpeg";
 import ListReceipts from "./ListReceipts";
+import LoadingReceipts from "./LoadingReceipts";
 
-import { connect, useDispatch } from "react-redux";
+import { Receipt } from "../../_helpers/types";
+import { useHaptics } from "../../_hooks/useHaptics";
 import { menuController } from "@ionic/core";
 import { receiptActions } from "../../_actions/receiptActions";
-import { useHaptics } from "../../_hooks/useHaptics";
-import { Receipt } from "../../_helpers/types";
+import { connect, useDispatch } from "react-redux";
 
 interface Props {
   receipts: Receipt[];
@@ -99,10 +100,11 @@ const Receipts: React.FC<Props> = (props: Props) => {
           </IonFabButton>
         </IonFab>
 
-        <IonLoading
-          isOpen={props.loading && receiptsNotRetrieved()}
-          message={"Please wait..."}
-        />
+        {props.loading && receiptsNotRetrieved() ? (
+          <LoadingReceipts />
+        ) : (
+          <ListReceipts day="" showByDay={false} receipts={props.receipts} />
+        )}
 
         {props.request === "failed" && receiptsNotRetrieved() && (
           <FadeIn>
@@ -120,8 +122,6 @@ const Receipts: React.FC<Props> = (props: Props) => {
             </IonCard>
           </FadeIn>
         )}
-
-        <ListReceipts day="" showByDay={false} receipts={props.receipts} />
       </IonContent>
     </IonPage>
   );

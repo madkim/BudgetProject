@@ -16,14 +16,17 @@ import {
   IonCardSubtitle,
 } from "@ionic/react";
 
-import { settingsOutline, swapHorizontalOutline } from "ionicons/icons";
+import {
+  settingsOutline,
+  notificationsOutline,
+  swapHorizontalOutline,
+} from "ionicons/icons";
 
 import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
 import moment from "moment";
 
 import { connect } from "react-redux";
-import { Receipt } from "../../_helpers/types";
 import { useDispatch } from "react-redux";
 import { spendingActions } from "../../_actions/spendingActions";
 import { menuController } from "@ionic/core";
@@ -56,6 +59,10 @@ const Spending: React.FC<Props> = (props: Props) => {
           <IonTitle className="ion-text-center">
             <h2>💰 M👀LA&nbsp;</h2>
           </IonTitle>
+
+          <IonButton slot="end" fill="clear">
+            <IonIcon icon={notificationsOutline} style={{ color: "white" }} />
+          </IonButton>
         </IonToolbar>
       </IonHeader>
 

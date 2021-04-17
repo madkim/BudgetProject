@@ -12,6 +12,9 @@ import {
   IonContent,
   IonToolbar,
   IonLoading,
+  IonItem,
+  IonLabel,
+  IonInput,
 } from "@ionic/react";
 
 import { settingsOutline, swapHorizontalOutline } from "ionicons/icons";
@@ -45,7 +48,22 @@ const Budget: React.FC<{}> = () => {
           <IonGrid>
             <IonRow>
               <IonCol>
-                <h1>HI :)</h1>
+                <IonItem className="ion-padding-horizontal">
+                  <IonLabel position="floating">
+                    <h1>Income:</h1>
+                  </IonLabel>
+                  <IonInput></IonInput>
+                </IonItem>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol>
+                <h1>Monthly:</h1>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol>
+                <h1>Yearly:</h1>
               </IonCol>
             </IonRow>
           </IonGrid>

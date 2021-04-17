@@ -12,12 +12,7 @@ import {
 
 import { IonReactRouter } from "@ionic/react-router";
 
-import {
-  cardOutline,
-  receiptOutline,
-  barChartOutline,
-  cellularOutline,
-} from "ionicons/icons";
+import { cardOutline, receiptOutline, barChartOutline } from "ionicons/icons";
 
 import Budget from "./_pages/Budget";
 import Settings from "./_pages/Settings";
