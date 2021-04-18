@@ -15,6 +15,10 @@ import {
   IonItem,
   IonLabel,
   IonInput,
+  IonList,
+  IonListHeader,
+  IonBadge,
+  IonNote,
 } from "@ionic/react";
 
 import { settingsOutline, swapHorizontalOutline } from "ionicons/icons";
@@ -43,30 +47,117 @@ const Budget: React.FC<{}> = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent>
+      <IonContent class="font-weight-light">
         <FadeIn>
-          <IonGrid>
-            <IonRow>
-              <IonCol>
-                <IonItem className="ion-padding-horizontal">
-                  <IonLabel position="floating">
-                    <h1>Income:</h1>
-                  </IonLabel>
-                  <IonInput></IonInput>
-                </IonItem>
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <h1>Monthly:</h1>
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <h1>Yearly:</h1>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
+          <div className="ion-padding-bottom ion-padding-end">
+            <IonGrid>
+              <IonRow>
+                <IonCol className="ion-text-center">
+                  <h1>April Budget</h1>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonList>
+                    <IonListHeader lines="inset">
+                      <IonLabel>Income</IonLabel>
+                      <IonNote color="success">
+                        <h2 className="ion-padding-end ">$3500</h2>
+                      </IonNote>
+                    </IonListHeader>
+                  </IonList>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonList>
+                    <IonListHeader lines="inset">
+                      <IonLabel>Monthly</IonLabel>
+                      <IonNote color="danger">
+                        <h2 className="ion-padding-end ">$28.45</h2>
+                      </IonNote>
+                    </IonListHeader>
+                    <div className="ion-padding-start">
+                      <IonItem>
+                        <IonLabel>
+                          <IonRow>
+                            <IonCol>
+                              <h1>HBO</h1>
+                            </IonCol>
+                            <IonCol className="ion-text-end">
+                              <h1>$12.55</h1>
+                            </IonCol>
+                          </IonRow>
+                        </IonLabel>
+                      </IonItem>
+                      <IonItem>
+                        <IonLabel>
+                          <IonRow>
+                            <IonCol>
+                              <h1>Netflix</h1>
+                            </IonCol>
+                            <IonCol className="ion-text-end">
+                              <h1>$15.00</h1>
+                            </IonCol>
+                          </IonRow>
+                        </IonLabel>
+                      </IonItem>
+                      <IonItem>
+                        <IonLabel>
+                          <IonRow>
+                            <IonCol>
+                              <h1>Spotify</h1>
+                            </IonCol>
+                            <IonCol className="ion-text-end">
+                              <h1>$9.00</h1>
+                            </IonCol>
+                          </IonRow>
+                        </IonLabel>
+                      </IonItem>
+                    </div>
+                  </IonList>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonList>
+                    <IonListHeader lines="inset">
+                      <IonLabel>Yearly</IonLabel>
+                      <IonNote color="danger">
+                        <h2 className="ion-padding-end ">$50.55</h2>
+                      </IonNote>
+                    </IonListHeader>
+                    <div className="ion-padding-start">
+                      <IonItem>
+                        <IonLabel>
+                          <IonRow>
+                            <IonCol>
+                              <h1>AAA</h1>
+                            </IonCol>
+                            <IonCol className="ion-text-end">
+                              <h1>$35.55</h1>
+                            </IonCol>
+                          </IonRow>
+                        </IonLabel>
+                      </IonItem>
+                      <IonItem>
+                        <IonLabel>
+                          <IonRow>
+                            <IonCol>
+                              <h1>Insurance</h1>
+                            </IonCol>
+                            <IonCol className="ion-text-end">
+                              <h1>$15.00</h1>
+                            </IonCol>
+                          </IonRow>
+                        </IonLabel>
+                      </IonItem>
+                    </div>
+                  </IonList>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
         </FadeIn>
       </IonContent>
     </IonPage>

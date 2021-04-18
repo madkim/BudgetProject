@@ -63,13 +63,13 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
 
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
-      if (price < 30) {
+      if (price <= 30) {
         return "success";
       }
-      if (price > 30 && price < 80) {
+      if (price >= 31 && price <= 80) {
         return "warning";
       }
-      if (price > 80) {
+      if (price >= 81) {
         return "danger";
       }
     }

@@ -96,7 +96,7 @@ function addNewReceipt(
       .addNew(date, photo, price, seller, receipts, dispatch)
       .then(async (updatedReceipts) => {
         await dispatch(success(updatedReceipts.sort(dateSortValue)));
-        history.push("/");
+        history.push("/receipts");
       })
       .catch((error: Error) => {
         dispatch({
@@ -105,7 +105,7 @@ function addNewReceipt(
         });
         alert("Could not create receipt. Please try again.");
         console.error("Error writing receipt: ", error);
-        history.push("/");
+        history.push("/receipts");
       });
   };
   function success(updatedReceipts: Receipt[]) {
