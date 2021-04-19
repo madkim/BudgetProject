@@ -74,7 +74,7 @@ const Budget: React.FC<{}> = () => {
                     <IonListHeader lines="inset">
                       <IonLabel>Monthly</IonLabel>
                       <IonNote color="danger">
-                        <h2 className="ion-padding-end ">$28.45</h2>
+                        <h2 className="ion-padding-end ">-$28.45</h2>
                       </IonNote>
                     </IonListHeader>
                     <div className="ion-padding-start">
@@ -124,7 +124,7 @@ const Budget: React.FC<{}> = () => {
                     <IonListHeader lines="inset">
                       <IonLabel>Yearly</IonLabel>
                       <IonNote color="danger">
-                        <h2 className="ion-padding-end ">$50.55</h2>
+                        <h2 className="ion-padding-end ">-$50.55</h2>
                       </IonNote>
                     </IonListHeader>
                     <div className="ion-padding-start">
@@ -153,6 +153,54 @@ const Budget: React.FC<{}> = () => {
                         </IonLabel>
                       </IonItem>
                     </div>
+                  </IonList>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonList>
+                    <IonListHeader lines="inset">
+                      <IonLabel>Total</IonLabel>
+                      <IonNote color="danger">
+                        <h2 className="ion-padding-end ">$79.00</h2>
+                      </IonNote>
+                    </IonListHeader>
+                  </IonList>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonList>
+                    <IonListHeader lines="inset">
+                      <IonLabel>Leftover</IonLabel>
+                      <IonNote color="dark">
+                        <h2 className="ion-padding-end ">$3421.00</h2>
+                      </IonNote>
+                    </IonListHeader>
+                  </IonList>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonList>
+                    <IonListHeader lines="inset">
+                      <IonLabel>Savings</IonLabel>
+                      <IonNote color="primary">
+                        <h2 className="ion-padding-end ">-$1200.00</h2>
+                      </IonNote>
+                    </IonListHeader>
+                  </IonList>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonList>
+                    <IonListHeader lines="inset">
+                      <IonLabel>Spending</IonLabel>
+                      <IonNote color="dark">
+                        <h2 className="ion-padding-end ">$2221.00</h2>
+                      </IonNote>
+                    </IonListHeader>
                   </IonList>
                 </IonCol>
               </IonRow>
