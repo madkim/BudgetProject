@@ -39,10 +39,10 @@ import { receiptActions } from "../../_actions/receiptActions";
 import { connect, useDispatch } from "react-redux";
 
 interface Props {
-  receipts: Receipt[];
-  loading: boolean;
-  request: string;
   upload: string;
+  request: string;
+  loading: boolean;
+  receipts: Receipt[];
 }
 
 const Receipts: React.FC<Props> = (props: Props) => {

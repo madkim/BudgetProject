@@ -26,9 +26,9 @@ import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
 import moment from "moment";
 
-import { Days } from "../../_helpers/types";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
+import { Days, Receipt } from "../../_helpers/types";
 import { menuController } from "@ionic/core";
 import { spendingActions } from "../../_actions/spendingActions";
 
@@ -38,6 +38,7 @@ import LoadingSpent from "./LoadingSpent";
 interface Props {
   days: Days;
   loading: boolean;
+  receipts: Receipt[];
   totalSpent: number;
 }
 

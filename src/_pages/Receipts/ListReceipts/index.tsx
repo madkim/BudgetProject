@@ -21,6 +21,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { receiptActions } from "../../../_actions/receiptActions";
+import { spendingActions } from "../../../_actions/spendingActions";
 import { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
 import { Receipt, Receipts, DynObject } from "../../../_helpers/types";
@@ -103,6 +104,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    dispatch(spendingActions.getTotalSpent());
     addMonthAsKey();
   }, [props.receipts]);
 
@@ -222,10 +224,13 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
     </IonContent>
   );
 };
-
-const mapStateToProps = (state: { receiptsReducer: { loading: boolean } }) => {
+const mapStateToProps = (state: {
+  spendingReducer: { totalSpent: number };
+  receiptsReducer: { loading: boolean };
+}) => {
   return {
     loading: state.receiptsReducer.loading,
+    totalSpent: state.spendingReducer.totalSpent,
   };
 };
 

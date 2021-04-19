@@ -1,5 +1,4 @@
 import { Dispatch } from "react";
-import { receiptsService } from "../_services/receiptsService";
 import { spendingService } from "../_services/spendingService";
 import { spendingConstants } from "../_constants/spendingConstants";
 import { Action, Receipt, Days } from "../_helpers/types";
@@ -12,7 +11,6 @@ export const spendingActions = {
 
 function getTotalSpent() {
   return (dispatch: Dispatch<Action>) => {
-    dispatch({ type: spendingConstants.MAKE_SPENDING_REQUEST, payload: true });
     spendingService
       .getTotal()
       .then((total: number) => {
