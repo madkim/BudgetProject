@@ -84,6 +84,49 @@ const Budget: React.FC<{}> = () => {
                         </IonRow>
                       </IonGrid>
                     </IonItem>
+
+                    <IonItem>
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol size="5">
+                            <h3>
+                              <IonLabel>Work</IonLabel>
+                            </h3>
+                          </IonCol>
+                          <IonCol size="4" className="ion-text-start">
+                            <h3>
+                              <IonLabel>$3500</IonLabel>
+                            </h3>
+                          </IonCol>
+                          <IonCol
+                            size="3"
+                            className="ion-text-end ion-no-padding"
+                          >
+                            <IonButton size="default" color="danger">
+                              <IonIcon icon={trashBin} />
+                            </IonButton>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                    </IonItem>
+                    <IonItem lines="inset">
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol size="9">
+                            <IonInput placeholder="Add Income"></IonInput>
+                          </IonCol>
+
+                          <IonCol
+                            size="3"
+                            className="ion-text-end ion-no-padding"
+                          >
+                            <IonButton size="default" color="success">
+                              <IonIcon icon={addOutline} />
+                            </IonButton>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                    </IonItem>
                   </IonList>
                 </IonCol>
               </IonRow>
