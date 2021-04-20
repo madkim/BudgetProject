@@ -196,7 +196,7 @@ const Budget: React.FC<{}> = () => {
                 <IonCol>
                   <IonList>
                     <IonListHeader lines="none">
-                      <IonLabel>Spending</IonLabel>
+                      <IonLabel>Budget</IonLabel>
                       <IonNote color="dark">
                         <h2 className="ion-padding-end ">$2221.00</h2>
                       </IonNote>

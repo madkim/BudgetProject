@@ -45,9 +45,7 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { menuController } from "@ionic/core";
 
-const ManageBudget: React.FC<{}> = () => {
-  const [showActionSheet, setShowActionSheet] = useState(false);
-
+const Budget: React.FC<{}> = () => {
   return (
     <IonPage>
       <IonHeader>
@@ -59,7 +57,7 @@ const ManageBudget: React.FC<{}> = () => {
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            <h2>💰 M👀LA&nbsp;</h2>
+            <h3>April 2021 Budget</h3>
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -69,11 +67,6 @@ const ManageBudget: React.FC<{}> = () => {
           <div className="ion-padding-bottom ion-padding-end">
             <IonGrid>
               <IonRow>
-                <IonCol className="ion-text-center">
-                  <h1>April Budget</h1>
-                </IonCol>
-              </IonRow>
-              <IonRow>
                 <IonCol>
                   <IonList>
                     <IonListHeader lines="inset">
@@ -82,6 +75,21 @@ const ManageBudget: React.FC<{}> = () => {
                         <h2 className="ion-padding-end ">$3500.00</h2>
                       </IonNote>
                     </IonListHeader>
+
+                    {/* <div className="ion-padding-start">
+                      <IonItem>
+                        <IonLabel>
+                          <IonRow>
+                            <IonCol>
+                              <h1>Work</h1>
+                            </IonCol>
+                            <IonCol className="ion-text-end">
+                              <h1>$3500.00</h1>
+                            </IonCol>
+                          </IonRow>
+                        </IonLabel>
+                      </IonItem>
+                    </div> */}
                   </IonList>
                 </IonCol>
               </IonRow>
@@ -89,9 +97,9 @@ const ManageBudget: React.FC<{}> = () => {
                 <IonCol>
                   <IonList>
                     <IonListHeader lines="inset">
-                      <IonLabel>Monthly</IonLabel>
+                      <IonLabel>Expenses</IonLabel>
                       <IonNote color="danger">
-                        <h2 className="ion-padding-end ">-$28.45</h2>
+                        <h2 className="ion-padding-end ">-$79.00</h2>
                       </IonNote>
                     </IonListHeader>
 
@@ -132,20 +140,6 @@ const ManageBudget: React.FC<{}> = () => {
                           </IonRow>
                         </IonLabel>
                       </IonItem>
-                    </div>
-                  </IonList>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol>
-                  <IonList>
-                    <IonListHeader lines="inset">
-                      <IonLabel>Yearly</IonLabel>
-                      <IonNote color="danger">
-                        <h2 className="ion-padding-end ">-$50.55</h2>
-                      </IonNote>
-                    </IonListHeader>
-                    <div className="ion-padding-start">
                       <IonItem>
                         <IonLabel>
                           <IonRow>
@@ -178,19 +172,7 @@ const ManageBudget: React.FC<{}> = () => {
                 <IonCol>
                   <IonList>
                     <IonListHeader lines="inset">
-                      <IonLabel>Total</IonLabel>
-                      <IonNote color="danger">
-                        <h2 className="ion-padding-end ">-$79.00</h2>
-                      </IonNote>
-                    </IonListHeader>
-                  </IonList>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol>
-                  <IonList>
-                    <IonListHeader lines="inset">
-                      <IonLabel>Leftover</IonLabel>
+                      <IonLabel>Difference</IonLabel>
                       <IonNote color="dark">
                         <h2 className="ion-padding-end ">$3421.00</h2>
                       </IonNote>
@@ -213,8 +195,8 @@ const ManageBudget: React.FC<{}> = () => {
               <IonRow>
                 <IonCol>
                   <IonList>
-                    <IonListHeader lines="inset">
-                      <IonLabel>Spending</IonLabel>
+                    <IonListHeader lines="none">
+                      <IonLabel>Budget</IonLabel>
                       <IonNote color="dark">
                         <h2 className="ion-padding-end ">$2221.00</h2>
                       </IonNote>
@@ -230,4 +212,4 @@ const ManageBudget: React.FC<{}> = () => {
   );
 };
 
-export default connect()(ManageBudget);
+export default connect()(Budget);
