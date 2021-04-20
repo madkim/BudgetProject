@@ -13,7 +13,7 @@ import {
   IonMenuToggle,
 } from "@ionic/react";
 
-import { bagHandleOutline } from "ionicons/icons";
+import { bagHandleOutline, statsChartOutline } from "ionicons/icons";
 
 const Settings: React.FC = () => {
   return (
@@ -36,6 +36,14 @@ const Settings: React.FC = () => {
               <IonIcon slot="start" icon={bagHandleOutline}></IonIcon>
               <h3>
                 <IonLabel>Manage Sellers</IonLabel>
+              </h3>
+            </IonItem>
+          </IonMenuToggle>
+          <IonMenuToggle auto-hide="false">
+            <IonItem button routerLink="/manage/budget" routerDirection="root">
+              <IonIcon slot="start" icon={statsChartOutline}></IonIcon>
+              <h3>
+                <IonLabel>Manage Budget</IonLabel>
               </h3>
             </IonItem>
           </IonMenuToggle>

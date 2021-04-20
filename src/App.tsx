@@ -14,14 +14,19 @@ import { IonReactRouter } from "@ionic/react-router";
 
 import { cardOutline, receiptOutline, barChartOutline } from "ionicons/icons";
 
-import Budget from "./_pages/Budget";
-import Settings from "./_pages/Settings";
 import Receipts from "./_pages/Receipts";
 import AddReceipt from "./_pages/Receipts/AddReceipt";
 import EditReceipt from "./_pages/Receipts/EditReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
+
+import Settings from "./_pages/Settings";
+
+import Budget from "./_pages/Budget";
+import ManageBudget from "./_pages/Budget/ManageBudget";
+
 import EditSeller from "./_pages/Sellers/EditSeller";
 import ManageSellers from "./_pages/Sellers/ManageSellers";
+
 import Spending from "./_pages/Spending";
 import SpentDetails from "./_pages/Spending/SpentDetails";
 
@@ -53,15 +58,21 @@ const App: React.FC = () => (
         <IonTabs>
           <IonRouterOutlet id="main">
             <Route path="/add" component={AddReceipt} />
-            <Route path="/budget" component={Budget} />
             <Route path="/view/:id" component={ViewReceipt} />
             <Route path="/edit/:id" component={EditReceipt} />
             <Route path="/receipts" component={Receipts} />
-            <Route path="/settings" component={Settings} />
+
             <Route path="/spending" component={Spending} />
             <Route path="/spent/:date/:days" component={SpentDetails} />
+
+            <Route path="/settings" component={Settings} />
+
             <Route path="/manage/sellers" component={ManageSellers} />
             <Route path="/manage/seller/:id" component={EditSeller} />
+
+            <Route path="/budget" component={Budget} />
+            <Route path="/manage/budget" component={ManageBudget} />
+
             <Route exact path="/">
               <Redirect to="/spending" />
             </Route>
