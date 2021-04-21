@@ -30,6 +30,7 @@ import { menuController } from "@ionic/core";
 
 const Budget: React.FC<{}> = () => {
   const [error, setError] = useState("");
+  const [expenseType, setExpenseType] = useState("");
   const [incomeTitle, setIncomeTitle] = useState("");
   const [expenseTitle, setExpenseTitle] = useState("");
   const [showAddIncome, setShowAddIncome] = useState(false);
@@ -86,14 +87,13 @@ const Budget: React.FC<{}> = () => {
           ]}
         />
         <IonAlert
+          backdropDismiss={false}
           isOpen={showAddExpense}
-          onDidDismiss={() => setShowAddExpense(false)}
-          cssClass="my-custom-class"
           header={expenseTitle}
           inputs={[
             {
               type: "number",
-              placeholder: "Amount",
+              placeholder: `Amount Per ${expenseType}`,
               cssClass: "specialClass",
               attributes: {
                 inputmode: "decimal",
@@ -111,9 +111,7 @@ const Budget: React.FC<{}> = () => {
             },
             {
               text: "Ok",
-              handler: () => {
-                setShowExpenseType(true);
-              },
+              handler: () => {},
             },
           ]}
         />
@@ -125,12 +123,16 @@ const Budget: React.FC<{}> = () => {
             {
               text: "Yearly",
               handler: () => {
+                setExpenseType("Year");
+                setShowAddExpense(true);
                 console.log("Confirm Okay");
               },
             },
             {
               text: "Monthly",
               handler: (blah) => {
+                setExpenseType("Month");
+                setShowAddExpense(true);
                 console.log("Confirm Cancel: blah");
               },
             },
@@ -148,7 +150,7 @@ const Budget: React.FC<{}> = () => {
                           <IonCol size="5">
                             <h5>Income</h5>
                           </IonCol>
-                          <IonCol size="auto">
+                          <IonCol size="auto" className="ion-padding-start">
                             <IonNote color="success">
                               <h5>$3500</h5>
                             </IonNote>
@@ -157,64 +159,66 @@ const Budget: React.FC<{}> = () => {
                       </IonGrid>
                     </IonItem>
 
-                    <IonItem>
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol size="5">
-                            <h5>
-                              <IonLabel>Work</IonLabel>
-                            </h5>
-                          </IonCol>
-                          <IonCol size="4" className="ion-text-start">
-                            <h5>
-                              <IonLabel>$3500</IonLabel>
-                            </h5>
-                          </IonCol>
-                          <IonCol
-                            size="3"
-                            className="ion-text-end ion-no-padding"
-                          >
-                            <IonButton size="default" color="danger">
-                              <IonIcon icon={trashBin} />
-                            </IonButton>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
-                    </IonItem>
-                    <IonItem lines="inset">
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol size="9">
-                            <IonInput
-                              placeholder="Add Income"
-                              onIonChange={(e) => {
-                                setIncomeTitle(e.detail.value!);
-                              }}
-                            ></IonInput>
-                          </IonCol>
-
-                          <IonCol
-                            size="3"
-                            className="ion-text-end ion-no-padding"
-                          >
-                            <IonButton
-                              size="default"
-                              color="success"
-                              onClick={() => {
-                                if (incomeTitle) {
-                                  setError("");
-                                  setShowAddIncome(true);
-                                } else {
-                                  setError("newIncome");
-                                }
-                              }}
+                    <div className="ion-padding-start">
+                      <IonItem>
+                        <IonGrid>
+                          <IonRow>
+                            <IonCol size="5">
+                              <h5>
+                                <IonLabel>Work</IonLabel>
+                              </h5>
+                            </IonCol>
+                            <IonCol size="4" className="ion-text-start">
+                              <h5>
+                                <IonLabel>$3500</IonLabel>
+                              </h5>
+                            </IonCol>
+                            <IonCol
+                              size="3"
+                              className="ion-text-end ion-no-padding"
                             >
-                              <IonIcon icon={addOutline} />
-                            </IonButton>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
-                    </IonItem>
+                              <IonButton size="default" color="danger">
+                                <IonIcon icon={trashBin} />
+                              </IonButton>
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      </IonItem>
+                      <IonItem lines="inset">
+                        <IonGrid>
+                          <IonRow>
+                            <IonCol size="9">
+                              <IonInput
+                                placeholder="Add Income"
+                                onIonChange={(e) => {
+                                  setIncomeTitle(e.detail.value!);
+                                }}
+                              ></IonInput>
+                            </IonCol>
+
+                            <IonCol
+                              size="3"
+                              className="ion-text-end ion-no-padding"
+                            >
+                              <IonButton
+                                size="default"
+                                color="success"
+                                onClick={() => {
+                                  if (incomeTitle) {
+                                    setError("");
+                                    setShowAddIncome(true);
+                                  } else {
+                                    setError("newIncome");
+                                  }
+                                }}
+                              >
+                                <IonIcon icon={addOutline} />
+                              </IonButton>
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      </IonItem>
+                    </div>
                   </IonList>
                 </IonCol>
               </IonRow>
@@ -370,7 +374,7 @@ const Budget: React.FC<{}> = () => {
                           <IonRow>
                             <IonCol size="9">
                               <IonInput
-                                placeholder="Add New Expense"
+                                placeholder="Add Expense"
                                 onIonChange={(e) => {
                                   setExpenseTitle(e.detail.value!);
                                 }}
@@ -387,7 +391,7 @@ const Budget: React.FC<{}> = () => {
                                 onClick={() => {
                                   if (expenseTitle) {
                                     setError("");
-                                    setShowAddExpense(true);
+                                    setShowExpenseType(true);
                                   } else {
                                     setError("newExpense");
                                   }
@@ -418,7 +422,7 @@ const Budget: React.FC<{}> = () => {
                         <IonCol size="5">
                           <h5>Difference</h5>
                         </IonCol>
-                        <IonCol size="6" className="ion-padding-start">
+                        <IonCol size="6">
                           <IonNote color="dark">
                             <h5 className="ion-padding-end ">
                               &nbsp;&nbsp;$3421.00
@@ -438,7 +442,7 @@ const Budget: React.FC<{}> = () => {
                         <IonCol size="5">
                           <h5>Savings</h5>
                         </IonCol>
-                        <IonCol size="5" className="ion-padding-start">
+                        <IonCol size="5">
                           <IonNote color="primary">
                             <h5 className="ion-padding-end ">-$1200.00</h5>
                           </IonNote>
@@ -456,7 +460,7 @@ const Budget: React.FC<{}> = () => {
                         <IonCol size="5">
                           <h5>Budget</h5>
                         </IonCol>
-                        <IonCol size="6" className="ion-padding-start">
+                        <IonCol size="6">
                           <IonNote color="dark">
                             <h5 className="ion-padding-end ">
                               &nbsp;&nbsp;$2221.00
