@@ -7,17 +7,16 @@ import {
   IonItem,
   IonList,
   IonNote,
+  IonText,
   IonLabel,
   IonInput,
   IonTitle,
+  IonAlert,
   IonHeader,
   IonButton,
   IonButtons,
   IonContent,
   IonToolbar,
-  IonRange,
-  IonAlert,
-  IonText,
 } from "@ionic/react";
 
 import { addOutline, settingsOutline, trashBin } from "ionicons/icons";
@@ -35,6 +34,7 @@ const Budget: React.FC<{}> = () => {
   const [expenseTitle, setExpenseTitle] = useState("");
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
+  const [showExpenseType, setShowExpenseType] = useState(false);
 
   return (
     <IonPage>
@@ -112,7 +112,26 @@ const Budget: React.FC<{}> = () => {
             {
               text: "Ok",
               handler: () => {
-                console.log("Confirm Ok");
+                setShowExpenseType(true);
+              },
+            },
+          ]}
+        />
+        <IonAlert
+          backdropDismiss={false}
+          isOpen={showExpenseType}
+          header={"Is this a monthly or yearly expense?"}
+          buttons={[
+            {
+              text: "Yearly",
+              handler: () => {
+                console.log("Confirm Okay");
+              },
+            },
+            {
+              text: "Monthly",
+              handler: (blah) => {
+                console.log("Confirm Cancel: blah");
               },
             },
           ]}
