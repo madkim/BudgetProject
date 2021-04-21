@@ -34,7 +34,7 @@ const Settings: React.FC = () => {
           <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/sellers" routerDirection="root">
               <IonIcon slot="start" icon={bagHandleOutline}></IonIcon>
-              <h3>
+              <h3 style={{ padding: "10px" }}>
                 <IonLabel>Manage Sellers</IonLabel>
               </h3>
             </IonItem>
@@ -42,7 +42,7 @@ const Settings: React.FC = () => {
           <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/budget" routerDirection="root">
               <IonIcon slot="start" icon={statsChartOutline}></IonIcon>
-              <h3>
+              <h3 style={{ padding: "10px" }}>
                 <IonLabel>Manage Budget</IonLabel>
               </h3>
             </IonItem>
