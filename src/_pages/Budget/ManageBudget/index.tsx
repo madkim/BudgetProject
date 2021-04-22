@@ -59,6 +59,32 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const totalExpense = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.expenses.reduce((total, expense) => {
+        return total + expense.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const totalSavings = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.savings.reduce((total, saving) => {
+        return total + saving.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const difference = () => {
+    return parseFloat(totalIncome()!) - parseFloat(totalExpense()!);
+  };
+
+  const spending = () => {
+    return difference() - parseFloat(totalSavings()!);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -190,30 +216,41 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                         </IonItem>
 
                         <div className="ion-padding-start">
-                          <IonItem>
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="5">
-                                  <h5>
-                                    <IonLabel>Work</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol size="4" className="ion-text-start">
-                                  <h5>
-                                    <IonLabel>$3500</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
-                                >
-                                  <IonButton size="default" color="danger">
-                                    <IonIcon icon={trashBin} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
+                          {props.budget.income &&
+                            props.budget.income.map((income) => {
+                              return (
+                                <IonItem key={income.id}>
+                                  <IonGrid>
+                                    <IonRow>
+                                      <IonCol size="5">
+                                        <h5>
+                                          <IonLabel>{income.name}</IonLabel>
+                                        </h5>
+                                      </IonCol>
+                                      <IonCol
+                                        size="4"
+                                        className="ion-text-start"
+                                      >
+                                        <h5>
+                                          <IonLabel>${income.amount}</IonLabel>
+                                        </h5>
+                                      </IonCol>
+                                      <IonCol
+                                        size="3"
+                                        className="ion-text-end ion-no-padding"
+                                      >
+                                        <IonButton
+                                          size="default"
+                                          color="danger"
+                                        >
+                                          <IonIcon icon={trashBin} />
+                                        </IonButton>
+                                      </IonCol>
+                                    </IonRow>
+                                  </IonGrid>
+                                </IonItem>
+                              );
+                            })}
                           <IonItem lines="inset">
                             <IonGrid>
                               <IonRow>
@@ -271,7 +308,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                               </IonCol>
                               <IonCol size="5" className="ion-padding-start">
                                 <IonNote color="danger">
-                                  <h5>$79.00</h5>
+                                  <h5>${totalExpense()}</h5>
                                 </IonNote>
                               </IonCol>
                             </IonRow>
@@ -279,126 +316,43 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                         </IonItem>
 
                         <div className="ion-padding-start">
-                          <IonItem>
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="5">
-                                  <h5>
-                                    <IonLabel>HBO</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol size="4" className="ion-text-start">
-                                  <h5>
-                                    <IonLabel>$12.55</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
-                                >
-                                  <IonButton size="default" color="danger">
-                                    <IonIcon icon={trashBin} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
-                          <IonItem>
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="5">
-                                  <h5>
-                                    <IonLabel>Netflix</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol size="4" className="ion-text-start">
-                                  <h5>
-                                    <IonLabel>$15.00</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
-                                >
-                                  <IonButton size="default" color="danger">
-                                    <IonIcon icon={trashBin} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
-                          <IonItem>
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="5">
-                                  <h5>
-                                    <IonLabel>Spotify</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol size="4" className="ion-text-start">
-                                  <h5>
-                                    <IonLabel>$9.00</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
-                                >
-                                  <IonButton size="default" color="danger">
-                                    <IonIcon icon={trashBin} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
-                          <IonItem>
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="5">
-                                  <h5>
-                                    <IonLabel>AAA</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol size="4" className="ion-text-start">
-                                  <h5>
-                                    <IonLabel>$35.55</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
-                                >
-                                  <IonButton size="default" color="danger">
-                                    <IonIcon icon={trashBin} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
-                          <IonItem>
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="5">
-                                  <h5>
-                                    <IonLabel>Insurance</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol size="4" className="ion-text-start">
-                                  <h5>
-                                    <IonLabel>$15.00</IonLabel>
-                                  </h5>
-                                </IonCol>
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
-                                >
-                                  <IonButton size="default" color="danger">
-                                    <IonIcon icon={trashBin} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
+                          {props.budget.expenses &&
+                            props.budget.expenses.map((expense) => {
+                              return (
+                                <IonItem key={expense.id}>
+                                  <IonGrid>
+                                    <IonRow>
+                                      <IonCol size="5">
+                                        <h5>
+                                          <IonLabel>{expense.name}</IonLabel>
+                                        </h5>
+                                      </IonCol>
+                                      <IonCol
+                                        size="4"
+                                        className="ion-text-start"
+                                      >
+                                        <h5>
+                                          <IonLabel>
+                                            ${expense.amount.toFixed(2)}
+                                          </IonLabel>
+                                        </h5>
+                                      </IonCol>
+                                      <IonCol
+                                        size="3"
+                                        className="ion-text-end ion-no-padding"
+                                      >
+                                        <IonButton
+                                          size="default"
+                                          color="danger"
+                                        >
+                                          <IonIcon icon={trashBin} />
+                                        </IonButton>
+                                      </IonCol>
+                                    </IonRow>
+                                  </IonGrid>
+                                </IonItem>
+                              );
+                            })}
                           <IonItem lines="inset">
                             <IonGrid>
                               <IonRow>
@@ -437,13 +391,13 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                       </IonList>
                     </IonCol>
                   </IonRow>
-                  <IonText color="danger" className="ion-padding-start">
-                    {error === "newExpense" && (
+                  {error === "newExpense" && (
+                    <IonText color="danger" className="ion-padding-start">
                       <span className="ion-margin ion-padding">
                         Please add an expense name.
                       </span>
-                    )}
-                  </IonText>
+                    </IonText>
+                  )}
                   <IonRow>
                     <IonCol>
                       <IonItem>
@@ -455,7 +409,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                             <IonCol size="6">
                               <IonNote color="dark">
                                 <h5 className="ion-padding-end ">
-                                  &nbsp;&nbsp;$3421.00
+                                  &nbsp;&nbsp;${difference().toFixed(2)}
                                 </h5>
                               </IonNote>
                             </IonCol>
@@ -474,7 +428,9 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                             </IonCol>
                             <IonCol size="5">
                               <IonNote color="primary">
-                                <h5 className="ion-padding-end ">-$1200.00</h5>
+                                <h5 className="ion-padding-end ">
+                                  -${totalSavings()}
+                                </h5>
                               </IonNote>
                             </IonCol>
                           </IonRow>
@@ -493,7 +449,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                             <IonCol size="6">
                               <IonNote color="dark">
                                 <h5 className="ion-padding-end ">
-                                  &nbsp;&nbsp;$2221.00
+                                  &nbsp;&nbsp;${spending().toFixed(2)}
                                 </h5>
                               </IonNote>
                             </IonCol>

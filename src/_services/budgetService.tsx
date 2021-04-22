@@ -14,6 +14,7 @@ function getBudget(month: string) {
       .then((res) => {
         return res.docs.map((expense) => {
           return {
+            id: expense.id,
             amount: expense.data().amount,
             name: expense.data().name,
             type: expense.data().type,
@@ -29,12 +30,27 @@ function getBudget(month: string) {
       .then((res) => {
         return res.docs.map((current) => {
           return {
+            id: current.id,
             amount: current.data().amount,
             name: current.data().name,
           };
         });
       });
 
-    resolve({ income: income, expenses: expenses });
+    const savings = await db
+      .collection("budgets")
+      .doc(month)
+      .collection("savings")
+      .get()
+      .then((res) => {
+        return res.docs.map((saving) => {
+          return {
+            id: saving.id,
+            amount: saving.data().amount,
+          };
+        });
+      });
+
+    resolve({ income: income, expenses: expenses, savings: savings });
   });
 }

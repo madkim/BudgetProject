@@ -24,18 +24,26 @@ export interface Sellers {
 }
 
 export interface Expense {
-  amount: number;
+  id: string;
   name: string;
   type: string;
+  amount: number;
 }
 
 export interface Income {
-  amount: number;
+  id: string;
   name: string;
+  amount: number;
+}
+
+export interface Saving {
+  id: string;
+  amount: number;
 }
 
 export interface Budget {
   income: Income[];
+  savings: Saving[];
   expenses: Expense[];
 }
 
