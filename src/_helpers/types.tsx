@@ -23,6 +23,22 @@ export interface Sellers {
   [key: string]: Seller[];
 }
 
+export interface Expense {
+  amount: number;
+  name: string;
+  type: string;
+}
+
+export interface Income {
+  amount: number;
+  name: string;
+}
+
+export interface Budget {
+  income: Income[];
+  expenses: Expense[];
+}
+
 export interface Days {
   [key: string]: number[];
 }

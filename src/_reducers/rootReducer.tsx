@@ -1,11 +1,13 @@
+import { budgetReducer } from "./budgetReducer";
+import { sellersReducer } from "./sellersReducer";
 import { combineReducers } from "redux";
 import { receiptsReducer } from "./receiptsReducer";
-import { sellersReducer } from "./sellersReducer";
 import { spendingReducer } from "./spendingReducer";
 
 const rootReducer = combineReducers({
-  receiptsReducer,
+  budgetReducer,
   sellersReducer,
+  receiptsReducer,
   spendingReducer,
 });
 
