@@ -24,8 +24,8 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import FadeIn from "react-fade-in";
 
+import { Budget } from "../../../_helpers/types";
 import { budgetActions } from "../../../_actions/budgetActions";
-import { Budget, Income } from "../../../_helpers/types";
 import { useDispatch, connect } from "react-redux";
 import { addOutline, chevronBackOutline, trashBin } from "ionicons/icons";
 
@@ -62,7 +62,9 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
   const totalExpense = () => {
     if (Object.keys(props.budget).length > 0) {
       const total = props.budget.expenses.reduce((total, expense) => {
-        return total + expense.amount;
+        return expense.type === "yearly"
+          ? total + expense.amount / 12
+          : total + expense.amount;
       }, 0);
       return total.toFixed(2);
     }
@@ -333,7 +335,10 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                                       >
                                         <h5>
                                           <IonLabel>
-                                            ${expense.amount.toFixed(2)}
+                                            $
+                                            {expense.type === "yearly"
+                                              ? (expense.amount / 12).toFixed(2)
+                                              : expense.amount.toFixed(2)}
                                           </IonLabel>
                                         </h5>
                                       </IonCol>
@@ -471,8 +476,6 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
 const mapStateToProps = (state: {
   budgetReducer: { budget: Budget; loading: boolean };
 }) => {
-  console.log(state.budgetReducer.loading);
-  console.log(state.budgetReducer.budget);
   return {
     budget: state.budgetReducer.budget,
     loading: state.budgetReducer.loading,

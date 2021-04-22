@@ -2,7 +2,6 @@ import {
   IonRow,
   IonCol,
   IonPage,
-  IonCard,
   IonGrid,
   IonIcon,
   IonTitle,
@@ -11,41 +10,74 @@ import {
   IonButtons,
   IonContent,
   IonToolbar,
-  IonLoading,
   IonItem,
   IonLabel,
-  IonInput,
   IonList,
   IonListHeader,
-  IonBadge,
   IonNote,
-  IonFabButton,
-  IonFab,
-  IonActionSheet,
+  IonLoading,
 } from "@ionic/react";
 
-import { Accordion, Collapse, Button } from "react-bootstrap";
-
-import {
-  add,
-  addOutline,
-  settingsOutline,
-  swapHorizontalOutline,
-  trash,
-  share,
-  caretForwardCircle,
-  heart,
-  close,
-} from "ionicons/icons";
-
 import React, { useEffect, useState } from "react";
-import FadeIn from "react-fade-in";
 import moment from "moment";
+import FadeIn from "react-fade-in";
 
-import { connect } from "react-redux";
+import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
+import { settingsOutline } from "ionicons/icons";
+import { useDispatch, connect } from "react-redux";
+import { Budget as BudgetType } from "../../_helpers/types";
 
-const Budget: React.FC<{}> = () => {
+interface Props {
+  budget: BudgetType;
+  loading: boolean;
+}
+
+const Budget: React.FC<Props> = (props: Props) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const month = moment(new Date()).format("YYYY-MM");
+    dispatch(budgetActions.getCurrentBudget(month));
+  }, []);
+
+  const totalIncome = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.income.reduce((total, current) => {
+        return total + current.amount;
+      }, 0);
+      return total.toFixed(0);
+    }
+  };
+
+  const totalExpense = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.expenses.reduce((total, expense) => {
+        return expense.type === "yearly"
+          ? total + expense.amount / 12
+          : total + expense.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const totalSavings = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.savings.reduce((total, saving) => {
+        return total + saving.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const difference = () => {
+    return parseFloat(totalIncome()!) - parseFloat(totalExpense()!);
+  };
+
+  const spending = () => {
+    return difference() - parseFloat(totalSavings()!);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -62,21 +94,24 @@ const Budget: React.FC<{}> = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent class="font-weight-light">
-        <FadeIn>
-          <div className="ion-padding-bottom ion-padding-end">
-            <IonGrid>
-              <IonRow>
-                <IonCol>
-                  <IonList>
-                    <IonListHeader lines="inset">
-                      <IonLabel>Income</IonLabel>
-                      <IonNote color="success">
-                        <h2 className="ion-padding-end ">$3500.00</h2>
-                      </IonNote>
-                    </IonListHeader>
+      <IonContent>
+        {props.loading ? (
+          <IonLoading isOpen={props.loading} message={"Please wait..."} />
+        ) : (
+          <FadeIn>
+            <div className="ion-padding-bottom ion-padding-end">
+              <IonGrid>
+                <IonRow>
+                  <IonCol>
+                    <IonList>
+                      <IonListHeader lines="inset">
+                        <IonLabel>Income</IonLabel>
+                        <IonNote color="success">
+                          <h2 className="ion-padding-end ">${totalIncome()}</h2>
+                        </IonNote>
+                      </IonListHeader>
 
-                    {/* <div className="ion-padding-start">
+                      {/* <div className="ion-padding-start">
                       <IonItem>
                         <IonLabel>
                           <IonRow>
@@ -90,126 +125,102 @@ const Budget: React.FC<{}> = () => {
                         </IonLabel>
                       </IonItem>
                     </div> */}
-                  </IonList>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol>
-                  <IonList>
-                    <IonListHeader lines="inset">
-                      <IonLabel>Expenses</IonLabel>
-                      <IonNote color="danger">
-                        <h2 className="ion-padding-end ">-$79.00</h2>
-                      </IonNote>
-                    </IonListHeader>
+                    </IonList>
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol>
+                    <IonList>
+                      <IonListHeader lines="inset">
+                        <IonLabel>Expenses</IonLabel>
+                        <IonNote color="danger">
+                          <h2 className="ion-padding-end ">
+                            -${totalExpense()}
+                          </h2>
+                        </IonNote>
+                      </IonListHeader>
 
-                    <div className="ion-padding-start">
-                      <IonItem>
-                        <IonLabel>
-                          <IonRow>
-                            <IonCol>
-                              <h1>HBO</h1>
-                            </IonCol>
-                            <IonCol className="ion-text-end">
-                              <h1>$12.55</h1>
-                            </IonCol>
-                          </IonRow>
-                        </IonLabel>
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel>
-                          <IonRow>
-                            <IonCol>
-                              <h1>Netflix</h1>
-                            </IonCol>
-                            <IonCol className="ion-text-end">
-                              <h1>$15.00</h1>
-                            </IonCol>
-                          </IonRow>
-                        </IonLabel>
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel>
-                          <IonRow>
-                            <IonCol>
-                              <h1>Spotify</h1>
-                            </IonCol>
-                            <IonCol className="ion-text-end">
-                              <h1>$9.00</h1>
-                            </IonCol>
-                          </IonRow>
-                        </IonLabel>
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel>
-                          <IonRow>
-                            <IonCol>
-                              <h1>AAA</h1>
-                            </IonCol>
-                            <IonCol className="ion-text-end">
-                              <h1>$35.55</h1>
-                            </IonCol>
-                          </IonRow>
-                        </IonLabel>
-                      </IonItem>
-                      <IonItem>
-                        <IonLabel>
-                          <IonRow>
-                            <IonCol>
-                              <h1>Insurance</h1>
-                            </IonCol>
-                            <IonCol className="ion-text-end">
-                              <h1>$15.00</h1>
-                            </IonCol>
-                          </IonRow>
-                        </IonLabel>
-                      </IonItem>
-                    </div>
-                  </IonList>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol>
-                  <IonList>
-                    <IonListHeader lines="inset">
-                      <IonLabel>Difference</IonLabel>
-                      <IonNote color="dark">
-                        <h2 className="ion-padding-end ">$3421.00</h2>
-                      </IonNote>
-                    </IonListHeader>
-                  </IonList>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol>
-                  <IonList>
-                    <IonListHeader lines="inset">
-                      <IonLabel>Savings</IonLabel>
-                      <IonNote color="primary">
-                        <h2 className="ion-padding-end ">-$1200.00</h2>
-                      </IonNote>
-                    </IonListHeader>
-                  </IonList>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol>
-                  <IonList>
-                    <IonListHeader lines="none">
-                      <IonLabel>Budget</IonLabel>
-                      <IonNote color="dark">
-                        <h2 className="ion-padding-end ">$2221.00</h2>
-                      </IonNote>
-                    </IonListHeader>
-                  </IonList>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-          </div>
-        </FadeIn>
+                      <div className="ion-padding-start">
+                        {props.budget.expenses &&
+                          props.budget.expenses.map((expense) => {
+                            return (
+                              <IonItem key={expense.id}>
+                                <IonLabel>
+                                  <IonRow>
+                                    <IonCol>
+                                      <h1>{expense.name}</h1>
+                                    </IonCol>
+                                    <IonCol className="ion-text-end">
+                                      <h1>
+                                        $
+                                        {expense.type === "yearly"
+                                          ? (expense.amount / 12).toFixed(2)
+                                          : expense.amount.toFixed(2)}
+                                      </h1>
+                                    </IonCol>
+                                  </IonRow>
+                                </IonLabel>
+                              </IonItem>
+                            );
+                          })}
+                      </div>
+                    </IonList>
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol>
+                    <IonList>
+                      <IonListHeader lines="inset">
+                        <IonLabel>Difference</IonLabel>
+                        <IonNote color="dark">
+                          <h2 className="ion-padding-end ">${difference()}</h2>
+                        </IonNote>
+                      </IonListHeader>
+                    </IonList>
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol>
+                    <IonList>
+                      <IonListHeader lines="inset">
+                        <IonLabel>Savings</IonLabel>
+                        <IonNote color="primary">
+                          <h2 className="ion-padding-end ">
+                            -${totalSavings()}
+                          </h2>
+                        </IonNote>
+                      </IonListHeader>
+                    </IonList>
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol>
+                    <IonList>
+                      <IonListHeader lines="none">
+                        <IonLabel>Budget</IonLabel>
+                        <IonNote color="dark">
+                          <h2 className="ion-padding-end ">${spending()}</h2>
+                        </IonNote>
+                      </IonListHeader>
+                    </IonList>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </div>
+          </FadeIn>
+        )}
       </IonContent>
     </IonPage>
   );
 };
 
-export default connect()(Budget);
+const mapStateToProps = (state: {
+  budgetReducer: { budget: BudgetType; loading: boolean };
+}) => {
+  return {
+    budget: state.budgetReducer.budget,
+    loading: state.budgetReducer.loading,
+  };
+};
+
+export default connect(mapStateToProps)(Budget);
