@@ -184,16 +184,12 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                               </IonCol>
                             )}
                             <IonCol
-                              size={props.showByDay ? "4" : ""}
-                              className="ion-text-left ion-padding-start"
-                            >
-                              <IonBadge color={getBadgeColor(receipt.price)}>
-                                ${receipt.price?.toFixed(2)}
-                              </IonBadge>
-                            </IonCol>
-                            <IonCol
                               size={props.showByDay ? "6" : "4"}
-                              className={props.showByDay ? "ion-text-left" : ""}
+                              className={
+                                props.showByDay
+                                  ? "ion-text-left"
+                                  : "ion-padding-start"
+                              }
                             >
                               {receipt.seller && (
                                 <IonLabel className="ion-text-capitalize">
@@ -201,6 +197,12 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                                 </IonLabel>
                               )}
                             </IonCol>
+                            <IonCol className="ion-text-center ion-padding-start">
+                              <IonBadge color={getBadgeColor(receipt.price)}>
+                                ${receipt.price?.toFixed(2)}
+                              </IonBadge>
+                            </IonCol>
+
                             {props.loading && clicked === receipt.id ? (
                               <IonSpinner name="lines-small" />
                             ) : (

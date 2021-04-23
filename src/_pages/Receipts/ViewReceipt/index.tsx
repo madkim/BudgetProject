@@ -177,7 +177,26 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
                   <h2>Date:</h2>
                 </IonLabel>
                 <IonLabel position="stacked">
-                  <h1> {receipt && moment(receipt.date).format("L")}</h1>
+                  <h1>
+                    {receipt && moment(receipt.date).format("MMM DD, YYYY")}
+                  </h1>
+                </IonLabel>
+              </IonItem>
+            </IonCol>
+          </IonRow>
+
+          <IonRow>
+            <IonCol>
+              <IonItem>
+                <IonLabel position="stacked">
+                  <h2>Seller:</h2>
+                </IonLabel>
+                <IonLabel
+                  position="stacked"
+                  className="ion-text-capitalize"
+                  style={{ paddingBottom: "1vh" }}
+                >
+                  <h1>{receipt.seller && receipt.seller.name}</h1>
                 </IonLabel>
               </IonItem>
             </IonCol>
@@ -198,23 +217,6 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
                       <h2>${receipt.price?.toFixed(2)}</h2>
                     </IonBadge>
                   )}
-                </IonLabel>
-              </IonItem>
-            </IonCol>
-          </IonRow>
-
-          <IonRow>
-            <IonCol>
-              <IonItem>
-                <IonLabel position="stacked">
-                  <h2>Seller:</h2>
-                </IonLabel>
-                <IonLabel
-                  position="stacked"
-                  className="ion-text-capitalize"
-                  style={{ paddingBottom: "1vh" }}
-                >
-                  <h1>{receipt.seller && receipt.seller.name}</h1>
                 </IonLabel>
               </IonItem>
             </IonCol>

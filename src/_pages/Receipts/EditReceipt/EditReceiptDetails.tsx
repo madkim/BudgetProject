@@ -87,6 +87,21 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
 
         <IonRow>
           <IonCol>
+            <IonItem
+              button
+              detail={false}
+              onClick={() => props.showSellers(true)}
+            >
+              <IonLabel position="stacked">Seller:</IonLabel>
+              <IonLabel position="stacked" className="ion-text-capitalize">
+                {props.seller && props.seller.name}
+              </IonLabel>
+            </IonItem>
+          </IonCol>
+        </IonRow>
+
+        <IonRow>
+          <IonCol>
             <IonItem>
               <IonLabel position="stacked">Total spent:</IonLabel>
               <IonRow style={{ width: "100%" }}>
@@ -128,21 +143,6 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
                 Done
               </IonButton>
             )}
-          </IonCol>
-        </IonRow>
-
-        <IonRow>
-          <IonCol>
-            <IonItem
-              button
-              detail={false}
-              onClick={() => props.showSellers(true)}
-            >
-              <IonLabel position="stacked">Seller:</IonLabel>
-              <IonLabel position="stacked" className="ion-text-capitalize">
-                {props.seller && props.seller.name}
-              </IonLabel>
-            </IonItem>
           </IonCol>
         </IonRow>
       </IonGrid>
