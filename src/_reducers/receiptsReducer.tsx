@@ -4,6 +4,7 @@ import { Action, Receipt } from "../_helpers/types";
 export const initState = {
   upload: "",
   request: "",
+  progress: 0,
   loading: false,
   receipt: {},
   receipts: [],
@@ -53,11 +54,18 @@ export function receiptsReducer(state = initState, action: Action) {
       loading: false,
     });
   }
+  if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_PROGRESS) {
+    return (state = {
+      ...state,
+      progress: action.payload,
+    });
+  }
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_FAILURE) {
     return (state = {
       ...state,
       upload: "failure",
       loading: false,
+      progress: 0,
     });
   }
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_SUCCESS) {
@@ -65,6 +73,7 @@ export function receiptsReducer(state = initState, action: Action) {
       ...state,
       upload: "success",
       loading: false,
+      progress: 0,
     });
   }
   if (action.type === receiptConstants.UPDATE_RECEIPT) {

@@ -16,6 +16,7 @@ import {
   IonCardHeader,
   IonCardContent,
   IonRefresherContent,
+  IonProgressBar,
 } from "@ionic/react";
 
 import {
@@ -42,6 +43,7 @@ interface Props {
   upload: string;
   request: string;
   loading: boolean;
+  progress: number;
   receipts: Receipt[];
 }
 
@@ -89,6 +91,10 @@ const Receipts: React.FC<Props> = (props: Props) => {
             <IonIcon icon={filterOutline} style={{ color: "white" }} />
           </IonButton>
         </IonToolbar>
+
+        {props.progress > 0 && (
+          <IonProgressBar value={props.progress}></IonProgressBar>
+        )}
       </IonHeader>
 
       <IonContent>
@@ -152,14 +158,16 @@ const Receipts: React.FC<Props> = (props: Props) => {
 
 const mapStateToProps = (state: {
   receiptsReducer: {
-    receipts: Receipt[];
     request: string;
     loading: boolean;
+    progress: number;
+    receipts: Receipt[];
   };
 }) => {
   return {
     request: state.receiptsReducer.request,
     loading: state.receiptsReducer.loading,
+    progress: state.receiptsReducer.progress,
     receipts: state.receiptsReducer.receipts,
   };
 };

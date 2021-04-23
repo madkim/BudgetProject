@@ -87,16 +87,14 @@ function addNewReceipt(
   photo: Photo | undefined,
   price: number | null,
   seller: Seller,
-  receipts: Receipt[],
-  history: any
+  receipts: Receipt[]
 ) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
     receiptsService
       .addNew(date, photo, price, seller, receipts, dispatch)
-      .then(async (updatedReceipts) => {
-        await dispatch(success(updatedReceipts.sort(dateSortValue)));
-        history.push("/receipts");
+      .then((updatedReceipts) => {
+        dispatch(success(updatedReceipts.sort(dateSortValue)));
       })
       .catch((error: Error) => {
         dispatch({
@@ -105,7 +103,6 @@ function addNewReceipt(
         });
         alert("Could not create receipt. Please try again.");
         console.error("Error writing receipt: ", error);
-        history.push("/receipts");
       });
   };
   function success(updatedReceipts: Receipt[]) {

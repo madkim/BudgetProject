@@ -126,7 +126,7 @@ const Budget: React.FC<Props> = (props: Props) => {
                         {props.budget.income &&
                           props.budget.income.map((income) => {
                             return (
-                              <IonItem>
+                              <IonItem key={income.id}>
                                 <IonLabel>
                                   <IonRow>
                                     <IonCol>

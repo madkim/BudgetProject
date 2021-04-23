@@ -73,10 +73,10 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
           receiptPhoto,
           price,
           seller,
-          props.receipts,
-          history
+          props.receipts
         )
       );
+      history.push("/receipts");
     }
   };
 

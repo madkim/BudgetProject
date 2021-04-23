@@ -34,22 +34,33 @@ export const uploadPhoto = async (
   dispatch({ type: receiptConstants.UPLOAD_RECEIPT_PHOTO, payload: "" });
   const base64Data = await base64FromPath(photo.webPath!);
 
-  await fireStorage
+  let upload = fireStorage
     .child("receipts/" + fileName)
-    .putString(base64Data, "data_url")
-    .then(() => {
+    .putString(base64Data, "data_url");
+
+  upload.on(
+    "state_changed",
+    (snapshot) => {
+      let progress = snapshot.bytesTransferred / snapshot.totalBytes;
+      dispatch({
+        type: receiptConstants.UPLOAD_RECEIPT_PHOTO_PROGRESS,
+        payload: progress,
+      });
+    },
+    (error) => {
+      dispatch({
+        type: receiptConstants.UPLOAD_RECEIPT_PHOTO_FAILURE,
+        payload: "",
+      });
+    },
+    () => {
       dispatch({
         type: receiptConstants.UPLOAD_RECEIPT_PHOTO_SUCCESS,
         payload: "",
       });
       console.log("photo uploaded :)");
-    })
-    .catch(() => {
-      dispatch({
-        type: receiptConstants.UPLOAD_RECEIPT_PHOTO_FAILURE,
-        payload: "",
-      });
-    });
+    }
+  );
 
   return photo;
 };
