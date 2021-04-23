@@ -4,8 +4,9 @@
 
 /* **/
 .text {
-  background: #f3f3f3;
   padding: 10px;
+  font-size: larger;
+  background: #f3f3f3;
 }
 
 .abc {

@@ -14,7 +14,6 @@ import {
   IonItemDivider,
   IonItemSliding,
   IonItemOptions,
-  IonProgressBar,
 } from "@ionic/react";
 import moment from "moment";
 
@@ -32,7 +31,6 @@ interface Props {
   day: string;
   xref: React.Ref<HTMLIonContentElement>;
   loading: boolean;
-  progress: number;
   receipts: Receipt[];
   showByDay: boolean;
 }
@@ -229,13 +227,11 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   );
 };
 const mapStateToProps = (state: {
+  receiptsReducer: { loading: boolean };
   spendingReducer: { totalSpent: number };
-  receiptsReducer: { loading: boolean; progress: number };
 }) => {
-  console.log(state.receiptsReducer.progress);
   return {
     loading: state.receiptsReducer.loading,
-    progress: state.receiptsReducer.progress,
     totalSpent: state.spendingReducer.totalSpent,
   };
 };

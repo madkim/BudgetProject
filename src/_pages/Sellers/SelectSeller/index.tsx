@@ -180,7 +180,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <IonContent className="ion-padding-end">
+      <IonContent>
         <IonLoading
           isOpen={
             initLoading || props.loading || props.uploadingPhoto === "uploading"
@@ -237,7 +237,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
         </IonGrid>
 
         <div className="wrapper">
-          <div className="ion-padding-horizontal">
+          <div className="ion-padding-end">
             <IonSearchbar
               ref={searchInput}
               value={search}
@@ -248,7 +248,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
               showCancelButton="never"
             ></IonSearchbar>
           </div>
-          <div className="container js-abc ion-padding-start">
+          <div className="container js-abc ">
             <div style={{ touchAction: "none" }}>
               <ul
                 id="alphaList"
@@ -315,9 +315,9 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                               return (
                                 <IonRow key={i} id={seller.id}>
                                   <IonCol className="ion-no-padding">
-                                    <IonItem lines="none">
-                                      <IonLabel className="ion-text-capitalize">
-                                        {seller.name}
+                                    <IonItem lines="full">
+                                      <IonLabel className="ion-text-capitalize ion-padding">
+                                        <h1>{seller.name}</h1>
                                       </IonLabel>
                                       <IonRadio
                                         slot="start"
@@ -346,7 +346,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
           </IonText>
         )}
 
-        <IonRow className="ion-padding-start ">
+        <IonRow className="ion-padding-horizontal ">
           <IonCol size="12">
             <IonButton
               color="success"
