@@ -24,9 +24,9 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import FadeIn from "react-fade-in";
 
-import { Budget } from "../../../_helpers/types";
 import { budgetActions } from "../../../_actions/budgetActions";
 import { useDispatch, connect } from "react-redux";
+import { Budget, Income, Expense } from "../../../_helpers/types";
 import { addOutline, chevronBackOutline, trashBin } from "ionicons/icons";
 
 interface Props {
@@ -46,8 +46,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const month = moment(new Date()).format("YYYY-MM");
-    dispatch(budgetActions.getCurrentBudget(month));
+    dispatch(budgetActions.getCurrentBudget());
   }, []);
 
   const totalIncome = () => {
@@ -76,6 +75,24 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
         return total + saving.amount;
       }, 0);
       return total.toFixed(2);
+    }
+  };
+
+  const deleteIncome = (income: Income) => {
+    const answer = window.confirm(
+      `Are you sure you want to delete ${income.name}?`
+    );
+    if (answer) {
+      dispatch(budgetActions.deleteIncome(income));
+    }
+  };
+
+  const deleteExpense = (expense: Expense) => {
+    const answer = window.confirm(
+      `Are you sure you want to delete ${expense.name}?`
+    );
+    if (answer) {
+      dispatch(budgetActions.deleteExpense(expense));
     }
   };
 
@@ -133,13 +150,21 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                   role: "cancel",
                   cssClass: "secondary",
                   handler: () => {
-                    console.log("Confirm Cancel");
+                    setIncomeTitle("");
+                    setShowAddIncome(false);
                   },
                 },
                 {
                   text: "Ok",
-                  handler: () => {
-                    console.log("Confirm Ok");
+                  handler: (amount) => {
+                    dispatch(
+                      budgetActions.addIncome(
+                        incomeTitle,
+                        parseFloat(amount[0])
+                      )
+                    );
+                    setIncomeTitle("");
+                    setShowAddIncome(false);
                   },
                 },
               ]}
@@ -164,12 +189,27 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                   role: "cancel",
                   cssClass: "secondary",
                   handler: () => {
-                    console.log("Confirm Cancel");
+                    setExpenseType("");
+                    setExpenseTitle("");
+                    setShowAddExpense(false);
+                    setShowExpenseType(false);
                   },
                 },
                 {
                   text: "Ok",
-                  handler: () => {},
+                  handler: (amount) => {
+                    dispatch(
+                      budgetActions.addExpense(
+                        expenseTitle,
+                        expenseType,
+                        parseFloat(amount[0])
+                      )
+                    );
+                    setExpenseType("");
+                    setExpenseTitle("");
+                    setShowAddExpense(false);
+                    setShowExpenseType(false);
+                  },
                 },
               ]}
             />
@@ -181,17 +221,15 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                 {
                   text: "Yearly",
                   handler: () => {
-                    setExpenseType("Year");
+                    setExpenseType("yearly");
                     setShowAddExpense(true);
-                    console.log("Confirm Okay");
                   },
                 },
                 {
                   text: "Monthly",
                   handler: (blah) => {
-                    setExpenseType("Month");
+                    setExpenseType("monthly");
                     setShowAddExpense(true);
-                    console.log("Confirm Cancel: blah");
                   },
                 },
               ]}
@@ -225,7 +263,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                                   <IonGrid>
                                     <IonRow>
                                       <IonCol size="5">
-                                        <h5>
+                                        <h5 className="ion-text-capitalize">
                                           <IonLabel>{income.name}</IonLabel>
                                         </h5>
                                       </IonCol>
@@ -244,6 +282,9 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                                         <IonButton
                                           size="default"
                                           color="danger"
+                                          onClick={() => {
+                                            deleteIncome(income);
+                                          }}
                                         >
                                           <IonIcon icon={trashBin} />
                                         </IonButton>
@@ -258,6 +299,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                               <IonRow>
                                 <IonCol size="9">
                                   <IonInput
+                                    value={incomeTitle}
                                     placeholder="Add Income"
                                     onIonChange={(e) => {
                                       setIncomeTitle(e.detail.value!);
@@ -349,6 +391,9 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                                         <IonButton
                                           size="default"
                                           color="danger"
+                                          onClick={() => {
+                                            deleteExpense(expense);
+                                          }}
                                         >
                                           <IonIcon icon={trashBin} />
                                         </IonButton>
@@ -363,6 +408,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                               <IonRow>
                                 <IonCol size="9">
                                   <IonInput
+                                    value={expenseTitle}
                                     placeholder="Add Expense"
                                     onIonChange={(e) => {
                                       setExpenseTitle(e.detail.value!);

@@ -1,8 +1,8 @@
-import { Action } from "../_helpers/types";
+import { Action, Budget } from "../_helpers/types";
 import { budgetConstants } from "../_constants/budgetConstants";
 
-export const initState = {
-  budget: {},
+export const initState: { budget: Budget; loading: boolean } = {
+  budget: { income: [], expenses: [], savings: [] },
   loading: false,
 };
 
@@ -26,5 +26,50 @@ export function budgetReducer(state = initState, action: Action) {
       budget: action.payload,
     });
   }
+  if (action.type === budgetConstants.ADD_INCOME) {
+    return (state = {
+      ...state,
+      loading: false,
+      budget: {
+        ...state.budget,
+        income: [...state.budget.income, action.payload],
+      },
+    });
+  }
+  if (action.type === budgetConstants.DELETE_INCOME) {
+    return (state = {
+      ...state,
+      loading: false,
+      budget: {
+        ...state.budget,
+        income: state.budget.income.filter((current) => {
+          return current.id !== action.payload.id;
+        }),
+      },
+    });
+  }
+  if (action.type === budgetConstants.ADD_EXPENSE) {
+    return (state = {
+      ...state,
+      loading: false,
+      budget: {
+        ...state.budget,
+        expenses: [...state.budget.expenses, action.payload],
+      },
+    });
+  }
+  if (action.type === budgetConstants.DELETE_EXPENSE) {
+    return (state = {
+      ...state,
+      loading: false,
+      budget: {
+        ...state.budget,
+        expenses: state.budget.expenses.filter((current) => {
+          return current.id !== action.payload.id;
+        }),
+      },
+    });
+  }
+
   return state;
 }

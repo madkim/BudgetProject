@@ -38,7 +38,7 @@ const Budget: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     const month = moment(new Date()).format("YYYY-MM");
-    dispatch(budgetActions.getCurrentBudget(month));
+    dispatch(budgetActions.getCurrentBudget());
   }, []);
 
   const totalIncome = () => {
@@ -76,6 +76,16 @@ const Budget: React.FC<Props> = (props: Props) => {
 
   const spending = () => {
     return difference() - parseFloat(totalSavings()!);
+  };
+
+  const yearlyExpense = (amount: number) => {
+    return (
+      <>
+        {(amount / 12).toFixed(2)}
+        {/* <br />
+        &nbsp;&nbsp;<small>${amount.toFixed(2)} / yr</small> */}
+      </>
+    );
   };
 
   return (
@@ -178,7 +188,7 @@ const Budget: React.FC<Props> = (props: Props) => {
                                       <h1>
                                         &nbsp;&nbsp;$
                                         {expense.type === "yearly"
-                                          ? (expense.amount / 12).toFixed(2)
+                                          ? yearlyExpense(expense.amount)
                                           : expense.amount.toFixed(2)}
                                       </h1>
                                     </IonCol>

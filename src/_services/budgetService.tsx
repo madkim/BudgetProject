@@ -1,10 +1,18 @@
+import moment from "moment";
 import { db } from "../_helpers/firebase";
-import { Budget } from "../_helpers/types";
+import { Budget, Income, Expense } from "../_helpers/types";
 
 export const budgetService = {
   getBudget,
+  addIncome,
+  addExpense,
+  deleteIncome,
+  deleteExpense,
 };
-function getBudget(month: string) {
+
+const month = moment(new Date()).format("YYYY-MM");
+
+function getBudget() {
   return new Promise(async (resolve: (value: Budget) => void) => {
     const expenses = await db
       .collection("budgets")
@@ -53,4 +61,76 @@ function getBudget(month: string) {
 
     resolve({ income: income, expenses: expenses, savings: savings });
   });
+}
+
+function addIncome(name: string, amount: number) {
+  return db
+    .collection("budgets")
+    .doc(month)
+    .collection("income")
+    .add({
+      name: name,
+      amount: amount,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .then((incomeRef) => {
+      db.collection("budgets").doc(month).update({ updatedAt: new Date() });
+
+      return {
+        id: incomeRef.id,
+        name: name,
+        amount: amount,
+      };
+    });
+}
+
+function deleteIncome(income: Income) {
+  return db
+    .collection("budgets")
+    .doc(month)
+    .collection("income")
+    .doc(income.id)
+    .delete()
+    .then(() => {
+      db.collection("budgets").doc(month).update({ updatedAt: new Date() });
+      return;
+    });
+}
+
+function addExpense(name: string, type: string, amount: number) {
+  return db
+    .collection("budgets")
+    .doc(month)
+    .collection("expenses")
+    .add({
+      name: name,
+      type: type,
+      amount: amount,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .then((expenseRef) => {
+      db.collection("budgets").doc(month).update({ updatedAt: new Date() });
+
+      return {
+        id: expenseRef.id,
+        name: name,
+        type: type,
+        amount: amount,
+      };
+    });
+}
+
+function deleteExpense(expense: Expense) {
+  return db
+    .collection("budgets")
+    .doc(month)
+    .collection("expenses")
+    .doc(expense.id)
+    .delete()
+    .then(() => {
+      db.collection("budgets").doc(month).update({ updatedAt: new Date() });
+      return;
+    });
 }
