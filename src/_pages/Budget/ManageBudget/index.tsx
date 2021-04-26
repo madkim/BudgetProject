@@ -514,6 +514,20 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                   </IonRow>
                 </IonGrid>
               </div>
+              <IonRow className="ion-padding-horizontal">
+                <IonCol size="12">
+                  <IonButton
+                    fill="solid"
+                    color="success"
+                    expand="block"
+                    routerLink="/"
+                    routerDirection="root"
+                  >
+                    Done
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+              <br />
             </FadeIn>
           </>
         )}

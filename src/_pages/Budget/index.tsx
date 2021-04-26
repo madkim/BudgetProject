@@ -4,22 +4,21 @@ import {
   IonPage,
   IonGrid,
   IonIcon,
+  IonItem,
+  IonList,
+  IonNote,
+  IonLabel,
   IonTitle,
   IonHeader,
   IonButton,
   IonButtons,
   IonContent,
   IonToolbar,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonListHeader,
-  IonNote,
   IonLoading,
+  IonListHeader,
 } from "@ionic/react";
 
-import React, { useEffect, useState } from "react";
-import moment from "moment";
+import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
 
 import { budgetActions } from "../../_actions/budgetActions";
@@ -107,14 +106,14 @@ const Budget: React.FC<Props> = (props: Props) => {
                       <IonListHeader lines="inset">
                         <IonLabel>
                           <IonRow>
-                            <IonCol>Income</IonCol>
+                            <IonCol size="7">Income</IonCol>
                             <IonCol>
                               <IonNote
                                 color="success"
                                 className="ion-text-start"
                               >
                                 <h1 className="ion-padding-end ">
-                                  &nbsp;&nbsp;${totalIncome()}
+                                  ${totalIncome()}
                                 </h1>
                               </IonNote>
                             </IonCol>
@@ -122,27 +121,25 @@ const Budget: React.FC<Props> = (props: Props) => {
                         </IonLabel>
                       </IonListHeader>
 
-                      <div className="ion-padding-start">
-                        {props.budget.income &&
-                          props.budget.income.map((income) => {
-                            return (
-                              <IonItem key={income.id}>
-                                <IonLabel>
-                                  <IonRow>
-                                    <IonCol>
-                                      <h1>{income.name}</h1>
-                                    </IonCol>
-                                    <IonCol>
-                                      <h1>
-                                        &nbsp;&nbsp;${income.amount.toFixed(2)}
-                                      </h1>
-                                    </IonCol>
-                                  </IonRow>
-                                </IonLabel>
-                              </IonItem>
-                            );
-                          })}
-                      </div>
+                      {props.budget.income &&
+                        props.budget.income.map((income) => {
+                          return (
+                            <IonItem key={income.id}>
+                              <IonLabel>
+                                <IonRow>
+                                  <IonCol size="7">
+                                    <h1>{income.name}</h1>
+                                  </IonCol>
+                                  <IonCol>
+                                    <h1>
+                                      &nbsp;&nbsp;${income.amount.toFixed(2)}
+                                    </h1>
+                                  </IonCol>
+                                </IonRow>
+                              </IonLabel>
+                            </IonItem>
+                          );
+                        })}
                     </IonList>
                   </IonCol>
                 </IonRow>
@@ -152,31 +149,31 @@ const Budget: React.FC<Props> = (props: Props) => {
                       <IonListHeader lines="inset">
                         <IonLabel>
                           <IonRow>
-                            <IonCol>Expenses</IonCol>
-                            <IonCol>
+                            <IonCol size="7">Expenses</IonCol>
+                            <IonCol className="ion-no-padding">
                               <IonNote color="danger">
-                                <h1 className="ion-padding-end ">
-                                  -${totalExpense()}
-                                </h1>
+                                <h1>-${totalExpense()}</h1>
                               </IonNote>
                             </IonCol>
                           </IonRow>
                         </IonLabel>
                       </IonListHeader>
 
-                      <div className="ion-padding-start">
+                      <div>
                         {props.budget.expenses &&
                           props.budget.expenses.map((expense) => {
                             return (
                               <IonItem key={expense.id}>
                                 <IonLabel>
                                   <IonRow>
-                                    <IonCol>
-                                      <h1>{expense.name}</h1>
+                                    <IonCol size="7">
+                                      <IonLabel>
+                                        <h1>{expense.name}</h1>
+                                      </IonLabel>
                                     </IonCol>
                                     <IonCol>
                                       <h1>
-                                        &nbsp;&nbsp;$
+                                        &nbsp;&nbsp;&nbsp;$
                                         {expense.type === "yearly"
                                           ? yearlyExpense(expense.amount)
                                           : expense.amount.toFixed(2)}
@@ -197,11 +194,11 @@ const Budget: React.FC<Props> = (props: Props) => {
                       <IonListHeader lines="inset">
                         <IonLabel>
                           <IonRow>
-                            <IonCol>Difference</IonCol>
+                            <IonCol size="7">Difference</IonCol>
                             <IonCol>
                               <IonNote color="dark">
                                 <h1 className="ion-padding-end">
-                                  &nbsp;&nbsp;${difference()}
+                                  &nbsp;${difference()}
                                 </h1>
                               </IonNote>
                             </IonCol>
@@ -217,8 +214,8 @@ const Budget: React.FC<Props> = (props: Props) => {
                       <IonListHeader lines="inset">
                         <IonLabel>
                           <IonRow>
-                            <IonCol>Savings</IonCol>
-                            <IonCol>
+                            <IonCol size="7">Savings</IonCol>
+                            <IonCol className="ion-no-padding">
                               <IonNote color="primary">
                                 <h1 className="ion-padding-end">
                                   -${props.budget.savings.amount}
@@ -237,11 +234,11 @@ const Budget: React.FC<Props> = (props: Props) => {
                       <IonListHeader lines="none">
                         <IonLabel>
                           <IonRow>
-                            <IonCol>Budget</IonCol>
+                            <IonCol size="7">Budget</IonCol>
                             <IonCol>
                               <IonNote color="dark">
                                 <h1 className="ion-padding-end">
-                                  &nbsp;&nbsp;${spending()}
+                                  &nbsp;${spending().toFixed(2)}
                                 </h1>
                               </IonNote>
                             </IonCol>

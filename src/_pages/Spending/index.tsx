@@ -11,16 +11,11 @@ import {
   IonButtons,
   IonContent,
   IonToolbar,
-  IonLoading,
   IonCardTitle,
   IonCardSubtitle,
 } from "@ionic/react";
 
-import {
-  settingsOutline,
-  notificationsOutline,
-  swapHorizontalOutline,
-} from "ionicons/icons";
+import { settingsOutline, notificationsOutline } from "ionicons/icons";
 
 import React, { useEffect } from "react";
 import FadeIn from "react-fade-in";
@@ -28,15 +23,17 @@ import moment from "moment";
 
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
-import { Days, Receipt } from "../../_helpers/types";
+import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
 import { spendingActions } from "../../_actions/spendingActions";
+import { Budget, Days, Receipt } from "../../_helpers/types";
 
 import SpentPerDay from "./SpentPerDay";
 import LoadingSpent from "./LoadingSpent";
 
 interface Props {
   days: Days;
+  budget: Budget;
   loading: boolean;
   receipts: Receipt[];
   totalSpent: number;
@@ -48,7 +45,46 @@ const Spending: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     dispatch(spendingActions.getTotalSpent());
     dispatch(spendingActions.getDaysSpent());
+    dispatch(budgetActions.getCurrentBudget());
   }, [props.totalSpent]);
+
+  const totalIncome = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.income.reduce((total, current) => {
+        return total + current.amount;
+      }, 0);
+      return total.toFixed(0);
+    }
+  };
+
+  const totalExpense = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.expenses.reduce((total, expense) => {
+        return expense.type === "yearly"
+          ? total + expense.amount / 12
+          : total + expense.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const difference = () => {
+    return +totalIncome()! - +totalExpense()!;
+  };
+
+  const budget = () => {
+    return difference() - +props.budget.savings.amount!;
+  };
+
+  const allowance = () => {
+    const allowance = budget() - props.totalSpent;
+    return allowance < 0 ? 0 : allowance.toFixed(0);
+  };
+
+  const saved = () => {
+    const saved = props.budget.savings.amount;
+    return allowance() === 0 ? saved + (budget() - props.totalSpent) : saved;
+  };
 
   return (
     <IonPage>
@@ -86,18 +122,19 @@ const Spending: React.FC<Props> = (props: Props) => {
                 <IonCol size="4">
                   <IonCardSubtitle>Allowance</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${(428.5 - props.totalSpent).toFixed(0)}
+                    ${allowance()}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">
-                  <IonButton fill="outline" color="dark" shape="round">
-                    <IonIcon icon={swapHorizontalOutline} />
-                  </IonButton>
+                  <IonCardSubtitle>Days Total</IonCardSubtitle>
+                  <IonCardTitle style={{ fontWeight: "300" }}>
+                    {moment().daysInMonth()}
+                  </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">
                   <IonCardSubtitle>Saved</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${(1200 - 155.79).toFixed(0)}
+                    ${saved().toFixed(0)}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>
@@ -106,7 +143,7 @@ const Spending: React.FC<Props> = (props: Props) => {
                 <IonCol size="4">
                   <IonCardSubtitle>Budget</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    $428
+                    ${budget().toFixed()}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">
@@ -141,9 +178,13 @@ const mapStateToProps = (state: {
     loading: boolean;
     totalSpent: number;
   };
+  budgetReducer: {
+    budget: Budget;
+  };
 }) => {
   return {
     days: state.spendingReducer.days,
+    budget: state.budgetReducer.budget,
     loading: state.spendingReducer.loading,
     totalSpent: state.spendingReducer.totalSpent,
   };

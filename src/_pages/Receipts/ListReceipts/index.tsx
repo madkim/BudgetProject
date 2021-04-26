@@ -24,12 +24,13 @@ import { receiptActions } from "../../../_actions/receiptActions";
 import { spendingActions } from "../../../_actions/spendingActions";
 import { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
-import { Receipt, Receipts, DynObject } from "../../../_helpers/types";
 import { imageOutline, chevronForwardOutline } from "ionicons/icons";
+import { Receipt, Receipts, DynObject, Budget } from "../../../_helpers/types";
 
 interface Props {
   day: string;
   xref: React.Ref<HTMLIonContentElement>;
+  budget: Budget;
   loading: boolean;
   receipts: Receipt[];
   showByDay: boolean;
@@ -137,7 +138,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
                         <small>
-                          ${totals && totals[month].toFixed(2)} / 428.5
+                          ${totals && totals[month].toFixed(2)} / 428
                         </small>
                       </IonLabel>
                     </>
@@ -227,10 +228,12 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   );
 };
 const mapStateToProps = (state: {
+  budgetReducer: { budget: Budget };
   receiptsReducer: { loading: boolean };
   spendingReducer: { totalSpent: number };
 }) => {
   return {
+    budget: state.budgetReducer.budget,
     loading: state.receiptsReducer.loading,
     totalSpent: state.spendingReducer.totalSpent,
   };
