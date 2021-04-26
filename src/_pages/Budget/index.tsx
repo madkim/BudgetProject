@@ -37,7 +37,6 @@ const Budget: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const month = moment(new Date()).format("YYYY-MM");
     dispatch(budgetActions.getCurrentBudget());
   }, []);
 
@@ -61,21 +60,12 @@ const Budget: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const totalSavings = () => {
-    if (Object.keys(props.budget).length > 0) {
-      const total = props.budget.savings.reduce((total, saving) => {
-        return total + saving.amount;
-      }, 0);
-      return total.toFixed(2);
-    }
-  };
-
   const difference = () => {
-    return parseFloat(totalIncome()!) - parseFloat(totalExpense()!);
+    return +totalIncome()! - +totalExpense()!;
   };
 
   const spending = () => {
-    return difference() - parseFloat(totalSavings()!);
+    return difference() - props.budget.savings.amount;
   };
 
   const yearlyExpense = (amount: number) => {
@@ -231,7 +221,7 @@ const Budget: React.FC<Props> = (props: Props) => {
                             <IonCol>
                               <IonNote color="primary">
                                 <h1 className="ion-padding-end">
-                                  -${totalSavings()}
+                                  -${props.budget.savings.amount}
                                 </h1>
                               </IonNote>
                             </IonCol>

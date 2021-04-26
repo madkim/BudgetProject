@@ -2,7 +2,11 @@ import { Action, Budget } from "../_helpers/types";
 import { budgetConstants } from "../_constants/budgetConstants";
 
 export const initState: { budget: Budget; loading: boolean } = {
-  budget: { income: [], expenses: [], savings: [] },
+  budget: {
+    income: [],
+    expenses: [],
+    savings: { id: "", type: "", amount: 0 },
+  },
   loading: false,
 };
 
@@ -67,6 +71,16 @@ export function budgetReducer(state = initState, action: Action) {
         expenses: state.budget.expenses.filter((current) => {
           return current.id !== action.payload.id;
         }),
+      },
+    });
+  }
+  if (action.type === budgetConstants.SET_SAVINGS) {
+    return (state = {
+      ...state,
+      loading: false,
+      budget: {
+        ...state.budget,
+        savings: action.payload,
       },
     });
   }

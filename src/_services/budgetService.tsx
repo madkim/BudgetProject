@@ -1,11 +1,12 @@
 import moment from "moment";
 import { db } from "../_helpers/firebase";
-import { Budget, Income, Expense } from "../_helpers/types";
+import { Budget, Income, Expense, Saving } from "../_helpers/types";
 
 export const budgetService = {
   getBudget,
   addIncome,
   addExpense,
+  setSavings,
   deleteIncome,
   deleteExpense,
 };
@@ -51,12 +52,11 @@ function getBudget() {
       .collection("savings")
       .get()
       .then((res) => {
-        return res.docs.map((saving) => {
-          return {
-            id: saving.id,
-            amount: saving.data().amount,
-          };
-        });
+        return {
+          id: res.docs[0].id,
+          type: res.docs[0].data().type,
+          amount: +res.docs[0].data().amount,
+        };
       });
 
     resolve({ income: income, expenses: expenses, savings: savings });
@@ -132,5 +132,22 @@ function deleteExpense(expense: Expense) {
     .then(() => {
       db.collection("budgets").doc(month).update({ updatedAt: new Date() });
       return;
+    });
+}
+
+function setSavings(amount: number, type: string, saving: Saving) {
+  return db
+    .collection("budgets")
+    .doc(month)
+    .collection("savings")
+    .doc(saving.id)
+    .update({ amount: amount, type: type })
+    .then(() => {
+      db.collection("budgets").doc(month).update({ updatedAt: new Date() });
+      return {
+        id: saving.id,
+        type: type,
+        amount: amount,
+      };
     });
 }

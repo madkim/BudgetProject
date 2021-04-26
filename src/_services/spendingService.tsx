@@ -17,7 +17,7 @@ function getTotal() {
       let totalSpent = receipts.docs.reduce((total, receipt) => {
         return receipt.data().price + total;
       }, 0);
-      return parseFloat(totalSpent.toFixed(2));
+      return +totalSpent.toFixed(2);
     });
 }
 

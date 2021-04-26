@@ -21,8 +21,8 @@ import {
 } from "@ionic/react";
 
 import React, { useState, useEffect } from "react";
-import moment from "moment";
 import FadeIn from "react-fade-in";
+import SavingsModal from "./SavingsModal";
 
 import { budgetActions } from "../../../_actions/budgetActions";
 import { useDispatch, connect } from "react-redux";
@@ -42,6 +42,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [showExpenseType, setShowExpenseType] = useState(false);
+  const [showSavingsModal, setShowSavingsModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -69,15 +70,6 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const totalSavings = () => {
-    if (Object.keys(props.budget).length > 0) {
-      const total = props.budget.savings.reduce((total, saving) => {
-        return total + saving.amount;
-      }, 0);
-      return total.toFixed(2);
-    }
-  };
-
   const deleteIncome = (income: Income) => {
     const answer = window.confirm(
       `Are you sure you want to delete ${income.name}?`
@@ -97,11 +89,11 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
   };
 
   const difference = () => {
-    return parseFloat(totalIncome()!) - parseFloat(totalExpense()!);
+    return +totalIncome()! - +totalExpense()!;
   };
 
   const spending = () => {
-    return difference() - parseFloat(totalSavings()!);
+    return difference() - +props.budget.savings.amount!;
   };
 
   return (
@@ -157,12 +149,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                 {
                   text: "Ok",
                   handler: (amount) => {
-                    dispatch(
-                      budgetActions.addIncome(
-                        incomeTitle,
-                        parseFloat(amount[0])
-                      )
-                    );
+                    dispatch(budgetActions.addIncome(incomeTitle, +amount[0]));
                     setIncomeTitle("");
                     setShowAddIncome(false);
                   },
@@ -176,7 +163,9 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
               inputs={[
                 {
                   type: "number",
-                  placeholder: `Amount Per ${expenseType}`,
+                  placeholder: `Amount Per ${
+                    expenseType === "monthly" ? "Month" : "Year"
+                  }`,
                   cssClass: "specialClass",
                   attributes: {
                     inputmode: "decimal",
@@ -202,7 +191,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                       budgetActions.addExpense(
                         expenseTitle,
                         expenseType,
-                        parseFloat(amount[0])
+                        +amount[0]
                       )
                     );
                     setExpenseType("");
@@ -469,9 +458,13 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                       </IonItem>
                     </IonCol>
                   </IonRow>
+
                   <IonRow>
                     <IonCol>
-                      <IonItem>
+                      <IonItem
+                        detail={true}
+                        onClick={() => setShowSavingsModal(true)}
+                      >
                         <IonGrid>
                           <IonRow>
                             <IonCol size="5">
@@ -479,16 +472,26 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                             </IonCol>
                             <IonCol size="5">
                               <IonNote color="primary">
-                                <h5 className="ion-padding-end ">
-                                  -${totalSavings()}
+                                <h5>
+                                  &nbsp;&nbsp;-${props.budget.savings.amount}
                                 </h5>
                               </IonNote>
                             </IonCol>
                           </IonRow>
                         </IonGrid>
                       </IonItem>
+
+                      {showSavingsModal && (
+                        <SavingsModal
+                          show={showSavingsModal}
+                          setShow={setShowSavingsModal}
+                          difference={+difference().toFixed(0)}
+                          budgetSavings={props.budget.savings}
+                        />
+                      )}
                     </IonCol>
                   </IonRow>
+
                   <IonRow>
                     <IonCol>
                       <IonItem lines="none">

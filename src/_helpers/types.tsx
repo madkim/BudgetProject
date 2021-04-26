@@ -38,12 +38,13 @@ export interface Income {
 
 export interface Saving {
   id: string;
+  type: string;
   amount: number;
 }
 
 export interface Budget {
   income: Income[];
-  savings: Saving[];
+  savings: Saving;
   expenses: Expense[];
 }
 

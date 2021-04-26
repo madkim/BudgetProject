@@ -114,6 +114,7 @@ const EditReceiptDetails: React.FC<Props> = (props: Props) => {
                     ref={priceInput}
                     type="number"
                     value={props.price}
+                    inputmode="decimal"
                     onIonBlur={() => setPriceInputFocus(false)}
                     onIonFocus={() => setPriceInputFocus(true)}
                     placeholder="Enter Total"

@@ -1,11 +1,12 @@
 import { Dispatch } from "react";
 import { budgetService } from "../_services/budgetService";
 import { budgetConstants } from "../_constants/budgetConstants";
-import { Action, Budget, Income, Expense } from "../_helpers/types";
+import { Action, Budget, Income, Expense, Saving } from "../_helpers/types";
 
 export const budgetActions = {
   addIncome,
   addExpense,
+  setSavings,
   deleteIncome,
   deleteExpense,
   getCurrentBudget,
@@ -107,6 +108,25 @@ function deleteExpense(expense: Expense) {
     return {
       type: budgetConstants.DELETE_EXPENSE,
       payload: expense,
+    };
+  }
+}
+
+function setSavings(amount: number, type: string, saving: Saving) {
+  return (dispatch: Dispatch<Action>) => {
+    budgetService
+      .setSavings(amount, type, saving)
+      .then((saving: Saving) => {
+        dispatch(success(saving));
+      })
+      .catch(() => {
+        alert("Could not set savings at this time. Please try again.");
+      });
+  };
+  function success(saving: Saving) {
+    return {
+      type: budgetConstants.SET_SAVINGS,
+      payload: saving,
     };
   }
 }
