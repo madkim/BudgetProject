@@ -27,7 +27,12 @@ import SavingsModal from "./SavingsModal";
 import { budgetActions } from "../../../_actions/budgetActions";
 import { useDispatch, connect } from "react-redux";
 import { Budget, Income, Expense } from "../../../_helpers/types";
-import { addOutline, chevronBackOutline, trashBin } from "ionicons/icons";
+import {
+  addOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+  trashBin,
+} from "ionicons/icons";
 
 interface Props {
   budget: Budget;
@@ -66,7 +71,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
           ? total + expense.amount / 12
           : total + expense.amount;
       }, 0);
-      return total.toFixed(2);
+      return total.toFixed(0);
     }
   };
 
@@ -232,10 +237,10 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                         <IonItem>
                           <IonGrid>
                             <IonRow>
-                              <IonCol size="5">
-                                <h5>Income</h5>
+                              <IonCol size="6" className="ion-no-padding">
+                                <h2>Income</h2>
                               </IonCol>
-                              <IonCol size="auto" className="ion-padding-start">
+                              <IonCol size="3" className="ion-text-end">
                                 <IonNote color="success">
                                   <h5>${totalIncome()}</h5>
                                 </IonNote>
@@ -244,81 +249,76 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                           </IonGrid>
                         </IonItem>
 
-                        <div className="ion-padding-start">
-                          {props.budget.income &&
-                            props.budget.income.map((income) => {
-                              return (
-                                <IonItem key={income.id}>
-                                  <IonGrid>
-                                    <IonRow>
-                                      <IonCol size="5">
-                                        <h5 className="ion-text-capitalize">
-                                          <IonLabel>{income.name}</IonLabel>
-                                        </h5>
-                                      </IonCol>
-                                      <IonCol
-                                        size="4"
-                                        className="ion-text-start"
+                        {props.budget.income &&
+                          props.budget.income.map((income) => {
+                            return (
+                              <IonItem key={income.id}>
+                                <IonGrid>
+                                  <IonRow>
+                                    <IonCol size="5">
+                                      <h5 className="ion-text-capitalize">
+                                        <IonLabel>{income.name}</IonLabel>
+                                      </h5>
+                                    </IonCol>
+                                    <IonCol size="4" className="ion-text-end">
+                                      <h5>
+                                        <IonLabel>${income.amount}</IonLabel>
+                                      </h5>
+                                    </IonCol>
+                                    <IonCol
+                                      size="3"
+                                      className="ion-text-end ion-no-padding"
+                                    >
+                                      <IonButton
+                                        size="default"
+                                        color="danger"
+                                        onClick={() => {
+                                          deleteIncome(income);
+                                        }}
                                       >
-                                        <h5>
-                                          <IonLabel>${income.amount}</IonLabel>
-                                        </h5>
-                                      </IonCol>
-                                      <IonCol
-                                        size="3"
-                                        className="ion-text-end ion-no-padding"
-                                      >
-                                        <IonButton
-                                          size="default"
-                                          color="danger"
-                                          onClick={() => {
-                                            deleteIncome(income);
-                                          }}
-                                        >
-                                          <IonIcon icon={trashBin} />
-                                        </IonButton>
-                                      </IonCol>
-                                    </IonRow>
-                                  </IonGrid>
-                                </IonItem>
-                              );
-                            })}
-                          <IonItem lines="inset">
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="9">
-                                  <IonInput
-                                    value={incomeTitle}
-                                    placeholder="Add Income"
-                                    onIonChange={(e) => {
-                                      setIncomeTitle(e.detail.value!);
-                                    }}
-                                  ></IonInput>
-                                </IonCol>
+                                        <IonIcon icon={trashBin} />
+                                      </IonButton>
+                                    </IonCol>
+                                  </IonRow>
+                                </IonGrid>
+                              </IonItem>
+                            );
+                          })}
+                        <IonItem lines="inset">
+                          <IonGrid>
+                            <IonRow>
+                              <IonCol size="9">
+                                <IonInput
+                                  value={incomeTitle}
+                                  placeholder="Add Income Name"
+                                  onIonChange={(e) => {
+                                    setIncomeTitle(e.detail.value!);
+                                  }}
+                                ></IonInput>
+                              </IonCol>
 
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
+                              <IonCol
+                                size="3"
+                                className="ion-text-end ion-no-padding"
+                              >
+                                <IonButton
+                                  size="default"
+                                  color="success"
+                                  onClick={() => {
+                                    if (incomeTitle) {
+                                      setError("");
+                                      setShowAddIncome(true);
+                                    } else {
+                                      setError("newIncome");
+                                    }
+                                  }}
                                 >
-                                  <IonButton
-                                    size="default"
-                                    color="success"
-                                    onClick={() => {
-                                      if (incomeTitle) {
-                                        setError("");
-                                        setShowAddIncome(true);
-                                      } else {
-                                        setError("newIncome");
-                                      }
-                                    }}
-                                  >
-                                    <IonIcon icon={addOutline} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
-                        </div>
+                                  <IonIcon icon={addOutline} />
+                                </IonButton>
+                              </IonCol>
+                            </IonRow>
+                          </IonGrid>
+                        </IonItem>
                       </IonList>
                     </IonCol>
                   </IonRow>
@@ -336,98 +336,93 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                         <IonItem>
                           <IonGrid>
                             <IonRow>
-                              <IonCol size="5">
-                                <h5>Expenses</h5>
+                              <IonCol size="6" className="ion-no-padding">
+                                <h2>Expenses</h2>
                               </IonCol>
-                              <IonCol size="5" className="ion-padding-start">
+                              <IonCol size="3" class="ion-text-end">
                                 <IonNote color="danger">
-                                  <h5>${totalExpense()}</h5>
+                                  <h5>&nbsp;-${totalExpense()}</h5>
                                 </IonNote>
                               </IonCol>
                             </IonRow>
                           </IonGrid>
                         </IonItem>
 
-                        <div className="ion-padding-start">
-                          {props.budget.expenses &&
-                            props.budget.expenses.map((expense) => {
-                              return (
-                                <IonItem key={expense.id}>
-                                  <IonGrid>
-                                    <IonRow>
-                                      <IonCol size="5">
-                                        <h5>
-                                          <IonLabel>{expense.name}</IonLabel>
-                                        </h5>
-                                      </IonCol>
-                                      <IonCol
-                                        size="4"
-                                        className="ion-text-start"
+                        {props.budget.expenses &&
+                          props.budget.expenses.map((expense) => {
+                            return (
+                              <IonItem key={expense.id}>
+                                <IonGrid>
+                                  <IonRow>
+                                    <IonCol size="5">
+                                      <h5>
+                                        <IonLabel>{expense.name}</IonLabel>
+                                      </h5>
+                                    </IonCol>
+                                    <IonCol size="4" className="ion-text-end">
+                                      <h5>
+                                        <IonLabel>
+                                          $
+                                          {expense.type === "yearly"
+                                            ? (expense.amount / 12).toFixed(2)
+                                            : expense.amount.toFixed(2)}
+                                        </IonLabel>
+                                      </h5>
+                                    </IonCol>
+                                    <IonCol
+                                      size="3"
+                                      className="ion-text-end ion-no-padding"
+                                    >
+                                      <IonButton
+                                        size="default"
+                                        color="danger"
+                                        onClick={() => {
+                                          deleteExpense(expense);
+                                        }}
                                       >
-                                        <h5>
-                                          <IonLabel>
-                                            $
-                                            {expense.type === "yearly"
-                                              ? (expense.amount / 12).toFixed(2)
-                                              : expense.amount.toFixed(2)}
-                                          </IonLabel>
-                                        </h5>
-                                      </IonCol>
-                                      <IonCol
-                                        size="3"
-                                        className="ion-text-end ion-no-padding"
-                                      >
-                                        <IonButton
-                                          size="default"
-                                          color="danger"
-                                          onClick={() => {
-                                            deleteExpense(expense);
-                                          }}
-                                        >
-                                          <IonIcon icon={trashBin} />
-                                        </IonButton>
-                                      </IonCol>
-                                    </IonRow>
-                                  </IonGrid>
-                                </IonItem>
-                              );
-                            })}
-                          <IonItem lines="inset">
-                            <IonGrid>
-                              <IonRow>
-                                <IonCol size="9">
-                                  <IonInput
-                                    value={expenseTitle}
-                                    placeholder="Add Expense"
-                                    onIonChange={(e) => {
-                                      setExpenseTitle(e.detail.value!);
-                                    }}
-                                  ></IonInput>
-                                </IonCol>
+                                        <IonIcon icon={trashBin} />
+                                      </IonButton>
+                                    </IonCol>
+                                  </IonRow>
+                                </IonGrid>
+                              </IonItem>
+                            );
+                          })}
+                        <IonItem lines="inset">
+                          <IonGrid>
+                            <IonRow>
+                              <IonCol size="9">
+                                <IonInput
+                                  value={expenseTitle}
+                                  placeholder="Add Expense Name"
+                                  onIonChange={(e) => {
+                                    setExpenseTitle(e.detail.value!);
+                                  }}
+                                ></IonInput>
+                              </IonCol>
 
-                                <IonCol
-                                  size="3"
-                                  className="ion-text-end ion-no-padding"
+                              <IonCol
+                                size="3"
+                                className="ion-text-end ion-no-padding"
+                              >
+                                <IonButton
+                                  size="default"
+                                  color="success"
+                                  onClick={() => {
+                                    if (expenseTitle) {
+                                      setError("");
+                                      setShowExpenseType(true);
+                                    } else {
+                                      setError("newExpense");
+                                    }
+                                  }}
                                 >
-                                  <IonButton
-                                    size="default"
-                                    color="success"
-                                    onClick={() => {
-                                      if (expenseTitle) {
-                                        setError("");
-                                        setShowExpenseType(true);
-                                      } else {
-                                        setError("newExpense");
-                                      }
-                                    }}
-                                  >
-                                    <IonIcon icon={addOutline} />
-                                  </IonButton>
-                                </IonCol>
-                              </IonRow>
-                            </IonGrid>
-                          </IonItem>
-                        </div>
+                                  <IonIcon icon={addOutline} />
+                                </IonButton>
+                              </IonCol>
+                            </IonRow>
+                          </IonGrid>
+                        </IonItem>
                       </IonList>
                     </IonCol>
                   </IonRow>
@@ -443,14 +438,12 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                       <IonItem>
                         <IonGrid>
                           <IonRow>
-                            <IonCol size="5">
-                              <h5>Difference</h5>
+                            <IonCol size="6" className="ion-no-padding">
+                              <h2>Difference</h2>
                             </IonCol>
-                            <IonCol size="6">
+                            <IonCol size="3" className="ion-text-end">
                               <IonNote color="dark">
-                                <h5 className="ion-padding-end ">
-                                  &nbsp;&nbsp;${difference().toFixed(2)}
-                                </h5>
+                                <h5>${difference().toFixed(0)}</h5>
                               </IonNote>
                             </IonCol>
                           </IonRow>
@@ -461,21 +454,26 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
 
                   <IonRow>
                     <IonCol>
-                      <IonItem
-                        detail={true}
-                        onClick={() => setShowSavingsModal(true)}
-                      >
+                      <IonItem onClick={() => setShowSavingsModal(true)}>
                         <IonGrid>
                           <IonRow>
-                            <IonCol size="5">
-                              <h5>Savings</h5>
+                            <IonCol size="6" className="ion-no-padding">
+                              <h2>Savings</h2>
                             </IonCol>
-                            <IonCol size="5">
+                            <IonCol size="3" className="ion-text-end">
                               <IonNote color="primary">
-                                <h5>
-                                  &nbsp;&nbsp;-${props.budget.savings.amount}
-                                </h5>
+                                <h5>-${props.budget.savings.amount}</h5>
                               </IonNote>
+                            </IonCol>
+                            <IonCol
+                              size="3"
+                              className="ion-text-end"
+                              style={{ paddingTop: "2.5vh" }}
+                            >
+                              <IonIcon
+                                color="medium"
+                                icon={chevronForwardOutline}
+                              />
                             </IonCol>
                           </IonRow>
                         </IonGrid>
@@ -497,14 +495,12 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                       <IonItem lines="none">
                         <IonGrid>
                           <IonRow>
-                            <IonCol size="5">
-                              <h5>Budget</h5>
+                            <IonCol size="6" className="ion-no-padding">
+                              <h2>Budget</h2>
                             </IonCol>
-                            <IonCol size="6">
+                            <IonCol size="3" className="ion-text-end">
                               <IonNote color="dark">
-                                <h5 className="ion-padding-end ">
-                                  &nbsp;&nbsp;${spending().toFixed(2)}
-                                </h5>
+                                <h5>${spending().toFixed(0)}</h5>
                               </IonNote>
                             </IonCol>
                           </IonRow>

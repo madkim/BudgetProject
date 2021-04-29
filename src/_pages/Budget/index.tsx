@@ -16,16 +16,17 @@ import {
   IonToolbar,
   IonLoading,
   IonListHeader,
+  IonDatetime,
 } from "@ionic/react";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import FadeIn from "react-fade-in";
 
 import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
-import { settingsOutline } from "ionicons/icons";
 import { useDispatch, connect } from "react-redux";
 import { Budget as BudgetType } from "../../_helpers/types";
+import { menuSharp, timeOutline } from "ionicons/icons";
 
 interface Props {
   budget: BudgetType;
@@ -34,6 +35,7 @@ interface Props {
 
 const Budget: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const datePickerRef = useRef<any>();
 
   useEffect(() => {
     dispatch(budgetActions.getCurrentBudget());
@@ -83,13 +85,36 @@ const Budget: React.FC<Props> = (props: Props) => {
         <IonToolbar color="success">
           <IonButtons slot="start" className="ion-padding">
             <IonButton fill="clear" onClick={() => menuController.open()}>
-              <IonIcon icon={settingsOutline} style={{ color: "white" }} />
+              <IonIcon
+                size="large"
+                icon={menuSharp}
+                style={{ color: "white" }}
+              />
             </IonButton>
           </IonButtons>
 
           <IonTitle className="ion-text-center">
             <h3>April 2021 Budget</h3>
           </IonTitle>
+
+          <IonButton
+            slot="end"
+            fill="clear"
+            onClick={() => {
+              datePickerRef.current?.open();
+            }}
+          >
+            <IonIcon
+              size="large"
+              icon={timeOutline}
+              style={{ color: "white" }}
+            />
+          </IonButton>
+          <IonDatetime
+            ref={datePickerRef}
+            className="ion-hide"
+            displayFormat="MMMM:YYYY"
+          ></IonDatetime>
         </IonToolbar>
       </IonHeader>
 

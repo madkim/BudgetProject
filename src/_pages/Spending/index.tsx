@@ -13,11 +13,12 @@ import {
   IonToolbar,
   IonCardTitle,
   IonCardSubtitle,
+  IonDatetime,
 } from "@ionic/react";
 
-import { settingsOutline, notificationsOutline } from "ionicons/icons";
+import { menuSharp, settingsOutline, timeOutline } from "ionicons/icons";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import FadeIn from "react-fade-in";
 import moment from "moment";
 
@@ -41,6 +42,7 @@ interface Props {
 
 const Spending: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const datePickerRef = useRef<any>();
 
   useEffect(() => {
     dispatch(spendingActions.getTotalSpent());
@@ -92,17 +94,37 @@ const Spending: React.FC<Props> = (props: Props) => {
         <IonToolbar color="success">
           <IonButtons slot="start" className="ion-padding">
             <IonButton fill="clear" onClick={() => menuController.open()}>
-              <IonIcon icon={settingsOutline} style={{ color: "white" }} />
+              <IonIcon
+                size="large"
+                icon={menuSharp}
+                style={{ color: "white" }}
+              />
             </IonButton>
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            <h2>💰 M👀LA&nbsp;</h2>
+            {/* <h2>💰 M👀LA&nbsp;</h2> */}
+            <h3>{moment().format("MMMM YYYY")}</h3>
           </IonTitle>
 
-          <IonButton slot="end" fill="clear">
-            <IonIcon icon={notificationsOutline} style={{ color: "white" }} />
+          <IonButton
+            slot="end"
+            fill="clear"
+            onClick={() => {
+              datePickerRef.current?.open();
+            }}
+          >
+            <IonIcon
+              size="large"
+              icon={timeOutline}
+              style={{ color: "white" }}
+            />
           </IonButton>
+          <IonDatetime
+            ref={datePickerRef}
+            className="ion-hide"
+            displayFormat="MMMM:YYYY"
+          ></IonDatetime>
         </IonToolbar>
       </IonHeader>
 
@@ -111,14 +133,14 @@ const Spending: React.FC<Props> = (props: Props) => {
           <IonCard>
             <IonGrid className="ion-padding-start ion-text-center">
               <IonRow>
-                <IonCol className="ion-padding-vertical">
+                <IonCol className="ion-padding-top ion-text-center">
+                  <IonCardSubtitle>Today is:</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    {moment().format("dddd MMMM Do ")}
+                    {moment().format("dddd Do ")}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>
-
-              <IonRow className="ion-padding-bottom">
+              <IonRow className="ion-padding-vertical">
                 <IonCol size="4">
                   <IonCardSubtitle>Allowance</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
@@ -126,9 +148,9 @@ const Spending: React.FC<Props> = (props: Props) => {
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">
-                  <IonCardSubtitle>Days Total</IonCardSubtitle>
+                  <IonCardSubtitle>Days Left</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    {moment().daysInMonth()}
+                    {moment().endOf("month").diff(moment(), "days")}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">
@@ -147,9 +169,9 @@ const Spending: React.FC<Props> = (props: Props) => {
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">
-                  <IonCardSubtitle>Days Left</IonCardSubtitle>
+                  <IonCardSubtitle>Days Total</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    {moment().endOf("month").diff(moment(), "days")}
+                    {moment().daysInMonth()}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">

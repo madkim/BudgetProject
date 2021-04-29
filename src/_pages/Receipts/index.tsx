@@ -21,6 +21,7 @@ import {
 
 import {
   add,
+  menuSharp,
   filterOutline,
   settingsOutline,
   chevronUpOutline,
@@ -79,7 +80,11 @@ const Receipts: React.FC<Props> = (props: Props) => {
         <IonToolbar color="success">
           <IonButtons slot="start" className="ion-padding">
             <IonButton fill="clear" onClick={() => menuController.open()}>
-              <IonIcon icon={settingsOutline} style={{ color: "white" }} />
+              <IonIcon
+                size="large"
+                icon={menuSharp}
+                style={{ color: "white" }}
+              />
             </IonButton>
           </IonButtons>
 
@@ -88,7 +93,11 @@ const Receipts: React.FC<Props> = (props: Props) => {
           </IonTitle>
 
           <IonButton slot="end" fill="clear">
-            <IonIcon icon={filterOutline} style={{ color: "white" }} />
+            <IonIcon
+              size="large"
+              icon={filterOutline}
+              style={{ color: "white" }}
+            />
           </IonButton>
         </IonToolbar>
 
