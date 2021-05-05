@@ -1,12 +1,17 @@
 import { Action, Budget } from "../_helpers/types";
 import { budgetConstants } from "../_constants/budgetConstants";
 
-export const initState: { budget: Budget; loading: boolean } = {
+export const initState: {
+  budget: Budget;
+  reviewed: boolean;
+  loading: boolean;
+} = {
   budget: {
     income: [],
     expenses: [],
     savings: { id: "", type: "", amount: 0 },
   },
+  reviewed: true,
   loading: false,
 };
 
@@ -21,6 +26,14 @@ export function budgetReducer(state = initState, action: Action) {
     return (state = {
       ...state,
       loading: true,
+    });
+  }
+  if (action.type === budgetConstants.CREATE_NEW_BUDGET) {
+    return (state = {
+      ...state,
+      loading: false,
+      reviewed: false,
+      budget: action.payload,
     });
   }
   if (action.type === budgetConstants.GET_BUDGET) {

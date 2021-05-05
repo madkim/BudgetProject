@@ -10,8 +10,13 @@ export const spendingService = {
   getDay,
 };
 function getTotal() {
+  const start = moment().clone().startOf("month");
+  const end = moment().clone().endOf("month");
+
   return db
     .collection("receipts")
+    .where("date", ">=", start.toDate())
+    .where("date", "<=", end.toDate())
     .get()
     .then((receipts) => {
       let totalSpent = receipts.docs.reduce((total, receipt) => {
@@ -22,8 +27,13 @@ function getTotal() {
 }
 
 function getDays() {
+  const start = moment().clone().startOf("month");
+  const end = moment().clone().endOf("month");
+
   return db
     .collection("receipts")
+    .where("date", ">=", start.toDate())
+    .where("date", "<=", end.toDate())
     .get()
     .then((receipts) => {
       let receiptsByDay: Days = {};

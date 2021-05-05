@@ -33,10 +33,12 @@ import {
   chevronForwardOutline,
   trashBin,
 } from "ionicons/icons";
+import moment from "moment";
 
 interface Props {
   budget: Budget;
   loading: boolean;
+  reviewed: boolean;
 }
 
 const ManageBudget: React.FC<Props> = (props: Props) => {
@@ -116,7 +118,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
             </IonButton>
           </IonButtons>
           <IonTitle className="ion-text-center">
-            <h4>Manage April Budget</h4>
+            <h4>Manage {moment(new Date()).format("MMMM")} Budget</h4>
           </IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -126,6 +128,14 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
           <IonLoading isOpen={props.loading} message={"Please wait..."} />
         ) : (
           <>
+            <IonAlert
+              isOpen={!props.reviewed}
+              header={"New Budget Created"}
+              message={
+                "Please review this month's budget and update accordingly."
+              }
+              buttons={["OK"]}
+            />
             <IonAlert
               isOpen={showAddIncome}
               onDidDismiss={() => setShowAddIncome(false)}
@@ -533,11 +543,12 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  budgetReducer: { budget: Budget; loading: boolean };
+  budgetReducer: { budget: Budget; loading: boolean; reviewed: boolean };
 }) => {
   return {
     budget: state.budgetReducer.budget,
     loading: state.budgetReducer.loading,
+    reviewed: state.budgetReducer.reviewed,
   };
 };
 

@@ -1,4 +1,3 @@
-import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonTabs,
@@ -11,7 +10,7 @@ import {
 } from "@ionic/react";
 
 import { IonReactRouter } from "@ionic/react-router";
-
+import { Redirect, Route } from "react-router-dom";
 import { cardOutline, receiptOutline, barChartOutline } from "ionicons/icons";
 
 import Receipts from "./_pages/Receipts";
@@ -49,55 +48,57 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonSplitPane contentId="main">
-        <Settings />
+const App: React.FC = () => {
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonSplitPane contentId="main">
+          <Settings />
 
-        <IonTabs>
-          <IonRouterOutlet id="main">
-            <Route path="/add" component={AddReceipt} />
-            <Route path="/view/:id" component={ViewReceipt} />
-            <Route path="/edit/:id" component={EditReceipt} />
-            <Route path="/receipts" component={Receipts} />
+          <IonTabs>
+            <IonRouterOutlet id="main">
+              <Route path="/add" component={AddReceipt} />
+              <Route path="/view/:id" component={ViewReceipt} />
+              <Route path="/edit/:id" component={EditReceipt} />
+              <Route path="/receipts" component={Receipts} />
 
-            <Route path="/spending" component={Spending} />
-            <Route path="/spent/:date/:days" component={SpentDetails} />
+              <Route path="/spending" component={Spending} />
+              <Route path="/spent/:date/:days" component={SpentDetails} />
 
-            <Route path="/settings" component={Settings} />
+              <Route path="/settings" component={Settings} />
 
-            <Route path="/manage/sellers" component={ManageSellers} />
-            <Route path="/manage/seller/:id" component={EditSeller} />
+              <Route path="/manage/sellers" component={ManageSellers} />
+              <Route path="/manage/seller/:id" component={EditSeller} />
 
-            <Route path="/budget" component={Budget} />
-            <Route path="/manage/budget" component={ManageBudget} />
+              <Route path="/budget" component={Budget} />
+              <Route path="/manage/budget" component={ManageBudget} />
 
-            <Route exact path="/">
-              <Redirect to="/spending" />
-            </Route>
-          </IonRouterOutlet>
+              <Route exact path="/">
+                <Redirect to="/spending" />
+              </Route>
+            </IonRouterOutlet>
 
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="spending" href="/spending">
-              <IonIcon icon={cardOutline} />
-              <IonLabel>Spending</IonLabel>
-            </IonTabButton>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="spending" href="/spending">
+                <IonIcon icon={cardOutline} />
+                <IonLabel>Spending</IonLabel>
+              </IonTabButton>
 
-            <IonTabButton tab="budget" href="/budget">
-              <IonIcon icon={barChartOutline} />
-              <IonLabel>Budget</IonLabel>
-            </IonTabButton>
+              <IonTabButton tab="budget" href="/budget">
+                <IonIcon icon={barChartOutline} />
+                <IonLabel>Budget</IonLabel>
+              </IonTabButton>
 
-            <IonTabButton tab="receipts" href="/receipts">
-              <IonIcon icon={receiptOutline} />
-              <IonLabel>Receipts</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-      </IonSplitPane>
-    </IonReactRouter>
-  </IonApp>
-);
+              <IonTabButton tab="receipts" href="/receipts">
+                <IonIcon icon={receiptOutline} />
+                <IonLabel>Receipts</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </IonSplitPane>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;

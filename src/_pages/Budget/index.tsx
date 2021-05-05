@@ -27,6 +27,7 @@ import { menuController } from "@ionic/core";
 import { useDispatch, connect } from "react-redux";
 import { Budget as BudgetType } from "../../_helpers/types";
 import { menuSharp, timeOutline } from "ionicons/icons";
+import moment from "moment";
 
 interface Props {
   budget: BudgetType;
@@ -70,13 +71,7 @@ const Budget: React.FC<Props> = (props: Props) => {
   };
 
   const yearlyExpense = (amount: number) => {
-    return (
-      <>
-        {(amount / 12).toFixed(2)}
-        {/* <br />
-        &nbsp;&nbsp;<small>${amount.toFixed(2)} / yr</small> */}
-      </>
-    );
+    return <>{(amount / 12).toFixed(2)}</>;
   };
 
   return (
@@ -94,7 +89,7 @@ const Budget: React.FC<Props> = (props: Props) => {
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            <h3>April 2021 Budget</h3>
+            <h3>{moment().format("MMMM YYYY")}</h3>
           </IonTitle>
 
           <IonButton

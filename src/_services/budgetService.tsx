@@ -7,17 +7,77 @@ export const budgetService = {
   addIncome,
   addExpense,
   setSavings,
+  checkBudget,
+  createBudget,
   deleteIncome,
   deleteExpense,
 };
 
 const month = moment(new Date()).format("YYYY-MM");
 
-function getBudget() {
+function checkBudget() {
+  return new Promise((resolve: (value: boolean) => void) => {
+    db.collection("budgets")
+      .doc(month)
+      .get()
+      .then((docSnapshot) => {
+        if (docSnapshot.exists) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+  });
+}
+
+function createBudget() {
+  return new Promise(async (resolve: (value: Budget) => void) => {
+    const mostRecent = await db
+      .collection("budgets")
+      .orderBy("createdAt", "desc")
+      .get();
+
+    const mostRecentMonth = mostRecent.docs.shift()?.data().month;
+
+    getBudget(mostRecentMonth).then(async (budget: Budget) => {
+      await db.collection("budgets").doc(month).set({
+        month: month,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      budget.expenses.map(async (expense) => {
+        const { id, ...rest } = expense;
+        await db
+          .collection("budgets")
+          .doc(month)
+          .collection("expenses")
+          .add(rest);
+      });
+
+      budget.income.map(async (income) => {
+        const { id, ...rest } = income;
+        await db
+          .collection("budgets")
+          .doc(month)
+          .collection("income")
+          .add(rest);
+      });
+
+      const { id, ...rest } = budget.savings;
+
+      await db.collection("budgets").doc(month).collection("savings").add(rest);
+
+      resolve(budget);
+    });
+  });
+}
+
+function getBudget(mon: string = month) {
   return new Promise(async (resolve: (value: Budget) => void) => {
     const expenses = await db
       .collection("budgets")
-      .doc(month)
+      .doc(mon)
       .collection("expenses")
       .get()
       .then((res) => {
@@ -33,7 +93,7 @@ function getBudget() {
 
     const income = await db
       .collection("budgets")
-      .doc(month)
+      .doc(mon)
       .collection("income")
       .get()
       .then((res) => {
@@ -48,7 +108,7 @@ function getBudget() {
 
     const savings = await db
       .collection("budgets")
-      .doc(month)
+      .doc(mon)
       .collection("savings")
       .get()
       .then((res) => {

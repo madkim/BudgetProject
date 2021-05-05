@@ -14,20 +14,20 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonDatetime,
+  IonLoading,
 } from "@ionic/react";
 
-import { menuSharp, settingsOutline, timeOutline } from "ionicons/icons";
-
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FadeIn from "react-fade-in";
 import moment from "moment";
 
-import { connect } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
 import { spendingActions } from "../../_actions/spendingActions";
+import { useDispatch, connect } from "react-redux";
 import { Budget, Days, Receipt } from "../../_helpers/types";
+import { menuSharp, timeOutline } from "ionicons/icons";
 
 import SpentPerDay from "./SpentPerDay";
 import LoadingSpent from "./LoadingSpent";
@@ -35,19 +35,29 @@ import LoadingSpent from "./LoadingSpent";
 interface Props {
   days: Days;
   budget: Budget;
-  loading: boolean;
   receipts: Receipt[];
   totalSpent: number;
+  spendLoading: boolean;
+  budgetLoading: boolean;
 }
 
 const Spending: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const datePickerRef = useRef<any>();
+  const [exists, setExists] = useState<boolean | void>(false);
 
   useEffect(() => {
-    dispatch(spendingActions.getTotalSpent());
-    dispatch(spendingActions.getDaysSpent());
-    dispatch(budgetActions.getCurrentBudget());
+    budgetActions.checkBudgetExists().then((exists) => {
+      setExists(exists);
+      if (exists) {
+        dispatch(budgetActions.getCurrentBudget());
+        dispatch(spendingActions.getTotalSpent());
+        dispatch(spendingActions.getDaysSpent());
+      } else {
+        dispatch(budgetActions.createNewBudget(history));
+      }
+    });
   }, [props.totalSpent]);
 
   const totalIncome = () => {
@@ -103,7 +113,6 @@ const Spending: React.FC<Props> = (props: Props) => {
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            {/* <h2>💰 M👀LA&nbsp;</h2> */}
             <h3>{moment().format("MMMM YYYY")}</h3>
           </IonTitle>
 
@@ -129,6 +138,12 @@ const Spending: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
+        <IonLoading
+          isOpen={props.budgetLoading && !exists}
+          message={"Please wait..."}
+          duration={5000}
+        />
+
         <FadeIn>
           <IonCard>
             <IonGrid className="ion-padding-start ion-text-center">
@@ -184,7 +199,7 @@ const Spending: React.FC<Props> = (props: Props) => {
             </IonGrid>
           </IonCard>
         </FadeIn>
-        {props.loading ? (
+        {props.spendLoading ? (
           <LoadingSpent count={7} />
         ) : (
           <SpentPerDay days={props.days} />
@@ -202,13 +217,15 @@ const mapStateToProps = (state: {
   };
   budgetReducer: {
     budget: Budget;
+    loading: boolean;
   };
 }) => {
   return {
     days: state.spendingReducer.days,
     budget: state.budgetReducer.budget,
-    loading: state.spendingReducer.loading,
     totalSpent: state.spendingReducer.totalSpent,
+    spendLoading: state.spendingReducer.loading,
+    budgetLoading: state.budgetReducer.loading,
   };
 };
 

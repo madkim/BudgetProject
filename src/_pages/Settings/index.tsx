@@ -7,19 +7,17 @@ import {
   IonList,
   IonMenu,
   IonLabel,
+  IonBadge,
   IonHeader,
   IonToolbar,
   IonContent,
   IonMenuToggle,
-  IonBadge,
-  IonChip,
 } from "@ionic/react";
 
 import {
   personOutline,
   bagHandleOutline,
   statsChartOutline,
-  notificationsOutline,
 } from "ionicons/icons";
 
 const Settings: React.FC = () => {
@@ -48,14 +46,11 @@ const Settings: React.FC = () => {
           </IonMenuToggle>
           <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/sellers" routerDirection="root">
-              <IonIcon slot="start" icon={notificationsOutline}></IonIcon>
+              <IonBadge slot="start" color="danger">
+                2
+              </IonBadge>
               <h3 style={{ padding: "10px" }}>
-                <IonLabel>
-                  Notifications
-                  <IonChip className="ion-margin-start" color="danger" outline>
-                    <IonLabel>0</IonLabel>
-                  </IonChip>
-                </IonLabel>
+                <IonLabel>Notifications</IonLabel>
               </h3>
             </IonItem>
           </IonMenuToggle>

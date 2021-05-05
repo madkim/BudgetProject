@@ -9,8 +9,46 @@ export const budgetActions = {
   setSavings,
   deleteIncome,
   deleteExpense,
+  createNewBudget,
   getCurrentBudget,
+  checkBudgetExists,
 };
+
+function checkBudgetExists() {
+  return budgetService
+    .checkBudget()
+    .then((exists: boolean) => {
+      return exists;
+    })
+    .catch(() => {
+      alert("Could check if budget exists at this time. Please try again.");
+    });
+}
+
+function createNewBudget(history: any) {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({ type: budgetConstants.GET_BUDGET_REQUEST, payload: true });
+    budgetService
+      .createBudget()
+      .then((budget: Budget) => {
+        dispatch(success(budget));
+        history.push("/manage/budget");
+      })
+      .catch(() => {
+        dispatch({
+          type: budgetConstants.GET_BUDGET_REQUEST_FAILURE,
+          payload: false,
+        });
+        alert("Could not create new budget at this time. Please try again.");
+      });
+  };
+  function success(budget: Budget) {
+    return {
+      type: budgetConstants.CREATE_NEW_BUDGET,
+      payload: budget,
+    };
+  }
+}
 
 function getCurrentBudget() {
   return (dispatch: Dispatch<Action>) => {
