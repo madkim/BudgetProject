@@ -28,7 +28,7 @@ import {
   chevronDownCircleOutline,
 } from "ionicons/icons";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FadeIn from "react-fade-in";
 import sadMoney from "../../_assets/sadMoney.jpeg";
 import ListReceipts from "./ListReceipts";
@@ -50,6 +50,8 @@ interface Props {
 
 const Receipts: React.FC<Props> = (props: Props) => {
   const topRef = useRef<HTMLIonContentElement>(null);
+  const [scrollTop, setScrollTop] = useState(0);
+
   const dispatch = useDispatch();
   const { impactMedium } = useHaptics();
 
@@ -106,15 +108,22 @@ const Receipts: React.FC<Props> = (props: Props) => {
         )}
       </IonHeader>
 
-      <IonContent>
-        {/* <IonRefresher slot="fixed" onIonRefresh={refreshReceipts}>
+      <IonContent
+        scrollEvents={true}
+        onIonScroll={(e) => setScrollTop(e.detail.scrollTop)}
+      >
+        <IonRefresher
+          slot="fixed"
+          disabled={scrollTop > 0}
+          onIonRefresh={refreshReceipts}
+        >
           <IonRefresherContent
             pullingIcon={chevronDownCircleOutline}
             pullingText="Pull to refresh"
             refreshingSpinner="circles"
             refreshingText="Refreshing..."
           ></IonRefresherContent>
-        </IonRefresher> */}
+        </IonRefresher>
 
         <IonFab
           slot="fixed"
