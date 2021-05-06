@@ -73,11 +73,12 @@ function createBudget() {
   });
 }
 
-function getBudget(mon: string = month) {
+function getBudget(mnth: string | null) {
   return new Promise(async (resolve: (value: Budget) => void) => {
+    mnth = mnth === null ? month : mnth;
     const expenses = await db
       .collection("budgets")
-      .doc(mon)
+      .doc(mnth)
       .collection("expenses")
       .get()
       .then((res) => {
@@ -93,7 +94,7 @@ function getBudget(mon: string = month) {
 
     const income = await db
       .collection("budgets")
-      .doc(mon)
+      .doc(mnth)
       .collection("income")
       .get()
       .then((res) => {
@@ -108,7 +109,7 @@ function getBudget(mon: string = month) {
 
     const savings = await db
       .collection("budgets")
-      .doc(mon)
+      .doc(mnth)
       .collection("savings")
       .get()
       .then((res) => {

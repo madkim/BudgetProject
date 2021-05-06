@@ -5,13 +5,16 @@ import { db } from "../_helpers/firebase";
 import moment from "moment";
 
 export const spendingService = {
+  getMonths,
   getTotal,
   getDays,
   getDay,
 };
-function getTotal() {
-  const start = moment().clone().startOf("month");
-  const end = moment().clone().endOf("month");
+function getTotal(month: string | null) {
+  const mnth = month === null ? new Date() : month;
+
+  const start = moment(mnth).clone().startOf("month");
+  const end = moment(mnth).clone().endOf("month");
 
   return db
     .collection("receipts")
@@ -26,9 +29,23 @@ function getTotal() {
     });
 }
 
-function getDays() {
-  const start = moment().clone().startOf("month");
-  const end = moment().clone().endOf("month");
+function getMonths() {
+  return db
+    .collection("budgets")
+    .orderBy("month", "asc")
+    .get()
+    .then((budgets) => {
+      return budgets.docs.map((budget) => {
+        return budget.data().month;
+      });
+    });
+}
+
+function getDays(month: string | null) {
+  const mnth = month === null ? new Date() : month;
+
+  const start = moment(mnth).clone().startOf("month");
+  const end = moment(mnth).clone().endOf("month");
 
   return db
     .collection("receipts")

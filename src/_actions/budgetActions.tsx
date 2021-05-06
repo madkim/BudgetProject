@@ -50,11 +50,11 @@ function createNewBudget(history: any) {
   }
 }
 
-function getCurrentBudget() {
+function getCurrentBudget(month: string | null = null) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: budgetConstants.GET_BUDGET_REQUEST, payload: true });
     budgetService
-      .getBudget()
+      .getBudget(month)
       .then((budget: Budget) => {
         dispatch(success(budget));
       })

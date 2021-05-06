@@ -4,15 +4,16 @@ import { spendingConstants } from "../_constants/spendingConstants";
 import { Action, Receipt, Days } from "../_helpers/types";
 
 export const spendingActions = {
+  getMonthsSpent,
   getTotalSpent,
   getSpentByDay,
   getDaysSpent,
 };
 
-function getTotalSpent() {
+function getTotalSpent(month: string | null = null) {
   return (dispatch: Dispatch<Action>) => {
     spendingService
-      .getTotal()
+      .getTotal(month)
       .then((total: number) => {
         dispatch(success(total));
       })
@@ -32,11 +33,38 @@ function getTotalSpent() {
   }
 }
 
-function getDaysSpent() {
+function getMonthsSpent() {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: spendingConstants.MAKE_SPENDING_REQUEST,
+      payload: true,
+    });
+    spendingService
+      .getMonths()
+      .then((months: string[]) => {
+        dispatch(success(months));
+      })
+      .catch(() => {
+        dispatch({
+          type: spendingConstants.SPENDING_REQUEST_FAILURE,
+          payload: false,
+        });
+        alert("Could not retrieve months spent. Please try again.");
+      });
+  };
+  function success(months: string[]) {
+    return {
+      type: spendingConstants.GET_MONTHS_SPENT,
+      payload: months,
+    };
+  }
+}
+
+function getDaysSpent(month: string | null = null) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: spendingConstants.MAKE_SPENDING_REQUEST, payload: true });
     spendingService
-      .getDays()
+      .getDays(month)
       .then((days: Days) => {
         dispatch(success(days));
       })

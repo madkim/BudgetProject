@@ -34,6 +34,7 @@ import LoadingSpent from "./LoadingSpent";
 
 interface Props {
   days: Days;
+  months: string[];
   budget: Budget;
   receipts: Receipt[];
   totalSpent: number;
@@ -45,20 +46,42 @@ const Spending: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const datePickerRef = useRef<any>();
+
   const [exists, setExists] = useState<boolean | void>(false);
+  const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"));
+  const [viewPastSpending, setVeiwPastSpending] = useState(false);
 
   useEffect(() => {
-    budgetActions.checkBudgetExists().then((exists) => {
-      setExists(exists);
-      if (exists) {
-        dispatch(budgetActions.getCurrentBudget());
-        dispatch(spendingActions.getTotalSpent());
-        dispatch(spendingActions.getDaysSpent());
-      } else {
-        dispatch(budgetActions.createNewBudget(history));
-      }
-    });
+    if (viewPastSpending === false) {
+      budgetActions.checkBudgetExists().then((exists) => {
+        setExists(exists);
+        if (exists) {
+          dispatch(budgetActions.getCurrentBudget());
+          dispatch(spendingActions.getMonthsSpent());
+          dispatch(spendingActions.getTotalSpent());
+          dispatch(spendingActions.getDaysSpent());
+        } else {
+          dispatch(budgetActions.createNewBudget(history));
+        }
+      });
+    }
   }, [props.totalSpent]);
+
+  const selectSpendingDate = (date: string) => {
+    setSelectedDate(date);
+
+    let dateYrMnth: string | null = moment(date).format("YYYY-MM");
+
+    if (dateYrMnth === moment(new Date()).format("YYYY-MM")) {
+      dateYrMnth = null;
+      setVeiwPastSpending(false);
+    } else {
+      setVeiwPastSpending(true);
+    }
+    dispatch(budgetActions.getCurrentBudget(dateYrMnth));
+    dispatch(spendingActions.getTotalSpent(dateYrMnth));
+    dispatch(spendingActions.getDaysSpent(dateYrMnth));
+  };
 
   const totalIncome = () => {
     if (Object.keys(props.budget).length > 0) {
@@ -113,7 +136,7 @@ const Spending: React.FC<Props> = (props: Props) => {
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            <h3>{moment().format("MMMM YYYY")}</h3>
+            <h3>{moment(selectedDate).format("MMMM YYYY")}</h3>
           </IonTitle>
 
           <IonButton
@@ -131,8 +154,16 @@ const Spending: React.FC<Props> = (props: Props) => {
           </IonButton>
           <IonDatetime
             ref={datePickerRef}
+            min={props.months[0]}
+            max={
+              props.months.length > 1
+                ? props.months[props.months.length - 1]
+                : props.months[0]
+            }
+            value={selectedDate}
             className="ion-hide"
             displayFormat="MMMM:YYYY"
+            onIonChange={(e) => selectSpendingDate(e.detail.value!)}
           ></IonDatetime>
         </IonToolbar>
       </IonHeader>
@@ -148,12 +179,21 @@ const Spending: React.FC<Props> = (props: Props) => {
           <IonCard>
             <IonGrid className="ion-padding-start ion-text-center">
               <IonRow>
-                <IonCol className="ion-padding-top ion-text-center">
-                  <IonCardSubtitle>Today is:</IonCardSubtitle>
-                  <IonCardTitle style={{ fontWeight: "300" }}>
-                    {moment().format("dddd Do ")}
-                  </IonCardTitle>
-                </IonCol>
+                {viewPastSpending ? (
+                  <IonCol className="ion-padding-top ion-text-center">
+                    <IonCardSubtitle>Past spending for:</IonCardSubtitle>
+                    <IonCardTitle style={{ fontWeight: "300" }}>
+                      {moment(selectedDate).format("MMMM YYYY")}
+                    </IonCardTitle>
+                  </IonCol>
+                ) : (
+                  <IonCol className="ion-padding-top ion-text-center">
+                    <IonCardSubtitle>Today is:</IonCardSubtitle>
+                    <IonCardTitle style={{ fontWeight: "300" }}>
+                      {moment().format("dddd Do ")}
+                    </IonCardTitle>
+                  </IonCol>
+                )}
               </IonRow>
               <IonRow className="ion-padding-vertical">
                 <IonCol size="4">
@@ -165,7 +205,9 @@ const Spending: React.FC<Props> = (props: Props) => {
                 <IonCol size="4">
                   <IonCardSubtitle>Days Left</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    {moment().endOf("month").diff(moment(), "days")}
+                    {viewPastSpending
+                      ? 0
+                      : moment().endOf("month").diff(moment(), "days")}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">
@@ -212,6 +254,7 @@ const Spending: React.FC<Props> = (props: Props) => {
 const mapStateToProps = (state: {
   spendingReducer: {
     days: Days;
+    months: string[];
     loading: boolean;
     totalSpent: number;
   };
@@ -222,9 +265,11 @@ const mapStateToProps = (state: {
 }) => {
   return {
     days: state.spendingReducer.days,
-    budget: state.budgetReducer.budget,
+    months: state.spendingReducer.months,
     totalSpent: state.spendingReducer.totalSpent,
     spendLoading: state.spendingReducer.loading,
+
+    budget: state.budgetReducer.budget,
     budgetLoading: state.budgetReducer.loading,
   };
 };

@@ -4,6 +4,7 @@ import { Action } from "../_helpers/types";
 export const initState = {
   day: [],
   days: {},
+  months: [],
   loading: false,
   totalSpent: 0,
 };
@@ -28,11 +29,11 @@ export function spendingReducer(state = initState, action: Action) {
       totalSpent: action.payload,
     });
   }
-  if (action.type === spendingConstants.GET_TOTAL_SPENT) {
+  if (action.type === spendingConstants.GET_MONTHS_SPENT) {
     return (state = {
       ...state,
       loading: false,
-      totalSpent: action.payload,
+      months: action.payload,
     });
   }
   if (action.type === spendingConstants.GET_TOTAL_SPENT_BY_DAYS) {

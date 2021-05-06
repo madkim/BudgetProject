@@ -22,16 +22,18 @@ import {
 import React, { useEffect, useRef } from "react";
 import FadeIn from "react-fade-in";
 
+import { Budget as BudgetType } from "../../_helpers/types";
 import { useHistory } from "react-router-dom";
 import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
+import { spendingActions } from "../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
-import { Budget as BudgetType } from "../../_helpers/types";
 import { menuSharp, timeOutline } from "ionicons/icons";
 import moment from "moment";
 
 interface Props {
   budget: BudgetType;
+  months: string[];
   loading: boolean;
 }
 
@@ -44,6 +46,7 @@ const Budget: React.FC<Props> = (props: Props) => {
     budgetActions.checkBudgetExists().then((exists) => {
       if (exists) {
         dispatch(budgetActions.getCurrentBudget());
+        dispatch(spendingActions.getMonthsSpent());
       } else {
         dispatch(budgetActions.createNewBudget(history));
       }
@@ -115,6 +118,12 @@ const Budget: React.FC<Props> = (props: Props) => {
           </IonButton>
           <IonDatetime
             ref={datePickerRef}
+            min={props.months[0]}
+            max={
+              props.months.length > 1
+                ? props.months[props.months.length - 1]
+                : props.months[0]
+            }
             className="ion-hide"
             displayFormat="MMMM:YYYY"
           ></IonDatetime>
@@ -287,9 +296,11 @@ const Budget: React.FC<Props> = (props: Props) => {
 
 const mapStateToProps = (state: {
   budgetReducer: { budget: BudgetType; loading: boolean };
+  spendingReducer: { months: string[] };
 }) => {
   return {
     budget: state.budgetReducer.budget,
+    months: state.spendingReducer.months,
     loading: state.budgetReducer.loading,
   };
 };
