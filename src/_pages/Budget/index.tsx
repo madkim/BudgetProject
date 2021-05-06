@@ -22,6 +22,7 @@ import {
 import React, { useEffect, useRef } from "react";
 import FadeIn from "react-fade-in";
 
+import { useHistory } from "react-router-dom";
 import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
 import { useDispatch, connect } from "react-redux";
@@ -36,10 +37,17 @@ interface Props {
 
 const Budget: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const datePickerRef = useRef<any>();
 
   useEffect(() => {
-    dispatch(budgetActions.getCurrentBudget());
+    budgetActions.checkBudgetExists().then((exists) => {
+      if (exists) {
+        dispatch(budgetActions.getCurrentBudget());
+      } else {
+        dispatch(budgetActions.createNewBudget(history));
+      }
+    });
   }, []);
 
   const totalIncome = () => {

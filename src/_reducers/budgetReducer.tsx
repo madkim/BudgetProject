@@ -40,6 +40,7 @@ export function budgetReducer(state = initState, action: Action) {
     return (state = {
       ...state,
       loading: false,
+      reviewed: true,
       budget: action.payload,
     });
   }

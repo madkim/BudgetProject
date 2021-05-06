@@ -74,12 +74,20 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
   const [search, setSearch] = useState("");
   const [seller, setSeller] = useState("");
   const [letter, setLetter] = useState("");
-  const [newSeller, setNewSeller] = useState("");
   const [initLoad, setInitLoad] = useState(true);
+  const [newSeller, setNewSeller] = useState("");
+  const [listHeight, setListHeight] = useState(window.screen.height / 2.2);
   const [initLoading, setInitLoading] = useState(false);
 
   const { impactLight } = useHaptics();
   const { sellerOptions, stepBack, handleNext, setParentSeller } = props;
+
+  useEffect(() => {
+    const height = document.getElementById("alphaList")?.clientHeight;
+    if (height !== undefined && height > listHeight) {
+      setListHeight(height);
+    }
+  }, []);
 
   useEffect(() => {
     if (Object.keys(sellerOptions).length === 0) {
@@ -174,7 +182,6 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const listHeight = window.screen.height / 2.2;
   const addNewSellerInput: Ref = useRef(null);
   const searchInput: React.Ref<HTMLIonSearchbarElement> = useRef(null);
 
@@ -254,7 +261,6 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                 id="alphaList"
                 onTouchMove={handlePan}
                 className="abc js-abc-nav"
-                style={{ height: listHeight }}
               >
                 {Object.keys(alpha).map((letter) => {
                   if (Object.keys(sellerOptions).includes(letter)) {
