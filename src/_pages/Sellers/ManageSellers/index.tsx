@@ -86,6 +86,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
   const [letter, setLetter] = useState("");
   const [clicked, setClicked] = useState("");
   const [newSeller, setNewSeller] = useState("");
+  const [listHeight, setListHeight] = useState(window.screen.height / 2);
 
   const { impactLight } = useHaptics();
   const { sellerOptions } = props;
@@ -95,6 +96,13 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
       dispatch(sellerActions.getAllSellers());
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    const height = document.getElementById("alphaList")?.clientHeight;
+    if (height !== undefined && height > listHeight) {
+      setListHeight(height);
+    }
+  }, []);
 
   const addNewSeller = () => {
     setError("");
@@ -155,7 +163,6 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     dispatch(sellerActions.getSellerByID(id, history));
   };
 
-  const listHeight = window.screen.height / 2;
   const addNewSellerInput: Ref = useRef(null);
   const searchInput: React.Ref<HTMLIonSearchbarElement> = useRef(null);
 
@@ -254,7 +261,6 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
                   id="alphaList"
                   onTouchMove={handlePan}
                   className="abc js-abc-nav"
-                  style={{ height: listHeight }}
                 >
                   {Object.keys(alpha).map((letter) => {
                     if (Object.keys(sellerOptions).includes(letter)) {
