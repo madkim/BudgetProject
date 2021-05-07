@@ -1,7 +1,15 @@
 import { receiptConstants } from "../_constants/receiptConstants";
-import { Action, Receipt } from "../_helpers/types";
+import { Action, Receipt, Sellers } from "../_helpers/types";
 
-export const initState = {
+export const initState: {
+  upload: string;
+  request: string;
+  progress: number;
+  loading: boolean;
+  receipt: Receipt | object;
+  receipts: Receipt[];
+  sellerOptions: Sellers;
+} = {
   upload: "",
   request: "",
   progress: 0,
@@ -19,6 +27,7 @@ export function receiptsReducer(state = initState, action: Action) {
       loading: true,
     });
   }
+
   if (action.type === receiptConstants.GET_RECEIPT_REQUEST_FAILURE) {
     return (state = {
       ...state,
@@ -26,6 +35,7 @@ export function receiptsReducer(state = initState, action: Action) {
       loading: false,
     });
   }
+
   if (action.type === receiptConstants.GET_RECEIPT_BY_ID) {
     return (state = {
       ...state,
@@ -33,6 +43,7 @@ export function receiptsReducer(state = initState, action: Action) {
       receipt: action.payload,
     });
   }
+
   if (action.type === receiptConstants.GET_ALL_RECEIPTS) {
     return (state = {
       ...state,
@@ -40,6 +51,7 @@ export function receiptsReducer(state = initState, action: Action) {
       receipts: action.payload,
     });
   }
+
   if (action.type === receiptConstants.ADD_NEW_RECEIPT) {
     return (state = {
       ...state,
@@ -47,6 +59,7 @@ export function receiptsReducer(state = initState, action: Action) {
       receipts: action.payload,
     });
   }
+
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO) {
     return (state = {
       ...state,
@@ -54,12 +67,14 @@ export function receiptsReducer(state = initState, action: Action) {
       loading: false,
     });
   }
+
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_PROGRESS) {
     return (state = {
       ...state,
       progress: action.payload,
     });
   }
+
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_FAILURE) {
     return (state = {
       ...state,
@@ -68,14 +83,28 @@ export function receiptsReducer(state = initState, action: Action) {
       progress: 0,
     });
   }
+
   if (action.type === receiptConstants.UPLOAD_RECEIPT_PHOTO_SUCCESS) {
     return (state = {
       ...state,
       upload: "success",
       loading: false,
       progress: 0,
+      receipt: {
+        ...state.receipt,
+        photo: action.payload.photo,
+        hasPhoto: true,
+      },
+      receipts: state.receipts.map((receipt) => {
+        if (receipt.id === action.payload.id) {
+          receipt.photo = action.payload.photo;
+          receipt.hasPhoto = true;
+        }
+        return receipt;
+      }),
     });
   }
+
   if (action.type === receiptConstants.UPDATE_RECEIPT) {
     return (state = {
       ...state,
@@ -83,6 +112,7 @@ export function receiptsReducer(state = initState, action: Action) {
       receipt: action.payload,
     });
   }
+
   if (action.type === receiptConstants.DELETE_RECEIPT) {
     const receiptId = action.payload;
     return (state = {

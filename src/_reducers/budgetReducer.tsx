@@ -22,12 +22,14 @@ export function budgetReducer(state = initState, action: Action) {
       loading: false,
     });
   }
+
   if (action.type === budgetConstants.GET_BUDGET_REQUEST) {
     return (state = {
       ...state,
       loading: true,
     });
   }
+
   if (action.type === budgetConstants.CREATE_NEW_BUDGET) {
     return (state = {
       ...state,
@@ -36,6 +38,7 @@ export function budgetReducer(state = initState, action: Action) {
       budget: action.payload,
     });
   }
+
   if (action.type === budgetConstants.GET_BUDGET) {
     return (state = {
       ...state,
@@ -44,6 +47,7 @@ export function budgetReducer(state = initState, action: Action) {
       budget: action.payload,
     });
   }
+
   if (action.type === budgetConstants.ADD_INCOME) {
     return (state = {
       ...state,
@@ -54,6 +58,7 @@ export function budgetReducer(state = initState, action: Action) {
       },
     });
   }
+
   if (action.type === budgetConstants.DELETE_INCOME) {
     return (state = {
       ...state,
@@ -66,6 +71,7 @@ export function budgetReducer(state = initState, action: Action) {
       },
     });
   }
+
   if (action.type === budgetConstants.ADD_EXPENSE) {
     return (state = {
       ...state,
@@ -76,6 +82,7 @@ export function budgetReducer(state = initState, action: Action) {
       },
     });
   }
+
   if (action.type === budgetConstants.DELETE_EXPENSE) {
     return (state = {
       ...state,
@@ -88,6 +95,7 @@ export function budgetReducer(state = initState, action: Action) {
       },
     });
   }
+
   if (action.type === budgetConstants.SET_SAVINGS) {
     return (state = {
       ...state,

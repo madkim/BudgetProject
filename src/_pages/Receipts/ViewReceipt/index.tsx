@@ -19,6 +19,7 @@ import {
   IonText,
   IonBadge,
   IonButtons,
+  IonProgressBar,
 } from "@ionic/react";
 
 import {
@@ -41,6 +42,7 @@ import moment from "moment";
 
 interface Props {
   receipt: Receipt;
+  progress: number;
 }
 
 const ViewReceipt: React.FC<Props> = (props: Props) => {
@@ -166,6 +168,10 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
             />
           </IonButton>
         </IonToolbar>
+
+        {props.progress > 0 && (
+          <IonProgressBar value={props.progress}></IonProgressBar>
+        )}
       </IonHeader>
 
       <IonContent className="ion-padding-end">
@@ -258,9 +264,12 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
   );
 };
 
-const mapStateToProps = (state: { receiptsReducer: { receipt: Receipt } }) => {
+const mapStateToProps = (state: {
+  receiptsReducer: { receipt: Receipt; progress: number };
+}) => {
   return {
     receipt: state.receiptsReducer.receipt,
+    progress: state.receiptsReducer.progress,
   };
 };
 

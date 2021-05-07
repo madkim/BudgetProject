@@ -131,7 +131,7 @@ async function update(
 ) {
   if (photo !== undefined) {
     await uploadPhoto(photo, id, dispatch);
-    fields.hasPhoto = true;
+    // fields.hasPhoto = true;
   }
   if (Object.keys(fields).length > 0) {
     fields.updatedAt = new Date();

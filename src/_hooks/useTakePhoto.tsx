@@ -58,7 +58,7 @@ export const uploadPhoto = async (
     () => {
       dispatch({
         type: receiptConstants.UPLOAD_RECEIPT_PHOTO_SUCCESS,
-        payload: "",
+        payload: { id: fileName, photo: photo.webPath },
       });
       db.collection("receipts").doc(fileName).update({ hasPhoto: true });
       console.log("photo uploaded :)");

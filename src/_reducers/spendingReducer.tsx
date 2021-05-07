@@ -16,12 +16,14 @@ export function spendingReducer(state = initState, action: Action) {
       loading: true,
     });
   }
+
   if (action.type === spendingConstants.SPENDING_REQUEST_FAILURE) {
     return (state = {
       ...state,
       loading: false,
     });
   }
+
   if (action.type === spendingConstants.GET_TOTAL_SPENT) {
     return (state = {
       ...state,
@@ -29,6 +31,7 @@ export function spendingReducer(state = initState, action: Action) {
       totalSpent: action.payload,
     });
   }
+
   if (action.type === spendingConstants.GET_MONTHS_SPENT) {
     return (state = {
       ...state,
@@ -36,6 +39,7 @@ export function spendingReducer(state = initState, action: Action) {
       months: action.payload,
     });
   }
+
   if (action.type === spendingConstants.GET_TOTAL_SPENT_BY_DAYS) {
     return (state = {
       ...state,
@@ -43,6 +47,7 @@ export function spendingReducer(state = initState, action: Action) {
       days: action.payload,
     });
   }
+
   if (action.type === spendingConstants.GET_TOTAL_SPENT_BY_DAY) {
     return (state = {
       ...state,

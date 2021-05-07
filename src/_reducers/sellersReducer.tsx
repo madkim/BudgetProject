@@ -16,6 +16,7 @@ export function sellersReducer(state = initState, action: Action) {
       loading: true,
     });
   }
+
   if (action.type === sellerConstants.GET_SELLER_REQUEST_FAILURE) {
     return (state = {
       ...state,
@@ -23,6 +24,7 @@ export function sellersReducer(state = initState, action: Action) {
       loading: false,
     });
   }
+
   if (action.type === sellerConstants.GET_SELLER_BY_ID) {
     return (state = {
       ...state,
@@ -30,6 +32,7 @@ export function sellersReducer(state = initState, action: Action) {
       seller: action.payload,
     });
   }
+
   if (action.type === sellerConstants.GET_ALL_SELLERS) {
     return (state = {
       ...state,
@@ -37,6 +40,7 @@ export function sellersReducer(state = initState, action: Action) {
       sellerOptions: action.payload,
     });
   }
+
   if (action.type === sellerConstants.UPDATE_SELLER) {
     return (state = {
       ...state,
@@ -44,6 +48,7 @@ export function sellersReducer(state = initState, action: Action) {
       sellerOptions: action.payload,
     });
   }
+
   if (action.type === sellerConstants.ADD_NEW_SELLER) {
     return (state = {
       ...state,
