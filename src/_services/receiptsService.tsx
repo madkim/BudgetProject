@@ -133,6 +133,10 @@ async function update(
     await uploadPhoto(photo, id, dispatch);
     // fields.hasPhoto = true;
   }
+  if ("seller" in fields) {
+    const sellerRef = db.collection("sellers").doc(fields.seller.id);
+    fields.seller = sellerRef;
+  }
   if (Object.keys(fields).length > 0) {
     fields.updatedAt = new Date();
     return db

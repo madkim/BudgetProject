@@ -110,6 +110,9 @@ export function receiptsReducer(state = initState, action: Action) {
       ...state,
       loading: false,
       receipt: action.payload,
+      receipts: state.receipts.map((receipt) => {
+        return receipt.id === action.payload.id ? action.payload : receipt;
+      }),
     });
   }
 
