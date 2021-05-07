@@ -94,7 +94,8 @@ function addNew(
       date: new Date(date),
       price: price,
       seller: db.collection("sellers").doc(seller.id),
-      hasPhoto: photo !== undefined ? true : false,
+      // hasPhoto: photo !== undefined ? true : false,
+      hasPhoto: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -105,7 +106,8 @@ function addNew(
         photo: "",
         price: price,
         seller: { id: seller.id, name: seller.name, favorite: seller.favorite },
-        hasPhoto: photo !== undefined ? true : false,
+        // hasPhoto: photo !== undefined ? true : false,
+        hasPhoto: false,
       };
 
       let photoUrl = "";
