@@ -87,7 +87,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
     if (height !== undefined && height > listHeight) {
       setListHeight(height);
     }
-  }, []);
+  }, [document.getElementById("alphaList")?.clientHeight]);
 
   useEffect(() => {
     if (Object.keys(sellerOptions).length === 0) {
