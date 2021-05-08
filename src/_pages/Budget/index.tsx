@@ -131,9 +131,8 @@ const Budget: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        {props.loading ? (
-          <IonLoading isOpen={props.loading} message={"Please wait..."} />
-        ) : (
+        {props.loading ? null : (
+          // <IonLoading isOpen={props.loading} message={"Please wait..."} />
           <FadeIn>
             <div className="ion-padding-bottom ion-padding-end">
               <IonGrid>

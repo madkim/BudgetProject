@@ -5,23 +5,23 @@ import {
   IonGrid,
   IonPage,
   IonIcon,
+  IonText,
   IonTitle,
   IonInput,
   IonHeader,
   IonButton,
+  IonLoading,
   IonContent,
   IonToolbar,
   IonButtons,
-  IonText,
-  IonLoading,
 } from "@ionic/react";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import { useDispatch, connect } from "react-redux";
-import { chevronBackOutline } from "ionicons/icons";
 import { sellerActions } from "../../../_actions/sellerActions";
+import { chevronBackOutline } from "ionicons/icons";
 import { Seller, Sellers, Ref } from "../../../_helpers/types";
+import { useDispatch, connect } from "react-redux";
+import { useHistory, useParams } from "react-router-dom";
 
 interface Props {
   seller: Seller;

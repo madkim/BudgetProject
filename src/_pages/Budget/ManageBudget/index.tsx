@@ -133,9 +133,8 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        {props.loading ? (
-          <IonLoading isOpen={props.loading} message={"Please wait..."} />
-        ) : (
+        {props.loading ? null : (
+          // <IonLoading isOpen={props.loading} message={"Please wait..."} />
           <>
             <IonAlert
               isOpen={notReviewed}

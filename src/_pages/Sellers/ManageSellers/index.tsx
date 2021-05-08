@@ -102,7 +102,7 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
     if (height !== undefined && height > listHeight) {
       setListHeight(height);
     }
-  }, []);
+  });
 
   const addNewSeller = () => {
     setError("");
