@@ -184,7 +184,7 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
                 </IonLabel>
                 <IonLabel position="stacked">
                   <h1>
-                    {receipt && moment(receipt.date).format("MMM DD, YYYY")}
+                    {receipt && moment(receipt.date).format("MMM D, YYYY")}
                   </h1>
                 </IonLabel>
               </IonItem>

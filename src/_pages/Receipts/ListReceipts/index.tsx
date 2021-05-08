@@ -121,11 +121,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                   {props.showByDay ? (
                     <>
                       <IonLabel>
-                        <h1>
-                          {`${moment(props.day).format("MMMM")} ${parseInt(
-                            props.day.split("-")[2]
-                          )}`}
-                        </h1>
+                        <h2>{moment(props.day).format("dddd")}</h2>
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
                         <small>${totals && totals[month].toFixed(2)}</small>
