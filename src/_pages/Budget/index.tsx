@@ -28,7 +28,12 @@ import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
 import { spendingActions } from "../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
-import { menuSharp, timeOutline } from "ionicons/icons";
+import {
+  menuSharp,
+  timeOutline,
+  chevronDown,
+  chevronForward,
+} from "ionicons/icons";
 import moment from "moment";
 
 interface Props {
@@ -44,6 +49,7 @@ const Budget: React.FC<Props> = (props: Props) => {
 
   const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"));
   const [viewPastBudget, setVeiwPastBudget] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState("");
 
   useEffect(() => {
     const unlisten = history.listen(onRouteChange);
@@ -87,6 +93,10 @@ const Budget: React.FC<Props> = (props: Props) => {
     setSelectedDate(date);
   };
 
+  const selectExpense = (id: string) => {
+    setSelectedExpense(selectedExpense === id ? "" : id);
+  };
+
   const totalExpense = () => {
     if (Object.keys(props.budget).length > 0) {
       const total = props.budget.expenses.reduce((total, expense) => {
@@ -116,7 +126,7 @@ const Budget: React.FC<Props> = (props: Props) => {
   };
 
   const yearlyExpense = (amount: number) => {
-    return <>{(amount / 12).toFixed(2)}</>;
+    return <>&nbsp;&nbsp;${(amount / 12).toFixed(2)}</>;
   };
 
   return (
@@ -235,7 +245,16 @@ const Budget: React.FC<Props> = (props: Props) => {
                         {props.budget.expenses &&
                           props.budget.expenses.map((expense) => {
                             return (
-                              <IonItem key={expense.id}>
+                              <IonItem
+                                key={expense.id}
+                                detail={expense.type === "yearly"}
+                                detailIcon={
+                                  selectedExpense === expense.id
+                                    ? chevronDown
+                                    : chevronForward
+                                }
+                                onClick={() => selectExpense(expense.id)}
+                              >
                                 <IonLabel>
                                   <IonRow>
                                     <IonCol size="7">
@@ -245,13 +264,23 @@ const Budget: React.FC<Props> = (props: Props) => {
                                     </IonCol>
                                     <IonCol>
                                       <h1>
-                                        &nbsp;&nbsp;&nbsp;$
+                                        &nbsp;&nbsp;
                                         {expense.type === "yearly"
                                           ? yearlyExpense(expense.amount)
-                                          : expense.amount.toFixed(2)}
+                                          : "$" + expense.amount.toFixed(2)}
                                       </h1>
                                     </IonCol>
                                   </IonRow>
+                                  {selectedExpense === expense.id && (
+                                    <IonRow>
+                                      <IonCol offset="7">
+                                        <h2>
+                                          &nbsp;&nbsp;&nbsp;&nbsp;$
+                                          {expense.amount.toFixed(2)} / yr
+                                        </h2>
+                                      </IonCol>
+                                    </IonRow>
+                                  )}
                                 </IonLabel>
                               </IonItem>
                             );
