@@ -130,7 +130,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                   ) : (
                     <>
                       <IonLabel>
-                        <h1>{date.format("MMMM YYYY")}</h1>
+                        <h2>{date.format("MMMM YYYY")}</h2>
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
                         <small>

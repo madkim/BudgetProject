@@ -20,25 +20,28 @@ import {
   IonLoading,
 } from "@ionic/react";
 
-import React, { useState, useEffect } from "react";
-import FadeIn from "react-fade-in";
-import SavingsModal from "./SavingsModal";
-
-import { budgetActions } from "../../../_actions/budgetActions";
-import { useDispatch, connect } from "react-redux";
-import { Budget, Income, Expense } from "../../../_helpers/types";
 import {
+  trashBin,
   addOutline,
   chevronBackOutline,
   chevronForwardOutline,
-  trashBin,
 } from "ionicons/icons";
+
+import React, { useState, useEffect } from "react";
 import moment from "moment";
+import FadeIn from "react-fade-in";
+import SavingsModal from "./SavingsModal";
+
+import { useHistory } from "react-router-dom";
+import { useDispatch, connect } from "react-redux";
+
+import { budgetActions } from "../../../_actions/budgetActions";
+import { spendingActions } from "../../../_actions/spendingActions";
+import { Budget, Income, Expense } from "../../../_helpers/types";
 
 interface Props {
   budget: Budget;
   loading: boolean;
-  reviewed: boolean;
 }
 
 const ManageBudget: React.FC<Props> = (props: Props) => {
@@ -52,9 +55,15 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
   const [showSavingsModal, setShowSavingsModal] = useState(false);
 
   const dispatch = useDispatch();
+  const history = useHistory();
+  const searchParams = new URLSearchParams(history.location.search);
+  const notReviewed = searchParams.get("reviewed") === "false";
 
   useEffect(() => {
     dispatch(budgetActions.getCurrentBudget());
+    return () => {
+      dispatch(spendingActions.getTotalSpent());
+    };
   }, []);
 
   const totalIncome = () => {
@@ -129,7 +138,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
         ) : (
           <>
             <IonAlert
-              isOpen={!props.reviewed}
+              isOpen={notReviewed}
               header={"New Budget Created"}
               message={
                 "Please review this month's budget and update accordingly."
@@ -543,12 +552,11 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  budgetReducer: { budget: Budget; loading: boolean; reviewed: boolean };
+  budgetReducer: { budget: Budget; loading: boolean };
 }) => {
   return {
     budget: state.budgetReducer.budget,
     loading: state.budgetReducer.loading,
-    reviewed: state.budgetReducer.reviewed,
   };
 };
 

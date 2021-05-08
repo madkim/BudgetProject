@@ -3,7 +3,6 @@ import { budgetConstants } from "../_constants/budgetConstants";
 
 export const initState: {
   budget: Budget;
-  reviewed: boolean;
   loading: boolean;
 } = {
   budget: {
@@ -11,7 +10,6 @@ export const initState: {
     expenses: [],
     savings: { id: "", type: "", amount: 0 },
   },
-  reviewed: true,
   loading: false,
 };
 
@@ -34,7 +32,6 @@ export function budgetReducer(state = initState, action: Action) {
     return (state = {
       ...state,
       loading: false,
-      reviewed: false,
       budget: action.payload,
     });
   }
@@ -43,7 +40,6 @@ export function budgetReducer(state = initState, action: Action) {
     return (state = {
       ...state,
       loading: false,
-      reviewed: true,
       budget: action.payload,
     });
   }

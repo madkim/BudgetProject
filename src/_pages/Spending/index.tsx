@@ -11,10 +11,10 @@ import {
   IonButtons,
   IonContent,
   IonToolbar,
+  IonLoading,
+  IonDatetime,
   IonCardTitle,
   IonCardSubtitle,
-  IonDatetime,
-  IonLoading,
 } from "@ionic/react";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -68,9 +68,7 @@ const Spending: React.FC<Props> = (props: Props) => {
   }, [props.totalSpent]);
 
   const selectSpendingDate = (date: string) => {
-    setSelectedDate(date);
     let dateYrMnth: string | null = moment(date).format("YYYY-MM");
-
     if (dateYrMnth === moment(new Date()).format("YYYY-MM")) {
       dateYrMnth = null;
       setVeiwPastSpending(false);
@@ -80,6 +78,7 @@ const Spending: React.FC<Props> = (props: Props) => {
     dispatch(budgetActions.getCurrentBudget(dateYrMnth));
     dispatch(spendingActions.getTotalSpent(dateYrMnth));
     dispatch(spendingActions.getDaysSpent(dateYrMnth));
+    setSelectedDate(date);
   };
 
   const totalIncome = () => {
@@ -253,25 +252,25 @@ const Spending: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
+  budgetReducer: {
+    budget: Budget;
+    loading: boolean;
+  };
   spendingReducer: {
     days: Days;
     months: string[];
     loading: boolean;
     totalSpent: number;
   };
-  budgetReducer: {
-    budget: Budget;
-    loading: boolean;
-  };
 }) => {
   return {
+    budget: state.budgetReducer.budget,
+    budgetLoading: state.budgetReducer.loading,
+
     days: state.spendingReducer.days,
     months: state.spendingReducer.months,
     totalSpent: state.spendingReducer.totalSpent,
     spendLoading: state.spendingReducer.loading,
-
-    budget: state.budgetReducer.budget,
-    budgetLoading: state.budgetReducer.loading,
   };
 };
 

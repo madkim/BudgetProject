@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 import { budgetService } from "../_services/budgetService";
 import { budgetConstants } from "../_constants/budgetConstants";
+import { spendingActions } from "../_actions/spendingActions";
 import { Action, Budget, Income, Expense, Saving } from "../_helpers/types";
 
 export const budgetActions = {
@@ -32,7 +33,7 @@ function createNewBudget(history: any) {
       .createBudget()
       .then((budget: Budget) => {
         dispatch(success(budget));
-        history.push("/manage/budget");
+        history.push("/manage/budget?reviewed=false");
       })
       .catch(() => {
         dispatch({
