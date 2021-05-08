@@ -18,8 +18,10 @@ import {
 } from "@ionic/react";
 
 import React, { useEffect, useState, useRef } from "react";
-import FadeIn from "react-fade-in";
 import moment from "moment";
+import FadeIn from "react-fade-in";
+import SpentPerDay from "./SpentPerDay";
+import LoadingSpent from "./LoadingSpent";
 
 import { useHistory } from "react-router-dom";
 import { budgetActions } from "../../_actions/budgetActions";
@@ -28,9 +30,6 @@ import { spendingActions } from "../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
 import { Budget, Days, Receipt } from "../../_helpers/types";
 import { menuSharp, timeOutline } from "ionicons/icons";
-
-import SpentPerDay from "./SpentPerDay";
-import LoadingSpent from "./LoadingSpent";
 
 interface Props {
   days: Days;
@@ -63,7 +62,7 @@ const Spending: React.FC<Props> = (props: Props) => {
       budgetActions.checkBudgetExists().then((exists) => {
         setExists(exists);
         if (exists) {
-          dispatchGetBudgetActions();
+          dispatchGetBudgetActions(null);
         } else {
           dispatch(budgetActions.createNewBudget(history));
         }
@@ -71,23 +70,23 @@ const Spending: React.FC<Props> = (props: Props) => {
     }
   }, [props.totalSpent]);
 
-  // Reset to current month spending
   const onRouteChange = (route: any) => {
     if (
       route.pathname.includes("budget") ||
       route.pathname.includes("receipts")
     ) {
+      // Reset to current month spending
       setSelectedDate(moment().format("YYYY-MM"));
       setVeiwPastSpending(false);
-      dispatchGetBudgetActions();
+      dispatchGetBudgetActions(null);
     }
   };
 
-  const dispatchGetBudgetActions = () => {
-    dispatch(budgetActions.getCurrentBudget());
+  const dispatchGetBudgetActions = (date: string | null = null) => {
+    dispatch(budgetActions.getCurrentBudget(date));
+    dispatch(spendingActions.getTotalSpent(date));
+    dispatch(spendingActions.getDaysSpent(date));
     dispatch(spendingActions.getMonthsSpent());
-    dispatch(spendingActions.getTotalSpent());
-    dispatch(spendingActions.getDaysSpent());
   };
 
   const selectSpendingDate = (date: string) => {
@@ -98,9 +97,7 @@ const Spending: React.FC<Props> = (props: Props) => {
     } else {
       setVeiwPastSpending(true);
     }
-    dispatch(budgetActions.getCurrentBudget(dateYrMnth));
-    dispatch(spendingActions.getTotalSpent(dateYrMnth));
-    dispatch(spendingActions.getDaysSpent(dateYrMnth));
+    dispatchGetBudgetActions(dateYrMnth);
     setSelectedDate(date);
   };
 
