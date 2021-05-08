@@ -19,7 +19,7 @@ import {
   IonDatetime,
 } from "@ionic/react";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FadeIn from "react-fade-in";
 
 import { Budget as BudgetType } from "../../_helpers/types";
@@ -42,24 +42,49 @@ const Budget: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const datePickerRef = useRef<any>();
 
+  const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"));
+  const [viewPastBudget, setVeiwPastBudget] = useState(false);
+
   useEffect(() => {
-    budgetActions.checkBudgetExists().then((exists) => {
-      if (exists) {
-        dispatch(budgetActions.getCurrentBudget());
-        dispatch(spendingActions.getMonthsSpent());
-      } else {
-        dispatch(budgetActions.createNewBudget(history));
-      }
-    });
+    const unlisten = history.listen(onRouteChange);
+    return () => {
+      unlisten();
+    };
   }, []);
 
-  const totalIncome = () => {
-    if (Object.keys(props.budget).length > 0) {
-      const total = props.budget.income.reduce((total, current) => {
-        return total + current.amount;
-      }, 0);
-      return total.toFixed(0);
+  useEffect(() => {
+    if (viewPastBudget === false) {
+      budgetActions.checkBudgetExists().then((exists) => {
+        if (exists) {
+          dispatchGetBudgetActions(null);
+        } else {
+          dispatch(budgetActions.createNewBudget(history));
+        }
+      });
     }
+  }, []);
+
+  const onRouteChange = (route: any) => {
+    // Reset to current month spending
+    setSelectedDate(moment().format("YYYY-MM"));
+    setVeiwPastBudget(false);
+  };
+
+  const dispatchGetBudgetActions = (date: string | null = null) => {
+    dispatch(budgetActions.getCurrentBudget(date));
+    dispatch(spendingActions.getMonthsSpent());
+  };
+
+  const selectBudgetDate = (date: string) => {
+    let dateYrMnth: string | null = moment(date).format("YYYY-MM");
+    if (dateYrMnth === moment(new Date()).format("YYYY-MM")) {
+      dateYrMnth = null;
+      setVeiwPastBudget(false);
+    } else {
+      setVeiwPastBudget(true);
+    }
+    dispatchGetBudgetActions(dateYrMnth);
+    setSelectedDate(date);
   };
 
   const totalExpense = () => {
@@ -70,6 +95,15 @@ const Budget: React.FC<Props> = (props: Props) => {
           : total + expense.amount;
       }, 0);
       return total.toFixed(2);
+    }
+  };
+
+  const totalIncome = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.income.reduce((total, current) => {
+        return total + current.amount;
+      }, 0);
+      return total.toFixed(0);
     }
   };
 
@@ -100,7 +134,7 @@ const Budget: React.FC<Props> = (props: Props) => {
           </IonButtons>
 
           <IonTitle className="ion-text-center">
-            <h3>{moment().format("MMMM YYYY")}</h3>
+            <h3>{moment(selectedDate).format("MMMM YYYY")}</h3>
           </IonTitle>
 
           <IonButton
@@ -124,8 +158,10 @@ const Budget: React.FC<Props> = (props: Props) => {
                 ? props.months[props.months.length - 1]
                 : props.months[0]
             }
+            value={selectedDate}
             className="ion-hide"
             displayFormat="MMMM:YYYY"
+            onIonChange={(e) => selectBudgetDate(e.detail.value!)}
           ></IonDatetime>
         </IonToolbar>
       </IonHeader>

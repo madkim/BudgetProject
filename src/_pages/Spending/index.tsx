@@ -71,11 +71,11 @@ const Spending: React.FC<Props> = (props: Props) => {
   }, [props.totalSpent]);
 
   const onRouteChange = (route: any) => {
+    // Reset to current month spending
     if (
       route.pathname.includes("budget") ||
       route.pathname.includes("receipts")
     ) {
-      // Reset to current month spending
       setSelectedDate(moment().format("YYYY-MM"));
       setVeiwPastSpending(false);
       dispatchGetBudgetActions(null);
