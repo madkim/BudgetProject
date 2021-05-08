@@ -52,20 +52,43 @@ const Spending: React.FC<Props> = (props: Props) => {
   const [viewPastSpending, setVeiwPastSpending] = useState(false);
 
   useEffect(() => {
+    const unlisten = history.listen(onRouteChange);
+    return () => {
+      unlisten();
+    };
+  }, []);
+
+  useEffect(() => {
     if (viewPastSpending === false) {
       budgetActions.checkBudgetExists().then((exists) => {
         setExists(exists);
         if (exists) {
-          dispatch(budgetActions.getCurrentBudget());
-          dispatch(spendingActions.getMonthsSpent());
-          dispatch(spendingActions.getTotalSpent());
-          dispatch(spendingActions.getDaysSpent());
+          dispatchGetBudgetActions();
         } else {
           dispatch(budgetActions.createNewBudget(history));
         }
       });
     }
   }, [props.totalSpent]);
+
+  // Reset to current month spending
+  const onRouteChange = (route: any) => {
+    if (
+      route.pathname.includes("budget") ||
+      route.pathname.includes("receipts")
+    ) {
+      setSelectedDate(moment().format("YYYY-MM"));
+      setVeiwPastSpending(false);
+      dispatchGetBudgetActions();
+    }
+  };
+
+  const dispatchGetBudgetActions = () => {
+    dispatch(budgetActions.getCurrentBudget());
+    dispatch(spendingActions.getMonthsSpent());
+    dispatch(spendingActions.getTotalSpent());
+    dispatch(spendingActions.getDaysSpent());
+  };
 
   const selectSpendingDate = (date: string) => {
     let dateYrMnth: string | null = moment(date).format("YYYY-MM");
