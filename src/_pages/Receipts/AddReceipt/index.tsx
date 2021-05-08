@@ -34,9 +34,12 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   );
 
   useEffect(() => {
-    history.listen(onRouteChange);
+    const unlisten = history.listen(onRouteChange);
     dispatch(sellerActions.getAllSellers());
     takeReceiptPhoto();
+    return () => {
+      unlisten();
+    };
   }, []);
 
   const onRouteChange = (route: any) => {

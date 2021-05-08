@@ -20,7 +20,7 @@ import {
   statsChartOutline,
 } from "ionicons/icons";
 
-const Settings: React.FC = () => {
+const Menu: React.FC = () => {
   return (
     <IonMenu type="overlay" content-id="main">
       <IonHeader>
@@ -36,15 +36,15 @@ const Settings: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonMenuToggle auto-hide="false">
+          {/* <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/sellers" routerDirection="root">
               <IonIcon slot="start" icon={personOutline}></IonIcon>
               <h3 style={{ padding: "10px" }}>
                 <IonLabel>User Profile</IonLabel>
               </h3>
             </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle auto-hide="false">
+          </IonMenuToggle> */}
+          {/* <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/sellers" routerDirection="root">
               <IonBadge slot="start" color="danger">
                 2
@@ -53,7 +53,7 @@ const Settings: React.FC = () => {
                 <IonLabel>Notifications</IonLabel>
               </h3>
             </IonItem>
-          </IonMenuToggle>
+          </IonMenuToggle> */}
           <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/sellers" routerDirection="root">
               <IonIcon slot="start" icon={bagHandleOutline}></IonIcon>
@@ -76,4 +76,4 @@ const Settings: React.FC = () => {
   );
 };
 
-export default withRouter(Settings);
+export default withRouter(Menu);

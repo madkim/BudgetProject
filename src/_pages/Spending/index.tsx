@@ -69,7 +69,6 @@ const Spending: React.FC<Props> = (props: Props) => {
 
   const selectSpendingDate = (date: string) => {
     setSelectedDate(date);
-
     let dateYrMnth: string | null = moment(date).format("YYYY-MM");
 
     if (dateYrMnth === moment(new Date()).format("YYYY-MM")) {
@@ -228,7 +227,9 @@ const Spending: React.FC<Props> = (props: Props) => {
                 <IonCol size="4">
                   <IonCardSubtitle>Days Total</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    {moment().daysInMonth()}
+                    {viewPastSpending
+                      ? moment(selectedDate).daysInMonth()
+                      : moment().daysInMonth()}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="4">

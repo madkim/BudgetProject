@@ -13,12 +13,12 @@ import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route } from "react-router-dom";
 import { cardOutline, receiptOutline, barChartOutline } from "ionicons/icons";
 
+import Menu from "./_pages/Menu";
+
 import Receipts from "./_pages/Receipts";
 import AddReceipt from "./_pages/Receipts/AddReceipt";
 import EditReceipt from "./_pages/Receipts/EditReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
-
-import Settings from "./_pages/Settings";
 
 import Budget from "./_pages/Budget";
 import ManageBudget from "./_pages/Budget/ManageBudget";
@@ -53,10 +53,12 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonSplitPane contentId="main">
-          <Settings />
+          <Menu />
 
           <IonTabs>
             <IonRouterOutlet id="main">
+              <Route path="/menu" component={Menu} />
+
               <Route path="/add" component={AddReceipt} />
               <Route path="/view/:id" component={ViewReceipt} />
               <Route path="/edit/:id" component={EditReceipt} />
@@ -64,8 +66,6 @@ const App: React.FC = () => {
 
               <Route path="/spending" component={Spending} />
               <Route path="/spent/:date/:days" component={SpentDetails} />
-
-              <Route path="/settings" component={Settings} />
 
               <Route path="/manage/sellers" component={ManageSellers} />
               <Route path="/manage/seller/:id" component={EditSeller} />

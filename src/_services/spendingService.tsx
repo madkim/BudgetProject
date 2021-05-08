@@ -55,7 +55,8 @@ function getDays(month: string | null) {
     .then((receipts) => {
       let receiptsByDay: Days = {};
       receipts.docs.forEach((receipt) => {
-        let date = moment.unix(receipt.data().date.seconds).format("L");
+        const date = moment(receipt.data().date.toDate()).format("L");
+
         if (date in receiptsByDay) {
           receiptsByDay[date].push(receipt.data().price);
         } else {

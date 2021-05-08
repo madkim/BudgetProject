@@ -38,6 +38,10 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
     });
   };
 
+  const formatDay = (day: string) => {
+    return moment(new Date(day)).format("YYYY-MM-DD");
+  };
+
   const { days } = props;
 
   return (
@@ -54,15 +58,13 @@ const SpentPerDay: React.FC<Props> = (props: Props) => {
                   button
                   key={day}
                   lines="full"
-                  routerLink={`spent/${moment(day).format("YYYY-MM-DD")}/${
-                    days[day].length
-                  }`}
+                  routerLink={`spent/${formatDay(day)}/${days[day].length}`}
                 >
                   <IonGrid>
                     <IonRow style={{ width: "100%", padding: "1vh" }}>
                       <IonCol size="8">
                         <IonLabel className="ion-text-capitalize">
-                          {moment(day).format("dddd, Do")}
+                          {moment(new Date(day)).format("dddd, Do")}
                         </IonLabel>
                       </IonCol>
                       <IonCol size="4">
