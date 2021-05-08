@@ -47,7 +47,7 @@ const Spending: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const datePickerRef = useRef<any>();
 
-  const [exists, setExists] = useState<boolean | void>(false);
+  const [exists, setExists] = useState<boolean | void>(true);
   const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"));
   const [viewPastSpending, setVeiwPastSpending] = useState(false);
 
