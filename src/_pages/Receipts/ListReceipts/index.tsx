@@ -224,9 +224,13 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
               </IonItemGroup>
             );
           })}
-        {props.allLoaded && (
-          <IonItem lines="none" className="ion-padding-top ion-text-center">
-            <IonText color="medium">All Receipts Loaded!</IonText>
+        {props.allLoaded && !props.showByDay && (
+          <IonItem lines="none" className="ion-padding-top">
+            <IonRow style={{ width: "100%" }}>
+              <IonCol className="ion-text-center">
+                <IonText color="medium">All Receipts Loaded!</IonText>
+              </IonCol>
+            </IonRow>
           </IonItem>
         )}
       </IonList>

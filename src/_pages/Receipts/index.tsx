@@ -15,10 +15,8 @@ import {
   IonRefresher,
   IonCardHeader,
   IonCardContent,
-  IonRefresherContent,
   IonProgressBar,
-  IonItem,
-  IonLabel,
+  IonRefresherContent,
 } from "@ionic/react";
 
 import {
