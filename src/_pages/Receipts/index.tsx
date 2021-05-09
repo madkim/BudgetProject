@@ -17,18 +17,20 @@ import {
   IonCardContent,
   IonRefresherContent,
   IonProgressBar,
+  IonItem,
+  IonLabel,
 } from "@ionic/react";
 
 import {
   add,
   menuSharp,
   filterOutline,
-  settingsOutline,
   chevronUpOutline,
   chevronDownCircleOutline,
 } from "ionicons/icons";
 
 import React, { useEffect, useState, useRef } from "react";
+import moment from "moment";
 import FadeIn from "react-fade-in";
 import sadMoney from "../../_assets/sadMoney.jpeg";
 import ListReceipts from "./ListReceipts";
@@ -38,6 +40,8 @@ import { Receipt } from "../../_helpers/types";
 import { useHaptics } from "../../_hooks/useHaptics";
 import { menuController } from "@ionic/core";
 import { receiptActions } from "../../_actions/receiptActions";
+import { receiptsService } from "../../_services/receiptsService";
+import { receiptConstants } from "../../_constants/receiptConstants";
 import { connect, useDispatch } from "react-redux";
 
 interface Props {
@@ -51,13 +55,15 @@ interface Props {
 const Receipts: React.FC<Props> = (props: Props) => {
   const topRef = useRef<HTMLIonContentElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
+  const [receiptMonths, setReceiptMonths] = useState(moment().format());
+  const [allReceiptsLoaded, setAllReceiptsLoaded] = useState(false);
 
   const dispatch = useDispatch();
   const { impactMedium } = useHaptics();
 
   useEffect(() => {
     if (receiptsNotRetrieved()) {
-      dispatch(receiptActions.getAllReceipts());
+      dispatch(receiptActions.getAllReceipts(moment().format()));
     }
   }, []);
 
@@ -65,8 +71,25 @@ const Receipts: React.FC<Props> = (props: Props) => {
     return Object.keys(props.receipts).length === 0;
   };
 
+  const loadMoreReceipts = (e: any) => {
+    const month = moment(receiptMonths).subtract(1, "months").format();
+    setReceiptMonths(month);
+    receiptsService.getAll(month).then((receipts) => {
+      if (JSON.stringify(receipts) === JSON.stringify(props.receipts)) {
+        setAllReceiptsLoaded(true);
+      } else {
+        dispatch({
+          type: receiptConstants.GET_ALL_RECEIPTS,
+          payload: receipts,
+        });
+      }
+      e.target.complete();
+    });
+  };
+
   const refreshReceipts = (e: any) => {
     impactMedium();
+    setAllReceiptsLoaded(false);
     dispatch(receiptActions.refreshReceipts(e));
   };
 
@@ -150,6 +173,8 @@ const Receipts: React.FC<Props> = (props: Props) => {
             xref={topRef}
             showByDay={false}
             receipts={props.receipts}
+            loadMore={loadMoreReceipts}
+            allLoaded={allReceiptsLoaded}
           />
         )}
 

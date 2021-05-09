@@ -3,6 +3,7 @@ import { receiptConstants } from "../_constants/receiptConstants";
 import { receiptsService } from "../_services/receiptsService";
 import { dateSortValue } from "../_helpers/datesort";
 import { Dispatch } from "react";
+import moment from "moment";
 
 export const receiptActions = {
   refreshReceipts,
@@ -36,11 +37,11 @@ function getReceiptByID(id: string, history: any = "") {
   }
 }
 
-function getAllReceipts() {
+function getAllReceipts(month: string) {
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
     receiptsService
-      .getAll()
+      .getAll(month)
       .then((receipts) => {
         dispatch(success(receipts));
       })
@@ -63,7 +64,7 @@ function getAllReceipts() {
 function refreshReceipts(e: any) {
   return (dispatch: Dispatch<Action>) => {
     receiptsService
-      .getAll()
+      .getAll(moment().format())
       .then((receipts) => {
         dispatch({
           type: receiptConstants.GET_ALL_RECEIPTS,

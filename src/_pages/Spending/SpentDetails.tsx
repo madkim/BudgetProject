@@ -65,7 +65,9 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
           <ListReceipts
             day={date}
             xref={topRef}
+            loadMore={null}
             showByDay={true}
+            allLoaded={true}
             receipts={props.day}
           />
         )}

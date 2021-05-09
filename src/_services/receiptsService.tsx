@@ -3,6 +3,7 @@ import { uploadPhoto } from "../_hooks/useTakePhoto";
 import { fireStorage } from "../_helpers/firebase";
 import { Dispatch } from "react";
 import { db } from "../_helpers/firebase";
+import moment from "moment";
 
 export const receiptsService = {
   getByID,
@@ -39,10 +40,13 @@ function getByID(id: string) {
     });
 }
 
-function getAll() {
+function getAll(month: string) {
+  const start = moment(month).clone().startOf("month");
+
   return db
     .collection("receipts")
     .orderBy("date", "desc")
+    .where("date", ">=", start.toDate())
     .get()
     .then(async (receipts) => {
       let sellerPromises = await receipts.docs.map(async (receipt) => {

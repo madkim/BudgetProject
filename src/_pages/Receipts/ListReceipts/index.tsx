@@ -14,6 +14,9 @@ import {
   IonItemDivider,
   IonItemSliding,
   IonItemOptions,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonText,
 } from "@ionic/react";
 import moment from "moment";
 
@@ -22,8 +25,8 @@ import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { spendingActions } from "../../../_actions/spendingActions";
-import { useEffect, useState } from "react";
 import { useDispatch, connect } from "react-redux";
+import { useEffect, useState, useRef } from "react";
 import { imageOutline, chevronForwardOutline } from "ionicons/icons";
 import { Receipt, Receipts, DynObject, Budget } from "../../../_helpers/types";
 
@@ -34,6 +37,8 @@ interface Props {
   loading: boolean;
   receipts: Receipt[];
   showByDay: boolean;
+  allLoaded: boolean;
+  loadMore: ((e: any) => void) | null;
 }
 
 const ListReceipts: React.FC<Props> = (props: Props) => {
@@ -219,7 +224,24 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
               </IonItemGroup>
             );
           })}
+        {props.allLoaded && (
+          <IonItem lines="none" className="ion-padding-top ion-text-center">
+            <IonText color="medium">All Receipts Loaded!</IonText>
+          </IonItem>
+        )}
       </IonList>
+      &nbsp;
+      {props.loadMore !== null && props.allLoaded === false && (
+        <IonInfiniteScroll
+          position="bottom"
+          onIonInfinite={(e) => props.loadMore!(e)}
+        >
+          <IonInfiniteScrollContent
+            loadingSpinner="bubbles"
+            loadingText="Loading more data..."
+          ></IonInfiniteScrollContent>
+        </IonInfiniteScroll>
+      )}
     </IonContent>
   );
 };
