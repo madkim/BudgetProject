@@ -1,6 +1,7 @@
 import {
   IonRow,
   IonCol,
+  IonText,
   IonList,
   IonItem,
   IonIcon,
@@ -16,7 +17,6 @@ import {
   IonItemOptions,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
-  IonText,
 } from "@ionic/react";
 import moment from "moment";
 
@@ -48,15 +48,6 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   const [totals, setTotals] = useState<DynObject>({});
   const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
-
-  const deleteReceipt = (receipt: Receipt) => {
-    let answer = window.confirm(
-      "Are you sure you want to delete this receipt?"
-    );
-    if (answer) {
-      dispatch(receiptActions.deleteReceipt(receipt, ""));
-    }
-  };
 
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
@@ -101,6 +92,15 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
         piccasoOptions: {}, // If this is not provided, an exception will be triggered
       };
       PhotoViewer.show(receipt.photo, receipt.seller.name, options);
+    }
+  };
+
+  const deleteReceipt = (receipt: Receipt) => {
+    let answer = window.confirm(
+      "Are you sure you want to delete this receipt?"
+    );
+    if (answer) {
+      dispatch(receiptActions.deleteReceipt(receipt, ""));
     }
   };
 

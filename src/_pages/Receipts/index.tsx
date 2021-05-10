@@ -38,12 +38,14 @@ import { Receipt } from "../../_helpers/types";
 import { useHaptics } from "../../_hooks/useHaptics";
 import { menuController } from "@ionic/core";
 import { receiptActions } from "../../_actions/receiptActions";
+import { spendingActions } from "../../_actions/spendingActions";
 import { receiptsService } from "../../_services/receiptsService";
 import { receiptConstants } from "../../_constants/receiptConstants";
 import { connect, useDispatch } from "react-redux";
 
 interface Props {
   upload: string;
+  months: string[];
   request: string;
   loading: boolean;
   progress: number;
@@ -61,6 +63,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     if (receiptsNotRetrieved()) {
+      dispatch(spendingActions.getMonthsSpent());
       dispatch(receiptActions.getAllReceipts(moment().format()));
     }
   }, []);
@@ -70,24 +73,29 @@ const Receipts: React.FC<Props> = (props: Props) => {
   };
 
   const loadMoreReceipts = (e: any) => {
-    const month = moment(receiptMonths).subtract(1, "months").format();
-    setReceiptMonths(month);
-    receiptsService.getAll(month).then((receipts) => {
-      if (JSON.stringify(receipts) === JSON.stringify(props.receipts)) {
-        setAllReceiptsLoaded(true);
-      } else {
+    const { months } = props;
+    const last = moment(months[0]).format("YYYY-MM");
+    const month = moment(receiptMonths).subtract(1, "months").format("YYYY-MM");
+
+    if (allReceiptsLoaded === false) {
+      receiptsService.getAll(month).then((receipts) => {
         dispatch({
           type: receiptConstants.GET_ALL_RECEIPTS,
           payload: receipts,
         });
-      }
-      e.target.complete();
-    });
+        if (month === last) {
+          setAllReceiptsLoaded(true);
+        }
+        setReceiptMonths(month);
+        e.target.complete();
+      });
+    }
   };
 
   const refreshReceipts = (e: any) => {
     impactMedium();
     setAllReceiptsLoaded(false);
+    setReceiptMonths(moment().format());
     dispatch(receiptActions.refreshReceipts(e));
   };
 
@@ -198,6 +206,9 @@ const Receipts: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
+  spendingReducer: {
+    months: string[];
+  };
   receiptsReducer: {
     request: string;
     loading: boolean;
@@ -206,6 +217,7 @@ const mapStateToProps = (state: {
   };
 }) => {
   return {
+    months: state.spendingReducer.months,
     request: state.receiptsReducer.request,
     loading: state.receiptsReducer.loading,
     progress: state.receiptsReducer.progress,
