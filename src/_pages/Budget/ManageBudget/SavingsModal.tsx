@@ -16,6 +16,8 @@ import {
   IonToolbar,
   IonSegment,
   IonSegmentButton,
+  IonCardContent,
+  IonCardHeader,
 } from "@ionic/react";
 
 import React, { useState, useRef, ReactElement } from "react";
@@ -38,22 +40,26 @@ export default function SavingsModal({
   difference,
   budgetSavings,
 }: Props): ReactElement {
+  const dispatch = useDispatch();
+  const savingsInput: Ref = useRef(null);
+  const containerHeight = window.screen.height / 1.6;
+
+  const [error, setError] = useState("");
+  const [savingsInputFocus, setSavingsInputFocus] = useState(false);
+
   const [type, setType] = useState(
     budgetSavings.type ? budgetSavings.type : "value"
   );
+
   const [savings, setSavings] = useState(
     budgetSavings.type === "value" ? budgetSavings.amount : 0
   );
+
   const [savingsPercent, setSavingsPercent] = useState(
     budgetSavings.type === "percent"
       ? (budgetSavings.amount / difference) * 100
       : 0
   );
-
-  const [error, setError] = useState("");
-  const [savingsInputFocus, setSavingsInputFocus] = useState(false);
-  const savingsInput: Ref = useRef(null);
-  const dispatch = useDispatch();
 
   const calculateSavings = () => {
     if (type === "value") {
@@ -106,165 +112,172 @@ export default function SavingsModal({
       </IonHeader>
 
       <IonContent>
-        <IonCard>
-          <IonItem lines="none">
-            <IonRow style={{ width: "100%" }}>
-              <IonCol size="6">
-                <h2>Difference</h2>
-              </IonCol>
-              <IonCol size="5">
-                <IonNote color="dark">
-                  <h2>&nbsp;&nbsp;${difference}</h2>
-                </IonNote>
-              </IonCol>
-            </IonRow>
-          </IonItem>
+        <div style={{ height: containerHeight }}>
+          <IonCard className="ion-padding">
+            <IonItem lines="none">
+              <IonRow style={{ width: "100%" }}>
+                <IonCol size="6">
+                  <h2 className="ion-no-margin">Difference</h2>
+                </IonCol>
+                <IonCol size="5">
+                  <IonNote color="dark">
+                    <h2 className="ion-no-margin">&nbsp;&nbsp;${difference}</h2>
+                  </IonNote>
+                </IonCol>
+              </IonRow>
+            </IonItem>
 
-          <IonItem lines="none">
-            <IonRow style={{ width: "100%" }}>
-              <IonCol size="6">
-                <h2>Savings</h2>
-              </IonCol>
-              <IonCol size="5">
-                <IonNote color="primary">
-                  <h2>&nbsp;&nbsp;${calculateSavings()}</h2>
-                </IonNote>
-              </IonCol>
-            </IonRow>
-          </IonItem>
+            <IonItem lines="none">
+              <IonRow style={{ width: "100%" }}>
+                <IonCol size="6">
+                  <h2 className="ion-no-margin">Savings</h2>
+                </IonCol>
+                <IonCol size="5">
+                  <IonNote color="primary">
+                    <h2 className="ion-no-margin">
+                      &nbsp;&nbsp;${calculateSavings()}
+                    </h2>
+                  </IonNote>
+                </IonCol>
+              </IonRow>
+            </IonItem>
 
-          <IonItem lines="none">
-            <IonRow style={{ width: "100%" }}>
-              <IonCol size="6">
-                <h2>Spending</h2>
-              </IonCol>
-              <IonCol size="6">
-                <IonNote color="dark">
-                  <h2 className="ion-padding-end ">
-                    &nbsp;&nbsp;$
-                    {difference - calculateSavings()!}
-                  </h2>
-                </IonNote>
-              </IonCol>
-            </IonRow>
-          </IonItem>
-        </IonCard>
+            <IonItem lines="none">
+              <IonRow style={{ width: "100%" }}>
+                <IonCol size="6">
+                  <h2 className="ion-no-margin">Spending</h2>
+                </IonCol>
+                <IonCol size="6">
+                  <IonNote color="dark">
+                    <h2 className="ion-padding-end ion-no-margin">
+                      &nbsp;&nbsp;$
+                      {difference - calculateSavings()!}
+                    </h2>
+                  </IonNote>
+                </IonCol>
+              </IonRow>
+            </IonItem>
+          </IonCard>
 
-        <IonCard className="ion-padding-vertical">
-          <div className="ion-padding">
-            <IonSegment
-              value={type}
-              onIonChange={(e) => selectInputType(e.detail.value!)}
-            >
-              <IonSegmentButton value="value" style={{ fontSize: "medium" }}>
-                <IonLabel>Value</IonLabel>
-              </IonSegmentButton>
-              <IonSegmentButton value="percent" style={{ fontSize: "medium" }}>
-                <IonLabel>Percentage</IonLabel>
-              </IonSegmentButton>
-            </IonSegment>
+          <IonCard className="ion-padding-horizontal">
+            <div className="ion-padding-top ion-margin">
+              <IonSegment
+                value={type}
+                onIonChange={(e) => selectInputType(e.detail.value!)}
+              >
+                <IonSegmentButton value="value" style={{ fontSize: "medium" }}>
+                  <IonLabel>Value</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton
+                  value="percent"
+                  style={{ fontSize: "medium" }}
+                >
+                  <IonLabel>Percentage</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
 
-            {type === "value" && (
-              <>
-                <IonRow className="ion-margin-top">
-                  <IonCol>
-                    <IonItem>
-                      <IonRow style={{ width: "100%" }}>
-                        <IonCol size="auto" style={{ marginTop: "8px" }}>
-                          $
-                        </IonCol>
+              {type === "value" && (
+                <>
+                  <IonRow className="ion-margin-top">
+                    <IonCol>
+                      <IonItem>
+                        <IonRow style={{ width: "100%" }}>
+                          <IonCol size="auto" style={{ marginTop: "8px" }}>
+                            $
+                          </IonCol>
 
-                        <IonCol>
-                          <IonInput
-                            type="tel"
-                            inputmode="decimal"
-                            placeholder="Enter Savings Amount"
-                            ref={savingsInput}
-                            value={savings}
-                            maxlength={difference.toString().length}
-                            onIonBlur={() => setSavingsInputFocus(false)}
-                            onIonFocus={() => setSavingsInputFocus(true)}
-                            onKeyPress={(e) =>
-                              e.key === "Enter" ? blurIonInput() : ""
-                            }
-                            onIonChange={(e) => {
-                              setError("");
-                              setSavings(+e.detail.value!);
-                            }}
-                          ></IonInput>
-                        </IonCol>
-                      </IonRow>
-                    </IonItem>
-                  </IonCol>
-                  <IonCol size="auto" className="ion-text-right ">
-                    {savingsInputFocus && (
-                      <IonButton
-                        size="default"
-                        color="success"
-                        onClick={() => blurIonInput()}
+                          <IonCol>
+                            <IonInput
+                              type="tel"
+                              inputmode="decimal"
+                              placeholder="Enter Savings Amount"
+                              ref={savingsInput}
+                              value={savings}
+                              maxlength={difference.toString().length}
+                              onIonBlur={() => setSavingsInputFocus(false)}
+                              onIonFocus={() => setSavingsInputFocus(true)}
+                              onKeyPress={(e) =>
+                                e.key === "Enter" ? blurIonInput() : ""
+                              }
+                              onIonChange={(e) => {
+                                setError("");
+                                setSavings(+e.detail.value!);
+                              }}
+                            ></IonInput>
+                          </IonCol>
+                        </IonRow>
+                      </IonItem>
+                    </IonCol>
+                    <IonCol size="auto" className="ion-text-right ">
+                      {savingsInputFocus && (
+                        <IonButton
+                          size="default"
+                          color="success"
+                          onClick={() => blurIonInput()}
+                        >
+                          Done
+                        </IonButton>
+                      )}
+                    </IonCol>
+                  </IonRow>
+                  <IonRow>
+                    <IonCol>
+                      {error === "savings" && (
+                        <IonText color="danger">
+                          <span className="ion-margin">
+                            Savings must not exceed Difference.
+                          </span>
+                        </IonText>
+                      )}
+                    </IonCol>
+                  </IonRow>
+                </>
+              )}
+
+              {type === "percent" && (
+                <>
+                  <br />
+                  <IonRow className="ion-padding-top">
+                    <IonCol className="ion-padding-top">
+                      <IonRange
+                        min={0}
+                        max={100}
+                        pin={true}
+                        step={25}
+                        snaps={true}
+                        value={savingsPercent}
+                        color="secondary"
+                        className="ion-no-padding"
+                        onIonChange={(e) =>
+                          setSavingsPercent(e.detail.value as number)
+                        }
                       >
-                        Done
-                      </IonButton>
-                    )}
-                  </IonCol>
-                </IonRow>
-                <IonRow>
-                  <IonCol>
-                    {error === "savings" && (
-                      <IonText color="danger">
-                        <span className="ion-margin">
-                          Savings must not exceed Difference.
-                        </span>
-                      </IonText>
-                    )}
-                  </IonCol>
-                </IonRow>
-              </>
-            )}
+                        <IonLabel
+                          slot="start"
+                          className="ion-padding-end ion-text-center"
+                        >
+                          0%
+                          <br />
+                          Savings
+                        </IonLabel>
+                        <IonLabel
+                          slot="end"
+                          className="ion-padding-start ion-text-center"
+                        >
+                          100%
+                          <br />
+                          Savings
+                        </IonLabel>
+                      </IonRange>
+                    </IonCol>
+                  </IonRow>
+                </>
+              )}
+            </div>
+          </IonCard>
+        </div>
 
-            {type === "percent" && (
-              <>
-                <br />
-                <IonRow className="ion-padding-top">
-                  <IonCol className="ion-padding-top">
-                    <IonRange
-                      min={0}
-                      max={100}
-                      pin={true}
-                      step={25}
-                      snaps={true}
-                      value={savingsPercent}
-                      color="secondary"
-                      className="ion-no-padding"
-                      onIonChange={(e) =>
-                        setSavingsPercent(e.detail.value as number)
-                      }
-                    >
-                      <IonLabel
-                        slot="start"
-                        className="ion-padding-end ion-text-center"
-                      >
-                        0%
-                        <br />
-                        Savings
-                      </IonLabel>
-                      <IonLabel
-                        slot="end"
-                        className="ion-padding-start ion-text-center"
-                      >
-                        100%
-                        <br />
-                        Savings
-                      </IonLabel>
-                    </IonRange>
-                  </IonCol>
-                </IonRow>
-              </>
-            )}
-          </div>
-        </IonCard>
-
-        <div className="ion-padding">
+        <div className="ion-padding-horizontal">
           <IonRow>
             <IonCol>
               <IonButton

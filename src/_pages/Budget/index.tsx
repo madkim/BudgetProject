@@ -14,7 +14,6 @@ import {
   IonButtons,
   IonContent,
   IonToolbar,
-  IonLoading,
   IonListHeader,
   IonDatetime,
 } from "@ionic/react";
@@ -22,13 +21,15 @@ import {
 import React, { useEffect, useState, useRef } from "react";
 import FadeIn from "react-fade-in";
 
-import { Budget as BudgetType } from "../../_helpers/types";
 import { useHistory } from "react-router-dom";
 import { budgetActions } from "../../_actions/budgetActions";
 import { menuController } from "@ionic/core";
 import { spendingActions } from "../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
+import { Budget as BudgetType, Expense } from "../../_helpers/types";
 import {
+  caretUp,
+  caretDown,
   menuSharp,
   timeOutline,
   chevronDown,
@@ -47,6 +48,9 @@ const Budget: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const datePickerRef = useRef<any>();
 
+  const sortIcon = ["", caretUp, caretDown];
+  const [sortName, setSortName] = useState(1);
+  const [sortAmnt, setSortAmnt] = useState(0);
   const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"));
   const [viewPastBudget, setVeiwPastBudget] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState("");
@@ -70,7 +74,7 @@ const Budget: React.FC<Props> = (props: Props) => {
     }
   }, []);
 
-  const onRouteChange = (route: any) => {
+  const onRouteChange = () => {
     // Reset to current month spending
     setSelectedDate(moment().format("YYYY-MM"));
     setVeiwPastBudget(false);
@@ -117,6 +121,10 @@ const Budget: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const yearlyExpense = (amount: number) => {
+    return <>&nbsp;&nbsp;${(amount / 12).toFixed(2)}</>;
+  };
+
   const difference = () => {
     return +totalIncome()! - +totalExpense()!;
   };
@@ -125,8 +133,34 @@ const Budget: React.FC<Props> = (props: Props) => {
     return difference() - props.budget.savings.amount;
   };
 
-  const yearlyExpense = (amount: number) => {
-    return <>&nbsp;&nbsp;${(amount / 12).toFixed(2)}</>;
+  const changeSort = (type: number, setType: (i: number) => void) => {
+    type === sortName ? setSortAmnt(0) : setSortName(0);
+    const index = type + 1;
+    setType(index % 3);
+  };
+
+  const sortExpenses = (a: Expense, b: Expense) => {
+    if (sortName > 0) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) {
+        return sortName === 1 ? -1 : 1;
+      }
+      if (a.name.toLowerCase() > b.name.toLowerCase()) {
+        return sortName === 1 ? 1 : -1;
+      }
+      return 0;
+    } else if (sortAmnt > 0) {
+      const aMonthly = a.type === "yearly" ? a.amount / 12 : a.amount;
+      const bMonthly = b.type === "yearly" ? b.amount / 12 : b.amount;
+
+      if (aMonthly < bMonthly) {
+        return sortAmnt === 1 ? -1 : 1;
+      }
+      if (aMonthly > bMonthly) {
+        return sortAmnt === 1 ? 1 : -1;
+      }
+      return 0;
+    }
+    return 0;
   };
 
   return (
@@ -178,7 +212,6 @@ const Budget: React.FC<Props> = (props: Props) => {
 
       <IonContent>
         {props.loading ? null : (
-          // <IonLoading isOpen={props.loading} message={"Please wait..."} />
           <FadeIn>
             <div className="ion-padding-bottom ion-padding-end">
               <IonGrid>
@@ -231,60 +264,84 @@ const Budget: React.FC<Props> = (props: Props) => {
                       <IonListHeader lines="inset">
                         <IonLabel>
                           <IonRow>
-                            <IonCol size="7">Expenses</IonCol>
-                            <IonCol className="ion-no-padding">
+                            <IonCol
+                              size="7"
+                              onClick={() => {
+                                changeSort(sortName, setSortName);
+                              }}
+                            >
+                              Expenses&nbsp;
+                              {sortIcon[sortName] !== "" && (
+                                <IonIcon icon={sortIcon[sortName]} />
+                              )}
+                            </IonCol>
+                            <IonCol
+                              className="ion-no-padding"
+                              onClick={() => {
+                                changeSort(sortAmnt, setSortAmnt);
+                              }}
+                            >
                               <IonNote color="danger">
                                 <h1>-${totalExpense()}</h1>
                               </IonNote>
                             </IonCol>
+                            {sortIcon[sortAmnt] !== "" && (
+                              <IonIcon icon={sortIcon[sortAmnt]} />
+                            )}
                           </IonRow>
                         </IonLabel>
                       </IonListHeader>
 
                       <div>
                         {props.budget.expenses &&
-                          props.budget.expenses.map((expense) => {
-                            return (
-                              <IonItem
-                                key={expense.id}
-                                detail={expense.type === "yearly"}
-                                detailIcon={
-                                  selectedExpense === expense.id
-                                    ? chevronDown
-                                    : chevronForward
-                                }
-                                onClick={() => selectExpense(expense.id)}
-                              >
-                                <IonLabel>
-                                  <IonRow>
-                                    <IonCol size="7">
-                                      <IonLabel>
-                                        <h1>{expense.name}</h1>
-                                      </IonLabel>
-                                    </IonCol>
-                                    <IonCol>
-                                      <h1>
-                                        &nbsp;&nbsp;
-                                        {expense.type === "yearly"
-                                          ? yearlyExpense(expense.amount)
-                                          : "$" + expense.amount.toFixed(2)}
-                                      </h1>
-                                    </IonCol>
-                                  </IonRow>
-                                  {selectedExpense === expense.id && (
+                          props.budget.expenses
+                            .sort(sortExpenses)
+                            .map((expense) => {
+                              return (
+                                <IonItem
+                                  key={expense.id}
+                                  detail={expense.type === "yearly"}
+                                  detailIcon={
+                                    selectedExpense === expense.id
+                                      ? chevronDown
+                                      : chevronForward
+                                  }
+                                  onClick={() =>
+                                    expense.type === "yearly"
+                                      ? selectExpense(expense.id)
+                                      : selectExpense("")
+                                  }
+                                >
+                                  <IonLabel>
                                     <IonRow>
-                                      <IonCol offset="7">
-                                        <h2>
-                                          &nbsp;&nbsp;&nbsp;&nbsp;$
-                                          {expense.amount.toFixed(2)} / yr
-                                        </h2>
+                                      <IonCol size="7">
+                                        <IonLabel>
+                                          <h1>{expense.name}</h1>
+                                        </IonLabel>
+                                      </IonCol>
+                                      <IonCol>
+                                        <h1>
+                                          &nbsp;&nbsp;
+                                          {expense.type === "yearly"
+                                            ? yearlyExpense(expense.amount)
+                                            : "$" + expense.amount.toFixed(2)}
+                                        </h1>
                                       </IonCol>
                                     </IonRow>
-                                  )}
-                                </IonLabel>
-                              </IonItem>
-                            );
-                          })}
+                                    {selectedExpense === expense.id && (
+                                      <IonRow>
+                                        <IonCol offset="7">
+                                          <h2>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;$
+                                            {expense.amount.toFixed(2)} / yr
+                                          </h2>
+                                        </IonCol>
+                                      </IonRow>
+                                    )}
+                                  </IonLabel>
+                                </IonItem>
+                              );
+                            })}
                       </div>
                     </IonList>
                   </IonCol>
