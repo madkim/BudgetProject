@@ -18,15 +18,6 @@ import {
   IonDatetime,
 } from "@ionic/react";
 
-import React, { useEffect, useState, useRef } from "react";
-import FadeIn from "react-fade-in";
-
-import { useHistory } from "react-router-dom";
-import { budgetActions } from "../../_actions/budgetActions";
-import { menuController } from "@ionic/core";
-import { spendingActions } from "../../_actions/spendingActions";
-import { useDispatch, connect } from "react-redux";
-import { Budget as BudgetType, Expense } from "../../_helpers/types";
 import {
   caretUp,
   caretDown,
@@ -36,6 +27,16 @@ import {
   chevronForward,
 } from "ionicons/icons";
 import moment from "moment";
+
+import React, { useEffect, useState, useRef } from "react";
+import FadeIn from "react-fade-in";
+
+import { useHistory } from "react-router-dom";
+import { budgetActions } from "../../_actions/budgetActions";
+import { menuController } from "@ionic/core";
+import { spendingActions } from "../../_actions/spendingActions";
+import { useDispatch, connect } from "react-redux";
+import { Budget as BudgetType, Expense } from "../../_helpers/types";
 
 interface Props {
   budget: BudgetType;
@@ -48,9 +49,9 @@ const Budget: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const datePickerRef = useRef<any>();
 
-  const sortIcon = ["", caretUp, caretDown];
-  const [sortName, setSortName] = useState(1);
-  const [sortAmnt, setSortAmnt] = useState(0);
+  const sortIcon = [caretDown, caretUp, ""];
+  const [sortName, setSortName] = useState(2);
+  const [sortAmnt, setSortAmnt] = useState(1);
   const [selectedDate, setSelectedDate] = useState(moment().format("YYYY-MM"));
   const [viewPastBudget, setVeiwPastBudget] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState("");
@@ -134,13 +135,13 @@ const Budget: React.FC<Props> = (props: Props) => {
   };
 
   const changeSort = (type: number, setType: (i: number) => void) => {
-    type === sortName ? setSortAmnt(0) : setSortName(0);
+    type === sortName ? setSortAmnt(2) : setSortName(2);
     const index = type + 1;
-    setType(index % 3);
+    setType(index % 2);
   };
 
   const sortExpenses = (a: Expense, b: Expense) => {
-    if (sortName > 0) {
+    if (sortName < 2) {
       if (a.name.toLowerCase() < b.name.toLowerCase()) {
         return sortName === 1 ? -1 : 1;
       }
@@ -148,15 +149,15 @@ const Budget: React.FC<Props> = (props: Props) => {
         return sortName === 1 ? 1 : -1;
       }
       return 0;
-    } else if (sortAmnt > 0) {
+    } else if (sortAmnt < 2) {
       const aMonthly = a.type === "yearly" ? a.amount / 12 : a.amount;
       const bMonthly = b.type === "yearly" ? b.amount / 12 : b.amount;
 
       if (aMonthly < bMonthly) {
-        return sortAmnt === 1 ? -1 : 1;
+        return sortAmnt === 1 ? 1 : -1;
       }
       if (aMonthly > bMonthly) {
-        return sortAmnt === 1 ? 1 : -1;
+        return sortAmnt === 1 ? -1 : 1;
       }
       return 0;
     }
