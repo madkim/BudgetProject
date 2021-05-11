@@ -277,6 +277,7 @@ const Budget: React.FC<Props> = (props: Props) => {
                               )}
                             </IonCol>
                             <IonCol
+                              size="auto"
                               className="ion-no-padding"
                               onClick={() => {
                                 changeSort(sortAmnt, setSortAmnt);
@@ -286,6 +287,7 @@ const Budget: React.FC<Props> = (props: Props) => {
                                 <h1>-${totalExpense()}</h1>
                               </IonNote>
                             </IonCol>
+                            &nbsp;
                             {sortIcon[sortAmnt] !== "" && (
                               <IonIcon icon={sortIcon[sortAmnt]} />
                             )}
