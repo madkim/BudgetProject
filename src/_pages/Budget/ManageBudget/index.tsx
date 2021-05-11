@@ -17,11 +17,13 @@ import {
   IonButtons,
   IonContent,
   IonToolbar,
-  IonLoading,
+  IonListHeader,
 } from "@ionic/react";
 
 import {
+  caretUp,
   trashBin,
+  caretDown,
   addOutline,
   chevronBackOutline,
   chevronForwardOutline,
@@ -45,7 +47,11 @@ interface Props {
 }
 
 const ManageBudget: React.FC<Props> = (props: Props) => {
+  const sortIcon = [caretDown, caretUp, ""];
+
   const [error, setError] = useState("");
+  const [sortName, setSortName] = useState(2);
+  const [sortAmnt, setSortAmnt] = useState(1);
   const [expenseType, setExpenseType] = useState("");
   const [incomeTitle, setIncomeTitle] = useState("");
   const [expenseTitle, setExpenseTitle] = useState("");
@@ -112,6 +118,36 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
     return difference() - +props.budget.savings.amount!;
   };
 
+  const changeSort = (type: number, setType: (i: number) => void) => {
+    type === sortName ? setSortAmnt(2) : setSortName(2);
+    const index = type + 1;
+    setType(index % 2);
+  };
+
+  const sortExpenses = (a: Expense, b: Expense) => {
+    if (sortName < 2) {
+      if (a.name.toLowerCase() < b.name.toLowerCase()) {
+        return sortName === 1 ? -1 : 1;
+      }
+      if (a.name.toLowerCase() > b.name.toLowerCase()) {
+        return sortName === 1 ? 1 : -1;
+      }
+      return 0;
+    } else if (sortAmnt < 2) {
+      const aMonthly = a.type === "yearly" ? a.amount / 12 : a.amount;
+      const bMonthly = b.type === "yearly" ? b.amount / 12 : b.amount;
+
+      if (aMonthly < bMonthly) {
+        return sortAmnt === 1 ? 1 : -1;
+      }
+      if (aMonthly > bMonthly) {
+        return sortAmnt === 1 ? -1 : 1;
+      }
+      return 0;
+    }
+    return 0;
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -134,7 +170,6 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
 
       <IonContent>
         {props.loading ? null : (
-          // <IonLoading isOpen={props.loading} message={"Please wait..."} />
           <>
             <IonAlert
               isOpen={notReviewed}
@@ -351,61 +386,81 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                   <IonRow>
                     <IonCol>
                       <IonList>
-                        <IonItem>
-                          <IonGrid>
+                        <IonListHeader lines="inset">
+                          <IonLabel>
                             <IonRow>
-                              <IonCol size="6" className="ion-no-padding">
-                                <h2>Expenses</h2>
+                              <IonCol
+                                size="6"
+                                onClick={() => {
+                                  changeSort(sortName, setSortName);
+                                }}
+                              >
+                                Expenses&nbsp;
+                                {sortIcon[sortName] !== "" && (
+                                  <IonIcon icon={sortIcon[sortName]} />
+                                )}
                               </IonCol>
-                              <IonCol size="3" class="ion-text-end">
+                              <IonCol
+                                size="auto"
+                                className="ion-no-padding"
+                                onClick={() => {
+                                  changeSort(sortAmnt, setSortAmnt);
+                                }}
+                              >
                                 <IonNote color="danger">
-                                  <h5>&nbsp;-${totalExpense()}</h5>
+                                  <h1>-${totalExpense()}</h1>
                                 </IonNote>
                               </IonCol>
+                              &nbsp;
+                              {sortIcon[sortAmnt] !== "" && (
+                                <IonIcon icon={sortIcon[sortAmnt]} />
+                              )}
                             </IonRow>
-                          </IonGrid>
-                        </IonItem>
+                          </IonLabel>
+                        </IonListHeader>
 
                         {props.budget.expenses &&
-                          props.budget.expenses.map((expense) => {
-                            return (
-                              <IonItem key={expense.id}>
-                                <IonGrid>
-                                  <IonRow>
-                                    <IonCol size="5">
-                                      <h5>
-                                        <IonLabel>{expense.name}</IonLabel>
-                                      </h5>
-                                    </IonCol>
-                                    <IonCol size="4" className="ion-text-end">
-                                      <h5>
-                                        <IonLabel>
-                                          $
-                                          {expense.type === "yearly"
-                                            ? (expense.amount / 12).toFixed(2)
-                                            : expense.amount.toFixed(2)}
-                                        </IonLabel>
-                                      </h5>
-                                    </IonCol>
-                                    <IonCol
-                                      size="3"
-                                      className="ion-text-end ion-no-padding"
-                                    >
-                                      <IonButton
-                                        size="default"
-                                        color="danger"
-                                        onClick={() => {
-                                          deleteExpense(expense);
-                                        }}
+                          props.budget.expenses
+                            .sort(sortExpenses)
+                            .map((expense) => {
+                              return (
+                                <IonItem key={expense.id}>
+                                  <IonGrid>
+                                    <IonRow>
+                                      <IonCol size="5">
+                                        <h5>
+                                          <IonLabel>{expense.name}</IonLabel>
+                                        </h5>
+                                      </IonCol>
+                                      <IonCol size="4" className="ion-text-end">
+                                        <h5>
+                                          <IonLabel>
+                                            $
+                                            {expense.type === "yearly"
+                                              ? (expense.amount / 12).toFixed(2)
+                                              : expense.amount.toFixed(2)}
+                                          </IonLabel>
+                                        </h5>
+                                      </IonCol>
+                                      <IonCol
+                                        size="3"
+                                        className="ion-text-end ion-no-padding"
                                       >
-                                        <IonIcon icon={trashBin} />
-                                      </IonButton>
-                                    </IonCol>
-                                  </IonRow>
-                                </IonGrid>
-                              </IonItem>
-                            );
-                          })}
+                                        <IonButton
+                                          size="default"
+                                          color="danger"
+                                          onClick={() => {
+                                            deleteExpense(expense);
+                                          }}
+                                        >
+                                          <IonIcon icon={trashBin} />
+                                        </IonButton>
+                                      </IonCol>
+                                    </IonRow>
+                                  </IonGrid>
+                                </IonItem>
+                              );
+                            })}
                         <IonItem lines="inset">
                           <IonGrid>
                             <IonRow>
