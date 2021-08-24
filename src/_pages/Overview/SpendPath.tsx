@@ -41,16 +41,16 @@ const SpendPath: React.FC<Props> = (props: Props) => {
 
             const data = {
                 chart: {
-                  caption: "Spend Path (current v. last month)",
-                  captionPosition: "left",
-                  yaxisname: "Spent",
-                  xaxisname: "Day",
-                  subcaption: "",
-                  showhovereffect: "1",
-                  numberprefix: "$",
-                  drawcrossline: "1",
-                  plottooltext: "You  $seriesName",
-                  theme: "fusion"
+                    drawAnchors: 0,
+                    caption: "Spend Path (current v. last month)",
+                    captionPosition: "left",
+                    yaxisname: "Spent",
+                    xaxisname: "Day",
+                    subcaption: "",
+                    numberprefix: "$",
+                    drawcrossline: "1",
+                    plottooltext: "$dataValue",
+                    theme: "fusion"
                 },
                 categories: categories,
                 dataset: dataset,
