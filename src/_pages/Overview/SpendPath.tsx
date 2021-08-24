@@ -50,6 +50,7 @@ const SpendPath: React.FC<Props> = (props: Props) => {
                     numberprefix: "$",
                     drawcrossline: "1",
                     plottooltext: "$dataValue",
+                    tooltipPosition: "top",
                     theme: "fusion"
                 },
                 categories: categories,
