@@ -45,8 +45,17 @@ const Overview: React.FC<Props> = (props: Props) => {
     const dispatch = useDispatch();
     const [chartData, setChartData] = useState([]);
 
-    useEffect(() => {
+    const getSpentThisYear = () => {
         dispatch(spendingActions.getSpentThisYear());
+    }
+    
+    window.addEventListener("orientationchange", getSpentThisYear, false);
+
+    useEffect(() => {
+        getSpentThisYear();
+        return () => {
+            window.removeEventListener("orientationchange", getSpentThisYear, false)
+        }
     }, [])
 
     useEffect(() => {
@@ -64,7 +73,7 @@ const Overview: React.FC<Props> = (props: Props) => {
     // Create a JSON object to store the chart configurations
     const chartConfigs = {
         type: "column2d", // The chart type
-        // width: window.screen.width - 25, // Width of the chart
+        width: window.screen.width - 25, // Width of the chart
         // height: "400", // Height of the chart
         dataFormat: "json", // Data type
         dataSource: {
