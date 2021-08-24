@@ -1,14 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
+import App from "./App";
+import React from "react";
+import ReactDOM from "react-dom";
+import reportWebVitals from "./unused/reportWebVitals";
+import * as serviceWorkerRegistration from "./unused/serviceWorkerRegistration";
+// import "bootstrap/dist/css/bootstrap.css";
+
+import store from "./_helpers/store";
+import { Provider } from "react-redux";
+import { defineCustomElements } from "@ionic/pwa-elements/loader";
+
+// Call the element loader after the platform has been bootstrapped
+defineCustomElements(window);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change

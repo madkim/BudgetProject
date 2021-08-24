@@ -1,0 +1,114 @@
+import { Receipt, Days } from "../_helpers/types";
+import { dateSortKey } from "../_helpers/datesort";
+import { fireStorage } from "../_helpers/firebase";
+import { db } from "../_helpers/firebase";
+import moment from "moment";
+
+export const spendingService = {
+  getMonths,
+  getTotal,
+  getDays,
+  getDay,
+};
+function getTotal(month: string | null) {
+  const mnth = month === null ? new Date() : month;
+
+  const start = moment(mnth).clone().startOf("month");
+  const end = moment(mnth).clone().endOf("month");
+
+  return db
+    .collection("receipts")
+    .where("date", ">=", start.toDate())
+    .where("date", "<=", end.toDate())
+    .get()
+    .then((receipts) => {
+      let totalSpent = receipts.docs.reduce((total, receipt) => {
+        return receipt.data().price + total;
+      }, 0);
+      return +totalSpent.toFixed(2);
+    });
+}
+
+function getMonths() {
+  return db
+    .collection("budgets")
+    .orderBy("month", "asc")
+    .get()
+    .then((budgets) => {
+      return budgets.docs.map((budget) => {
+        return budget.data().month;
+      });
+    });
+}
+
+function getDays(month: string | null) {
+  const mnth = month === null ? new Date() : month;
+
+  const start = moment(mnth).clone().startOf("month");
+  const end = moment(mnth).clone().endOf("month");
+
+  return db
+    .collection("receipts")
+    .where("date", ">=", start.toDate())
+    .where("date", "<=", end.toDate())
+    .get()
+    .then((receipts) => {
+      let receiptsByDay: Days = {};
+      receipts.docs.forEach((receipt) => {
+        const date = moment(receipt.data().date.toDate()).format("L");
+
+        if (date in receiptsByDay) {
+          receiptsByDay[date].push(receipt.data().price);
+        } else {
+          receiptsByDay[date] = [receipt.data().price];
+        }
+      });
+      return dateSortKey(receiptsByDay);
+    });
+}
+
+function getDay(date: string) {
+  const start = moment(date).set({ hour: 0, minute: 0 });
+  const end = moment(date).set({ hour: 23, minute: 59 });
+
+  return db
+    .collection("receipts")
+    .where("date", ">=", start.toDate())
+    .where("date", "<=", end.toDate())
+    .get()
+    .then(async (receipts) => {
+      let sellerPromises = await receipts.docs.map(async (receipt) => {
+        return await receipt.data().seller.get();
+      });
+
+      let photoPromises = await receipts.docs.map(async (receipt) => {
+        if (receipt.data().hasPhoto) {
+          return await fireStorage
+            .child("receipts/" + receipt.id)
+            .getDownloadURL();
+        }
+      });
+
+      const sellers = await Promise.all(sellerPromises);
+      const photos = await Promise.all(photoPromises);
+
+      let data: Receipt[] = [];
+
+      receipts.docs.map((receipt, index) => {
+        data[index] = {
+          id: receipt.id,
+          date: receipt.data().date.toDate(),
+          photo: photos[index] !== undefined ? photos[index] : "",
+          price: receipt.data().price,
+          seller: {
+            id: sellers[index].id,
+            name: sellers[index].data().name,
+            favorite: sellers[index].data().favorite,
+          },
+          hasPhoto: photos[index] !== undefined ? true : false,
+        };
+      });
+
+      return data;
+    });
+}
