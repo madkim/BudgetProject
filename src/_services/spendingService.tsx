@@ -1,4 +1,4 @@
-import { Receipt, Days } from "../_helpers/types";
+import { Receipt, Days, Range } from "../_helpers/types";
 import { dateSortKey } from "../_helpers/datesort";
 import { fireStorage } from "../_helpers/firebase";
 import { db } from "../_helpers/firebase";
@@ -6,6 +6,7 @@ import moment from "moment";
 
 export const spendingService = {
   getMonths,
+  getRange,
   getTotal,
   getYear,
   getDays,
@@ -27,6 +28,35 @@ function getTotal(month: string | null) {
         return receipt.data().price + total;
       }, 0);
       return +totalSpent.toFixed(2);
+    });
+}
+
+function getRange(startDate: string | null, endDate: string | null) {
+  const start = moment(startDate);
+  const end = moment(endDate);
+
+  return db
+    .collection("receipts")
+    .where("date", ">=", start.toDate())
+    .where("date", "<=", end.toDate())
+    .get()
+    .then((receipts) => {
+      let receiptsByDay: Range = {};
+      receipts.docs.forEach((receipt) => {
+        const month = moment(receipt.data().date.toDate()).format("MMM");
+        const day = moment(receipt.data().date.toDate()).format("DD");
+        
+        if (month in receiptsByDay && day in receiptsByDay[month]) {
+          receiptsByDay[month][parseInt(day)] += receipt.data().price;
+        } 
+        else if (month in receiptsByDay) {
+          receiptsByDay[month][parseInt(day)] = receipt.data().price;
+        }
+        else {
+          receiptsByDay[month] = [];
+        }
+      });
+      return receiptsByDay
     });
 }
 

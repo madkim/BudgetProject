@@ -56,6 +56,10 @@ export interface Year {
   [month: number]: number;
 }
 
+export interface Range {
+  [month: string]: number[]
+}
+
 export interface Action {
   type: string;
   payload: any;

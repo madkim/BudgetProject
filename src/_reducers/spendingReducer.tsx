@@ -6,6 +6,7 @@ export const initState = {
   days: {},
   months: [],
   year: {},
+  range: {},
   loading: false,
   totalSpent: 0,
 };
@@ -30,6 +31,14 @@ export function spendingReducer(state = initState, action: Action) {
       ...state,
       loading: false,
       totalSpent: action.payload,
+    });
+  }
+
+  if (action.type === spendingConstants.GET_RANGE_SPENT) {
+    return (state = {
+      ...state,
+      loading: false,
+      range: action.payload,
     });
   }
 
