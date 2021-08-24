@@ -48,14 +48,9 @@ const Overview: React.FC<Props> = (props: Props) => {
     const getSpentThisYear = () => {
         dispatch(spendingActions.getSpentThisYear());
     }
-    
-    window.addEventListener("orientationchange", getSpentThisYear, false);
 
     useEffect(() => {
         getSpentThisYear();
-        return () => {
-            window.removeEventListener("orientationchange", getSpentThisYear, false)
-        }
     }, [])
 
     useEffect(() => {
