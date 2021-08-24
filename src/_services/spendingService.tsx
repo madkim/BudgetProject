@@ -56,6 +56,13 @@ function getRange(startDate: string | null, endDate: string | null) {
           receiptsByDay[month] = [];
         }
       });
+      Object.keys(receiptsByDay).forEach(month => {
+        for (let day = 1; day < 32; day++) {
+          if (!(day in receiptsByDay[month])) {
+            receiptsByDay[month][day] = 0
+          }
+        }
+      })
       return receiptsByDay
     });
 }
