@@ -62,7 +62,7 @@ const Overview: React.FC<Props> = (props: Props) => {
             const data: any = [];
             Object.keys(props.year).map(month => {
                 const mnth = moment().month(month).format("MMM");
-                const dataPoint = { label: mnth, value: props.year[month] }
+                const dataPoint = { label: mnth, value: props.year[month], color: "#2dd36f" }
                 data.push(dataPoint);
             })
             setChartData(data);
@@ -78,7 +78,8 @@ const Overview: React.FC<Props> = (props: Props) => {
         dataSource: {
         // Chart Configuration
         chart: {
-            caption: "Overview for 2021",    //Set the chart caption
+            caption: "Spending Per Month (2021)",    //Set the chart caption
+            captionAlignment: "left",
             subCaption: "",             //Set the chart subcaption
             xAxisName: "Month",           //Set the x-axis name
             yAxisName: "Spent",  //Set the y-axis name
