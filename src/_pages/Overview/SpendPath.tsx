@@ -49,7 +49,7 @@ const SpendPath: React.FC<Props> = (props: Props) => {
                     subcaption: "",
                     numberprefix: "$",
                     drawcrossline: "1",
-                    plottooltext: "$dataValue",
+                    plottooltext: `$label - <b>$dataValue</b>`,
                     tooltipPosition: "top",
                     theme: "fusion"
                 },
