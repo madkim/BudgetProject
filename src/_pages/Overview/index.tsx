@@ -18,15 +18,7 @@ IonListHeader,
 IonDatetime,
 } from "@ionic/react";
 
-import {
-caretUp,
-caretDown,
-menuSharp,
-timeOutline,
-chevronDown,
-chevronForward,
-chevronBackOutline,
-} from "ionicons/icons";
+import { chevronBackOutline } from "ionicons/icons";
 
 import React from 'react';
 import moment from "moment";
@@ -60,7 +52,7 @@ const Overview: React.FC<Props> = (props: Props) => {
     useEffect(() => {
         if (Object.values(props.year).length > 0) {
             const data: any = [];
-            Object.keys(props.year).map(month => {
+            Object.keys(props.year).forEach(month => {
                 const mnth = moment().month(month).format("MMM");
                 const dataPoint = { label: mnth, value: props.year[month], color: "#2dd36f" }
                 data.push(dataPoint);
@@ -72,21 +64,20 @@ const Overview: React.FC<Props> = (props: Props) => {
     // Create a JSON object to store the chart configurations
     const chartConfigs = {
         type: "column2d", // The chart type
-        width: window.screen.width - 25, // Width of the chart
+        // width: window.screen.width - 25, // Width of the chart
         // height: "400", // Height of the chart
         dataFormat: "json", // Data type
         dataSource: {
         // Chart Configuration
         chart: {
-            caption: "Spending Per Month (2021)",    //Set the chart caption
+            caption: `Spending Per Month (${moment().format('yyyy')})`,    //Set the chart caption
             captionAlignment: "left",
-            subCaption: "",             //Set the chart subcaption
-            xAxisName: "Month",           //Set the x-axis name
-            yAxisName: "Spent",  //Set the y-axis name
+            subCaption: "",     //Set the chart subcaption
+            xAxisName: "Month", //Set the x-axis name
+            yAxisName: "Spent", //Set the y-axis name
             numberPrefix: "$",
-            theme: "fusion"                 //Set the theme for your chart
+            theme: "fusion"     //Set the theme for your chart
         },
-        // Chart Data - from step 2
         data: chartData
         }
     };
