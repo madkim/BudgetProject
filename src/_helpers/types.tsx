@@ -52,6 +52,10 @@ export interface Days {
   [key: string]: number[];
 }
 
+export interface Year {
+  [month: number]: number;
+}
+
 export interface Action {
   type: string;
   payload: any;

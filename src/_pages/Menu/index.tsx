@@ -16,6 +16,7 @@ import {
 
 import {
   personOutline,
+  telescopeOutline,
   bagHandleOutline,
   statsChartOutline,
 } from "ionicons/icons";
@@ -36,6 +37,14 @@ const Menu: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
+          <IonMenuToggle auto-hide="false">
+            <IonItem button routerLink="/overview" routerDirection="root">
+              <IonIcon slot="start" icon={telescopeOutline}></IonIcon>
+              <h3 style={{ padding: "10px" }}>
+                <IonLabel>Overview</IonLabel>
+              </h3>
+            </IonItem>
+          </IonMenuToggle>
           {/* <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/manage/sellers" routerDirection="root">
               <IonIcon slot="start" icon={personOutline}></IonIcon>

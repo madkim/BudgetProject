@@ -5,6 +5,7 @@ export const initState = {
   day: [],
   days: {},
   months: [],
+  year: {},
   loading: false,
   totalSpent: 0,
 };
@@ -37,6 +38,14 @@ export function spendingReducer(state = initState, action: Action) {
       ...state,
       loading: false,
       months: action.payload,
+    });
+  }
+
+  if (action.type === spendingConstants.GET_YEAR_SPENT) {
+    return (state = {
+      ...state,
+      loading: false,
+      year: action.payload,
     });
   }
 

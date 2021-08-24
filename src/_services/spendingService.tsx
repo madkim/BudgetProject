@@ -7,6 +7,7 @@ import moment from "moment";
 export const spendingService = {
   getMonths,
   getTotal,
+  getYear,
   getDays,
   getDay,
 };
@@ -26,6 +27,32 @@ function getTotal(month: string | null) {
         return receipt.data().price + total;
       }, 0);
       return +totalSpent.toFixed(2);
+    });
+}
+
+function getYear(year: string | null) {
+  const yr = year === null ? new Date() : year;
+
+  const start = moment(yr).clone().startOf("year");
+  const end = moment(yr).clone().endOf("year");
+
+  return db
+    .collection("receipts")
+    .where("date", ">=", start.toDate())
+    .where("date", "<=", end.toDate())
+    .get()
+    .then((receipts) => {
+      let receiptsByDay: Days = {};
+      receipts.docs.forEach((receipt) => {
+        const date = moment(receipt.data().date.toDate()).month();
+
+        if (date in receiptsByDay) {
+          receiptsByDay[date] += receipt.data().price;
+        } else {
+          receiptsByDay[date] = receipt.data().price;
+        }
+      });
+      return dateSortKey(receiptsByDay);
     });
 }
 
