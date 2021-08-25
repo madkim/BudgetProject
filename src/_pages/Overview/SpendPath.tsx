@@ -31,8 +31,6 @@ const SpendPath: React.FC<Props> = (props: Props) => {
                 series.data.shift();
                 dataset.push(series);
             })
-
-            console.log(dataset);
             
             for (let index = 1; index < 32; index++) {
                 categories[0]['category'].push({label: index.toString()})
