@@ -16,9 +16,7 @@ const SpendPath: React.FC<Props> = (props: Props) => {
     const [chartData, setChartData] = useState({});
 
     useEffect(() => {
-        console.log(props.range);
         if (Object.keys(props.range).length > 0) {
-
             const dataset: any = [];
             const categories: any = [{category: []}];
 
@@ -30,14 +28,15 @@ const SpendPath: React.FC<Props> = (props: Props) => {
                     total += spent;
                     series['data'].push({value: total});
                 })
-                
+                series.data.shift();
                 dataset.push(series);
             })
+
+            console.log(dataset);
             
             for (let index = 1; index < 32; index++) {
                 categories[0]['category'].push({label: index.toString()})
             }
-            console.log(categories)
 
             const data = {
                 chart: {

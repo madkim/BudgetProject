@@ -40,7 +40,7 @@ const Overview: React.FC<Props> = (props: Props) => {
 
     useEffect(() => {
         const start = moment(new Date()).subtract(1,'months').startOf('month').format('YYYY-MM-DD');
-        const end = moment(new Date()).format('YYYY-MM-DD');
+        const end = moment(new Date()).endOf('month').format('YYYY-MM-DD');
 
         dispatch(spendingActions.getSpentThisYear());
         dispatch(spendingActions.getSpentRange(start, end));

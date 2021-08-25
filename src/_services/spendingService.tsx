@@ -43,27 +43,39 @@ function getRange(startDate: string | null, endDate: string | null) {
     .then((receipts) => {
       let receiptsByDay: Range = {};
       receipts.docs.forEach((receipt) => {
-        const month = moment(receipt.data().date.toDate()).format("MMM");
-        const day = moment(receipt.data().date.toDate()).format("DD");
+        const month = moment(receipt.data().date.toDate()).format("MMM DD");
         
-        if (month in receiptsByDay && day in receiptsByDay[month]) {
-          receiptsByDay[month][parseInt(day)] += receipt.data().price;
+        if (month in receiptsByDay) {
+          receiptsByDay[month] += receipt.data().price;
         } 
-        else if (month in receiptsByDay) {
-          receiptsByDay[month][parseInt(day)] = receipt.data().price;
-        }
         else {
-          receiptsByDay[month] = [];
+          receiptsByDay[month] = receipt.data().price;
         }
       });
-      Object.keys(receiptsByDay).forEach(month => {
+      let data: any = {};
+
+      Object.keys(receiptsByDay).forEach(date => {
+        let split = date.split(' ');
+        let day = parseInt(split[1]);
+        let month = split[0];
+
+        if (month in data) {
+          data[month][day] = receiptsByDay[date];
+        }
+        else {
+          data[month] = [];
+          data[month][day] = receiptsByDay[date];
+        }
+      })
+      
+      Object.keys(data).forEach(month => {
         for (let day = 1; day < 32; day++) {
-          if (!(day in receiptsByDay[month])) {
-            receiptsByDay[month][day] = 0
+          if (!(day in data[month])) {
+            data[month][day] = 0;
           }
         }
       })
-      return receiptsByDay
+      return data;
     });
 }
 
