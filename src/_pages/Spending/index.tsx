@@ -197,31 +197,28 @@ const Spending: React.FC<Props> = (props: Props) => {
         <FadeIn>
           <IonCard>
             <IonGrid className="ion-padding-start ion-text-center">
-              <IonRow>
-                {viewPastSpending ? (
+              {viewPastSpending ? (
+                <IonRow>
                   <IonCol className="ion-padding-top ion-text-center">
                     <IonCardSubtitle>Past spending for:</IonCardSubtitle>
                     <IonCardTitle style={{ fontWeight: "300" }}>
                       {moment(selectedDate).format("MMMM YYYY")}
                     </IonCardTitle>
                   </IonCol>
+                </IonRow>
                 ) : (
-                  <IonCol className="ion-padding-top ion-text-center">
-                    <IonCardSubtitle>Today is:</IonCardSubtitle>
-                    <IonCardTitle style={{ fontWeight: "300" }}>
-                      {moment().format("dddd Do ")}
-                    </IonCardTitle>
-                  </IonCol>
-                )}
-              </IonRow>
-              <IonRow className="ion-padding-vertical">
-                <IonCol size="4">
-                  <IonCardSubtitle>Allowance</IonCardSubtitle>
-                  <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${allowance()}
-                  </IonCardTitle>
-                </IonCol>
-                <IonCol size="4">
+                  <IonRow>
+                    <IonCol className="ion-padding-top ion-text-center">
+                      <IonCardSubtitle>Today is:</IonCardSubtitle>
+                      <IonCardTitle style={{ fontWeight: "300" }}>
+                        {moment().format("dddd Do ")}
+                      </IonCardTitle>
+                    </IonCol>
+                  </IonRow>
+              )}
+
+              <IonRow className="ion-padding-top ion-padding-bottom">
+                <IonCol size="6">
                   <IonCardSubtitle>Days Left</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
                     {viewPastSpending
@@ -229,35 +226,25 @@ const Spending: React.FC<Props> = (props: Props) => {
                       : moment().endOf("month").diff(moment(), "days")}
                   </IonCardTitle>
                 </IonCol>
-                <IonCol size="4">
-                  <IonCardSubtitle>Saved</IonCardSubtitle>
+                <IonCol size="6">
+                  <IonCardSubtitle>Spent</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                  { props.budget.savings.amount === 0 ? 
-                    <small>$0</small> : <small>${ saved().toFixed(0)}/{numFormatter(props.budget.savings.amount, 2) }</small>
-                  }
+                    ${props.totalSpent.toFixed(0)}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>
 
               <IonRow className="ion-padding-bottom">
-                <IonCol size="4">
+                <IonCol size="6">
+                  <IonCardSubtitle>Remainder</IonCardSubtitle>
+                  <IonCardTitle style={{ fontWeight: "300" }}>
+                    ${(budget() - props.totalSpent).toFixed(0)}
+                  </IonCardTitle>
+                </IonCol>
+                <IonCol size="6">
                   <IonCardSubtitle>Budget</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
                     ${budget().toFixed()}
-                  </IonCardTitle>
-                </IonCol>
-                <IonCol size="4">
-                  <IonCardSubtitle>Days Total</IonCardSubtitle>
-                  <IonCardTitle style={{ fontWeight: "300" }}>
-                    {viewPastSpending
-                      ? moment(selectedDate).daysInMonth()
-                      : moment().daysInMonth()}
-                  </IonCardTitle>
-                </IonCol>
-                <IonCol size="4">
-                  <IonCardSubtitle>Spent</IonCardSubtitle>
-                  <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${props.totalSpent.toFixed(0)}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>
