@@ -8,7 +8,6 @@ import FusionCharts from "fusioncharts";
 import { Days } from '../../_helpers/types';
 import { useState, useEffect }from 'react';
 
-
 ReactFC.fcRoot(FusionCharts, Column2D, FusionTheme);
 
 type Props = {
@@ -30,22 +29,22 @@ const YearlySpending: React.FC<Props> = (props: Props) => {
         }
     }, [props.year])
 
-    // Create a JSON object to store the chart configurations
     const chartConfigs = {
         type: "column2d", // The chart type
+        width: "90%",
         dataFormat: "json", // Data type
         dataSource: {
-        // Chart Configuration
-        chart: {
-            caption: `Spending Per Month (${moment().format('yyyy')})`,    //Set the chart caption
-            captionAlignment: "left",
-            subCaption: "",     //Set the chart subcaption
-            xAxisName: "Month", //Set the x-axis name
-            yAxisName: "Spent", //Set the y-axis name
-            numberPrefix: "$",
-            theme: "fusion"     //Set the theme for your chart
-        },
-        data: chartData
+            // Chart Configuration
+            chart: {
+                caption: `Spending Per Month (${moment().format('yyyy')})`,    //Set the chart caption
+                captionAlignment: "left",
+                subCaption: "",     //Set the chart subcaption
+                xAxisName: "Month", //Set the x-axis name
+                yAxisName: "Spent", //Set the y-axis name
+                numberPrefix: "$",
+                theme: "fusion"     //Set the theme for your chart
+            },
+            data: chartData
         }
     };
 

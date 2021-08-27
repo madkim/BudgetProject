@@ -69,7 +69,7 @@ const Overview: React.FC<Props> = (props: Props) => {
         <IonContent>
             {props.loading ? null : (
                 <>
-                    <IonGrid>
+                    <IonGrid className="ion-text-center">
                         <IonRow>
                             <IonCol>
                                 <YearlySpending year={props.year}/>
