@@ -66,7 +66,7 @@ function createBudget() {
 
       const { id, ...rest } = budget.savings;
 
-      await db.collection("budgets").doc(month).collection("savings").add(rest);
+      await db.collection("budgets").doc(month).collection("savings").add({...rest, amount: 0});
 
       resolve(budget);
     });

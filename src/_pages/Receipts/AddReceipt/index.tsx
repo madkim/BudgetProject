@@ -34,9 +34,12 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   );
 
   useEffect(() => {
+    takeReceiptPhoto();
+  }, [])
+
+  useEffect(() => {
     const unlisten = history.listen(onRouteChange);
     dispatch(sellerActions.getAllSellers());
-    takeReceiptPhoto();
     return () => {
       unlisten();
     };
@@ -44,7 +47,6 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
 
   const onRouteChange = (route: any) => {
     initUseStates();
-    window.location.reload();
   };
 
   const initUseStates = () => {
