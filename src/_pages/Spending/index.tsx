@@ -233,7 +233,7 @@ const Spending: React.FC<Props> = (props: Props) => {
                   <IonCardSubtitle>Saved</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
                   { props.budget.savings.amount === 0 ? 
-                    <small>$0</small> : <small>{ saved().toFixed(0)}/{numFormatter(props.budget.savings.amount, 2) }</small>
+                    <small>$0</small> : <small>${ saved().toFixed(0)}/{numFormatter(props.budget.savings.amount, 2) }</small>
                   }
                   </IonCardTitle>
                 </IonCol>
