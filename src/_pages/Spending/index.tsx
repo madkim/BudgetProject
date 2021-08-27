@@ -218,12 +218,10 @@ const Spending: React.FC<Props> = (props: Props) => {
               )}
 
               <IonRow className="ion-padding-top ion-padding-bottom">
-                <IonCol size="6">
-                  <IonCardSubtitle>Days Left</IonCardSubtitle>
+              <IonCol size="6">
+                  <IonCardSubtitle>Budget</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    {viewPastSpending
-                      ? 0
-                      : moment().endOf("month").diff(moment(), "days")}
+                    ${budget().toFixed()}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="6">
@@ -236,15 +234,17 @@ const Spending: React.FC<Props> = (props: Props) => {
 
               <IonRow className="ion-padding-bottom">
                 <IonCol size="6">
-                  <IonCardSubtitle>Saved</IonCardSubtitle>
+                  <IonCardSubtitle>Days Left</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${(budget() - props.totalSpent).toFixed(0)}
+                    {viewPastSpending
+                      ? 0
+                      : moment().endOf("month").diff(moment(), "days")}
                   </IonCardTitle>
                 </IonCol>
                 <IonCol size="6">
-                  <IonCardSubtitle>Budget</IonCardSubtitle>
+                  <IonCardSubtitle>Saved</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${budget().toFixed()}
+                    ${(budget() - props.totalSpent).toFixed(0)}
                   </IonCardTitle>
                 </IonCol>
               </IonRow>
