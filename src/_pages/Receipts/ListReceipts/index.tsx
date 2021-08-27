@@ -23,6 +23,7 @@ import moment from "moment";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
+import { budgetActions } from "../../../_actions/budgetActions";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { spendingActions } from "../../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
@@ -109,10 +110,42 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
     dispatch(receiptActions.getReceiptByID(id, history));
   };
 
+  const totalIncome = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.income.reduce((total, current) => {
+        return total + current.amount;
+      }, 0);
+      return total.toFixed(0);
+    }
+  };
+
+  const totalExpense = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.expenses.reduce((total, expense) => {
+        return expense.type === "yearly"
+          ? total + expense.amount / 12
+          : total + expense.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const difference = () => {
+    return +totalIncome()! - +totalExpense()!;
+  };
+
+  const budget = () => {
+    return difference() - +props.budget.savings.amount!;
+  };
+
   useEffect(() => {
     dispatch(spendingActions.getTotalSpent());
     addMonthAsKey();
   }, [props.receipts]);
+
+  useEffect(() => {
+    dispatch(budgetActions.getCurrentBudget(null));
+  }, [])
 
   return (
     <IonContent ref={props.xref} scrollEvents={true}>
@@ -139,7 +172,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
                         <small>
-                          ${totals && totals[month].toFixed(2)} / 428
+                          ${totals && totals[month].toFixed(2)} / {budget().toFixed(2)}
                         </small>
                       </IonLabel>
                     </>
