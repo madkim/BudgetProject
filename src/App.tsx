@@ -21,6 +21,7 @@ import EditReceipt from "./_pages/Receipts/EditReceipt";
 import ViewReceipt from "./_pages/Receipts/ViewReceipt";
 
 import Budget from "./_pages/Budget";
+import Overview from "./_pages/Overview";
 import ManageBudget from "./_pages/Budget/ManageBudget";
 
 import EditSeller from "./_pages/Sellers/EditSeller";
@@ -63,6 +64,8 @@ const App: React.FC = () => {
               <Route path="/view/:id" component={ViewReceipt} />
               <Route path="/edit/:id" component={EditReceipt} />
               <Route path="/receipts" component={Receipts} />
+
+              <Route path="/overview" component={Overview} />
 
               <Route path="/spending" component={Spending} />
               <Route path="/spent/:date/:days" component={SpentDetails} />

@@ -43,6 +43,7 @@ export interface Saving {
 }
 
 export interface Budget {
+  month: String;
   income: Income[];
   savings: Saving;
   expenses: Expense[];
@@ -50,6 +51,14 @@ export interface Budget {
 
 export interface Days {
   [key: string]: number[];
+}
+
+export interface Year {
+  [month: number]: number;
+}
+
+export interface Range {
+  [month: string]: number[]
 }
 
 export interface Action {

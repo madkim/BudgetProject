@@ -15,6 +15,7 @@ import {
   IonItemDivider,
   IonItemSliding,
   IonItemOptions,
+  IonActionSheet,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
 } from "@ionic/react";
@@ -23,6 +24,7 @@ import moment from "moment";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
+import { budgetActions } from "../../../_actions/budgetActions";
 import { receiptActions } from "../../../_actions/receiptActions";
 import { spendingActions } from "../../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
@@ -44,10 +46,12 @@ interface Props {
 const ListReceipts: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const dispatch = useDispatch();
-
+  
   const [totals, setTotals] = useState<DynObject>({});
   const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
+  const [currentBudget, setCurrentBudget] = useState<DynObject>({});
+  const [showActionSheet, setShowActionSheet] = useState(false);
 
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
@@ -109,17 +113,91 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
     dispatch(receiptActions.getReceiptByID(id, history));
   };
 
+  const totalIncome = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.income.reduce((total, current) => {
+        return total + current.amount;
+      }, 0);
+      return total.toFixed(0);
+    }
+  };
+
+  const totalExpense = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.expenses.reduce((total, expense) => {
+        return expense.type === "yearly"
+          ? total + expense.amount / 12
+          : total + expense.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const difference = () => {
+    return +totalIncome()! - +totalExpense()!;
+  };
+
+  const budget = () => {
+    if (localStorage.getItem("withSavings") === null || localStorage.getItem("withSavings") === "true") {
+      localStorage.setItem("withSavings", "true");
+      return difference() - +props.budget.savings.amount!; // with savings
+    }
+    else if (localStorage.getItem("withSavings") === "false") {
+      return difference(); // without savings
+    }
+  };
+
   useEffect(() => {
     dispatch(spendingActions.getTotalSpent());
     addMonthAsKey();
   }, [props.receipts]);
 
+  useEffect(() => {
+    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
+    if (!(currentMonth in currentBudget)) {
+      dispatch(budgetActions.getCurrentBudget(currentMonth));
+    }
+  }, [props.receipts])
+
+  useEffect(() => {
+    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
+    
+    if (currentMonth === props.budget.month) {
+      const updatedBudget = {...currentBudget};
+      updatedBudget[currentMonth] = budget()?.toFixed(2);
+      setCurrentBudget(updatedBudget);
+    }
+  }, [props.budget])
+
   return (
     <IonContent ref={props.xref} scrollEvents={true}>
+      <IonActionSheet
+        isOpen={showActionSheet}
+        onDidDismiss={() => setShowActionSheet(false)}
+        buttons={[
+        {
+          text: 'Show with savings',
+          handler: () => {
+            localStorage.setItem("withSavings", "true");
+            window.location.reload();
+          }
+        }, {
+          text: 'Show without savings',
+          handler: () => {
+            localStorage.setItem("withSavings", "false");
+            window.location.reload();
+          }
+        }, {
+          text: 'Cancel',
+          role: 'cancel',
+        }]}
+      >
+      </IonActionSheet>
       <IonList>
         {Object.keys(receipts).length > 0 &&
           Object.keys(receipts).map((month) => {
             const date = moment(month);
+
             return (
               <IonItemGroup key={`group-${date}`}>
                 <IonItemDivider sticky>
@@ -137,10 +215,8 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                       <IonLabel>
                         <h2>{date.format("MMMM YYYY")}</h2>
                       </IonLabel>
-                      <IonLabel slot="end" className="ion-padding-horizontal">
-                        <small>
-                          ${totals && totals[month].toFixed(2)} / 428
-                        </small>
+                      <IonLabel slot="end" className="ion-padding-horizontal" onClick={() => setShowActionSheet(true)}>
+                        <small>{totals && currentBudget ? (totals[month] - currentBudget[date.format("YYYY-MM")]).toFixed(2) : ""}</small>
                       </IonLabel>
                     </>
                   )}

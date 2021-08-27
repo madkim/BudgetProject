@@ -84,7 +84,7 @@ function getBudget(mnth: string | null) {
       .then((res) => {
         return res.docs.map((expense) => {
           return {
-            id: expense.id,
+            id: expense.id, 
             amount: expense.data().amount,
             name: expense.data().name,
             type: expense.data().type,
@@ -120,7 +120,7 @@ function getBudget(mnth: string | null) {
         };
       });
 
-    resolve({ income: income, expenses: expenses, savings: savings });
+    resolve({month: mnth, income: income, expenses: expenses, savings: savings });
   });
 }
 
