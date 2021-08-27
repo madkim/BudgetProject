@@ -140,18 +140,25 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
-    dispatch(budgetActions.getCurrentBudget(currentMonth));
     dispatch(spendingActions.getTotalSpent());
     addMonthAsKey();
   }, [props.receipts]);
 
   useEffect(() => {
     const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
-    const updatedBudget = {...currentBudget};
-    updatedBudget[currentMonth] = budget().toFixed(2);
+    if (!(currentMonth in currentBudget)) {
+      dispatch(budgetActions.getCurrentBudget(currentMonth));
+    }
+  }, [props.receipts])
 
-    setCurrentBudget(updatedBudget);
+  useEffect(() => {
+    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
+    
+    if (currentMonth === props.budget.month) {
+      const updatedBudget = {...currentBudget};
+      updatedBudget[currentMonth] = budget().toFixed(2);
+      setCurrentBudget(updatedBudget);
+    }
   }, [props.budget])
 
   return (

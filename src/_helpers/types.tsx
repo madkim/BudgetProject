@@ -43,6 +43,7 @@ export interface Saving {
 }
 
 export interface Budget {
+  month: String;
   income: Income[];
   savings: Saving;
   expenses: Expense[];
