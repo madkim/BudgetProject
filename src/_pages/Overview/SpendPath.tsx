@@ -33,9 +33,9 @@ const SpendPath: React.FC<Props> = (props: Props) => {
             const dataset: any = [];
             const categories: any = [];
 
-            Object.keys(props.range).forEach(month => {
+            Object.keys(props.range).forEach((month, index) => {
                 let total = 0;
-                let series = { seriesname: month, data: [{}]};
+                let series = { seriesname: month, data: [{}], color: index === 0 ? "#000000" : "#2dd36f"};
 
                 props.range[month].forEach((spent, day) => {
                     total += spent;
