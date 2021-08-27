@@ -67,6 +67,7 @@ const SpendPath: React.FC<Props> = (props: Props) => {
                         drawcrossline: "1",
                         plottooltext: `$label - <b>$dataValue</b>`,
                         tooltipPosition: "top",
+                        formatNumberScale: 0,
                         theme: "fusion"
                     },
                     dataset: dataset,
