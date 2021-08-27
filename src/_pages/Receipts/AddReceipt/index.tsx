@@ -44,6 +44,7 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
 
   const onRouteChange = (route: any) => {
     initUseStates();
+    window.location.reload();
   };
 
   const initUseStates = () => {
