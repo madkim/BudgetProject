@@ -130,10 +130,10 @@ const Spending: React.FC<Props> = (props: Props) => {
     return difference();
   };
 
-  const allowance = () => {
-    const allowance = budget() - props.totalSpent;
-    return allowance < 0 ? 0 : allowance.toFixed(0);
-  };
+  // const allowance = () => {
+  //   const allowance = budget() - props.totalSpent;
+  //   return allowance < 0 ? 0 : allowance.toFixed(0);
+  // };
 
   // const saved = () => {
   //   const saved = props.budget.savings.amount;
@@ -236,7 +236,7 @@ const Spending: React.FC<Props> = (props: Props) => {
 
               <IonRow className="ion-padding-bottom">
                 <IonCol size="6">
-                  <IonCardSubtitle>Remainder</IonCardSubtitle>
+                  <IonCardSubtitle>Saved</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
                     ${(budget() - props.totalSpent).toFixed(0)}
                   </IonCardTitle>

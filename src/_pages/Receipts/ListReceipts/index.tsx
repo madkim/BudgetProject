@@ -186,7 +186,9 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                         <h2>{date.format("MMMM YYYY")}</h2>
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
-                        <small>{totals && currentBudget ? (totals[month] - currentBudget[date.format("YYYY-MM")]).toFixed(2) : ""}</small>
+                        <small>{totals && currentBudget[date.format("YYYY-MM")] ? 
+                          `$${(currentBudget[date.format("YYYY-MM")] - totals[month]).toFixed(2)}` : <IonSpinner name="dots" />}
+                        </small>
                       </IonLabel>
                     </>
                   )}
