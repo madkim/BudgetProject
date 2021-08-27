@@ -41,6 +41,7 @@ const YearlySpending: React.FC<Props> = (props: Props) => {
                 xAxisName: "Month", //Set the x-axis name
                 yAxisName: "Spent", //Set the y-axis name
                 numberPrefix: "$",
+                tooltipPosition: "top",
                 captionAlignment: "left",
                 formatNumberScale: 0,
             },

@@ -322,7 +322,7 @@ const SelectSeller: React.FC<Props> = (props: Props) => {
                                 <IonRow key={i} id={seller.id}>
                                   <IonCol className="ion-no-padding">
                                     <IonItem lines="full">
-                                      <IonLabel className="ion-text-capitalize ion-padding">
+                                      <IonLabel className="ion-text-capitalize" style={{padding: "8px"}}>
                                         <h1>{seller.name}</h1>
                                       </IonLabel>
                                       <IonRadio
