@@ -41,7 +41,7 @@ const Menu: React.FC = () => {
             <IonItem button routerLink="/overview" routerDirection="root">
               <IonIcon slot="start" icon={telescopeOutline}></IonIcon>
               <h3 style={{ padding: "10px" }}>
-                <IonLabel>My Spending</IonLabel>
+                <IonLabel>My Overview</IonLabel>
               </h3>
             </IonItem>
           </IonMenuToggle>
