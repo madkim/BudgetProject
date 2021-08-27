@@ -136,7 +136,8 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   };
 
   const budget = () => {
-    return difference() - +props.budget.savings.amount!;
+    // return difference() - +props.budget.savings.amount!; // with savings
+    return difference();
   };
 
   useEffect(() => {
@@ -157,7 +158,6 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   return (
     <IonContent ref={props.xref} scrollEvents={true}>
       <IonList>
-      {console.log(currentBudget)}
         {Object.keys(receipts).length > 0 &&
           Object.keys(receipts).map((month) => {
             const date = moment(month);
@@ -181,7 +181,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
                         <small>
-                          ${totals && totals[month].toFixed(2)} / {currentBudget && currentBudget[date.format("YYYY-MM")]}
+                          {totals && currentBudget ? (totals[month] - currentBudget[date.format("YYYY-MM")]).toFixed(2) : ""}
                         </small>
                       </IonLabel>
                     </>
