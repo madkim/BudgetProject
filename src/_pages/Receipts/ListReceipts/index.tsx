@@ -49,6 +49,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   const [totals, setTotals] = useState<DynObject>({});
   const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
+  const [currentBudget, setCurrentBudget] = useState<DynObject>({});
 
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
@@ -139,20 +140,28 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
+    dispatch(budgetActions.getCurrentBudget(currentMonth));
     dispatch(spendingActions.getTotalSpent());
     addMonthAsKey();
   }, [props.receipts]);
 
   useEffect(() => {
-    dispatch(budgetActions.getCurrentBudget(null));
-  }, [])
+    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
+    const updatedBudget = {...currentBudget};
+    updatedBudget[currentMonth] = budget().toFixed(2);
+
+    setCurrentBudget(updatedBudget);
+  }, [props.budget])
 
   return (
     <IonContent ref={props.xref} scrollEvents={true}>
       <IonList>
+      {console.log(currentBudget)}
         {Object.keys(receipts).length > 0 &&
           Object.keys(receipts).map((month) => {
             const date = moment(month);
+
             return (
               <IonItemGroup key={`group-${date}`}>
                 <IonItemDivider sticky>
@@ -172,7 +181,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
                         <small>
-                          ${totals && totals[month].toFixed(2)} / {budget().toFixed(2)}
+                          ${totals && totals[month].toFixed(2)} / {currentBudget && currentBudget[date.format("YYYY-MM")]}
                         </small>
                       </IonLabel>
                     </>
