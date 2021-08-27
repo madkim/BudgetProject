@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import MSArea from "fusioncharts/fusioncharts.charts";
 import ReactFC from "react-fusioncharts";
 import FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
@@ -43,8 +44,10 @@ const SpendPath: React.FC<Props> = (props: Props) => {
                 series.data.shift();
                 dataset.push(series);
             })
+
+            const currentDay = parseInt(moment(new Date()).format("D"));
             
-            for (let index = 1; index < 32; index++) {
+            for (let index = 1; index <= currentDay; index++) {
                 categories.push({label: index.toString()})
             }
 

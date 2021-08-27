@@ -75,6 +75,12 @@ function getRange(startDate: string | null, endDate: string | null) {
           }
         }
       })
+      const currentDay = moment(new Date()).format("D");
+      
+      Object.keys(data).forEach(month => {
+        data[month].length = currentDay + 1;
+      })
+
       return data;
     });
 }
