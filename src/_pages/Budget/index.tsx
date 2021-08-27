@@ -126,13 +126,9 @@ const Budget: React.FC<Props> = (props: Props) => {
     return <>&nbsp;&nbsp;${(amount / 12).toFixed(2)}</>;
   };
 
-  const difference = () => {
+  const budget = () => {
     return +totalIncome()! - +totalExpense()!;
   };
-
-  // const spending = () => {
-  //   return difference() - props.budget.savings.amount;
-  // };
 
   const changeSort = (type: number, setType: (i: number) => void) => {
     type === sortName ? setSortAmnt(2) : setSortName(2);
@@ -359,7 +355,7 @@ const Budget: React.FC<Props> = (props: Props) => {
                             <IonCol>
                               <IonNote color="dark">
                                 <h1 className="ion-padding-end">
-                                  &nbsp;${difference()}
+                                  &nbsp;${budget()}
                                 </h1>
                               </IonNote>
                             </IonCol>

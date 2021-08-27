@@ -122,23 +122,9 @@ const Spending: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const difference = () => {
+  const budget = () => {
     return +totalIncome()! - +totalExpense()!;
   };
-
-  const budget = () => {
-    return difference();
-  };
-
-  // const allowance = () => {
-  //   const allowance = budget() - props.totalSpent;
-  //   return allowance < 0 ? 0 : allowance.toFixed(0);
-  // };
-
-  // const saved = () => {
-  //   const saved = props.budget.savings.amount;
-  //   return allowance() === 0 ? saved + (budget() - props.totalSpent) : saved;
-  // };
 
   return (
     <IonPage>

@@ -131,13 +131,21 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const difference = () => {
+  const budget = () => {
     return +totalIncome()! - +totalExpense()!;
   };
 
-  const budget = () => {
-    return difference(); 
+  const onRouteChange = () => {
+    // Reset to current month spending
+    dispatch(budgetActions.getCurrentBudget(moment().format("YYYY-MM")));
   };
+
+  useEffect(() => {
+    const unlisten = history.listen(onRouteChange);
+    return () => {
+      unlisten();
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(spendingActions.getTotalSpent());
