@@ -136,8 +136,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   };
 
   const budget = () => {
-    // return difference() - +props.budget.savings.amount!; // with savings
-    return difference();
+    return difference() - +props.budget.savings.amount!; // with savings
   };
 
   useEffect(() => {
