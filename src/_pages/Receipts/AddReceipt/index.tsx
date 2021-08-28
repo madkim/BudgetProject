@@ -46,6 +46,9 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   }, []);
 
   const onRouteChange = (route: any) => {
+    if (route.pathname === '/add') {
+      window.location.reload();
+    }
     initUseStates();
   };
 
