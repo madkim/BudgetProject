@@ -26,13 +26,11 @@ import {
   caretDown,
   addOutline,
   chevronBackOutline,
-  chevronForwardOutline,
 } from "ionicons/icons";
 
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import FadeIn from "react-fade-in";
-import SavingsModal from "./SavingsModal";
 
 import { useHistory } from "react-router-dom";
 import { useDispatch, connect } from "react-redux";
@@ -58,7 +56,6 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
   const [showAddIncome, setShowAddIncome] = useState(false);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [showExpenseType, setShowExpenseType] = useState(false);
-  const [showSavingsModal, setShowSavingsModal] = useState(false);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -114,9 +111,9 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
     return +totalIncome()! - +totalExpense()!;
   };
 
-  const spending = () => {
-    return difference() - +props.budget.savings.amount!;
-  };
+  // const spending = () => {
+  //   return difference() - +props.budget.savings.amount!;
+  // };
 
   const changeSort = (type: number, setType: (i: number) => void) => {
     type === sortName ? setSortAmnt(2) : setSortName(2);
@@ -512,68 +509,11 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
                         <IonGrid>
                           <IonRow>
                             <IonCol size="6" className="ion-no-padding">
-                              <h2>Difference</h2>
-                            </IonCol>
-                            <IonCol size="3" className="ion-text-end">
-                              <IonNote color="dark">
-                                <h5>${difference().toFixed(0)}</h5>
-                              </IonNote>
-                            </IonCol>
-                          </IonRow>
-                        </IonGrid>
-                      </IonItem>
-                    </IonCol>
-                  </IonRow>
-
-                  <IonRow>
-                    <IonCol>
-                      <IonItem onClick={() => setShowSavingsModal(true)}>
-                        <IonGrid>
-                          <IonRow>
-                            <IonCol size="6" className="ion-no-padding">
-                              <h2>Savings</h2>
-                            </IonCol>
-                            <IonCol size="3" className="ion-text-end">
-                              <IonNote color="primary">
-                                <h5>-${props.budget.savings.amount}</h5>
-                              </IonNote>
-                            </IonCol>
-                            <IonCol
-                              size="3"
-                              className="ion-text-end"
-                              style={{ paddingTop: "2.5vh" }}
-                            >
-                              <IonIcon
-                                color="medium"
-                                icon={chevronForwardOutline}
-                              />
-                            </IonCol>
-                          </IonRow>
-                        </IonGrid>
-                      </IonItem>
-
-                      {showSavingsModal && (
-                        <SavingsModal
-                          show={showSavingsModal}
-                          setShow={setShowSavingsModal}
-                          difference={+difference().toFixed(0)}
-                          budgetSavings={props.budget.savings}
-                        />
-                      )}
-                    </IonCol>
-                  </IonRow>
-
-                  <IonRow>
-                    <IonCol>
-                      <IonItem lines="none">
-                        <IonGrid>
-                          <IonRow>
-                            <IonCol size="6" className="ion-no-padding">
                               <h2>Budget</h2>
                             </IonCol>
                             <IonCol size="3" className="ion-text-end">
                               <IonNote color="dark">
-                                <h5>${spending().toFixed(0)}</h5>
+                                <h5>${difference().toFixed(0)}</h5>
                               </IonNote>
                             </IonCol>
                           </IonRow>

@@ -126,12 +126,8 @@ const Budget: React.FC<Props> = (props: Props) => {
     return <>&nbsp;&nbsp;${(amount / 12).toFixed(2)}</>;
   };
 
-  const difference = () => {
+  const budget = () => {
     return +totalIncome()! - +totalExpense()!;
-  };
-
-  const spending = () => {
-    return difference() - props.budget.savings.amount;
   };
 
   const changeSort = (type: number, setType: (i: number) => void) => {
@@ -355,51 +351,11 @@ const Budget: React.FC<Props> = (props: Props) => {
                       <IonListHeader lines="inset">
                         <IonLabel>
                           <IonRow>
-                            <IonCol size="7">Difference</IonCol>
-                            <IonCol>
-                              <IonNote color="dark">
-                                <h1 className="ion-padding-end">
-                                  &nbsp;${difference()}
-                                </h1>
-                              </IonNote>
-                            </IonCol>
-                          </IonRow>
-                        </IonLabel>
-                      </IonListHeader>
-                    </IonList>
-                  </IonCol>
-                </IonRow>
-                <IonRow>
-                  <IonCol>
-                    <IonList>
-                      <IonListHeader lines="inset">
-                        <IonLabel>
-                          <IonRow>
-                            <IonCol size="7">Savings</IonCol>
-                            <IonCol className="ion-no-padding">
-                              <IonNote color="primary">
-                                <h1 className="ion-padding-end">
-                                  -${props.budget.savings.amount}
-                                </h1>
-                              </IonNote>
-                            </IonCol>
-                          </IonRow>
-                        </IonLabel>
-                      </IonListHeader>
-                    </IonList>
-                  </IonCol>
-                </IonRow>
-                <IonRow>
-                  <IonCol>
-                    <IonList>
-                      <IonListHeader lines="none">
-                        <IonLabel>
-                          <IonRow>
                             <IonCol size="7">Budget</IonCol>
                             <IonCol>
                               <IonNote color="dark">
                                 <h1 className="ion-padding-end">
-                                  &nbsp;${spending().toFixed(2)}
+                                  &nbsp;${budget()}
                                 </h1>
                               </IonNote>
                             </IonCol>

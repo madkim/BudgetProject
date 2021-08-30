@@ -14,6 +14,7 @@ import AddReceiptDetails from "./AddReceiptDetails";
 type Props = {
   dispatch: any;
   location: any;
+  progress: number;
   receipts: Receipt[];
   sellerOptions: Sellers;
 };
@@ -34,15 +35,21 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   );
 
   useEffect(() => {
+    takeReceiptPhoto();
+  }, [])
+
+  useEffect(() => {
     const unlisten = history.listen(onRouteChange);
     dispatch(sellerActions.getAllSellers());
-    takeReceiptPhoto();
     return () => {
       unlisten();
     };
   }, []);
 
   const onRouteChange = (route: any) => {
+    if (route.pathname === '/add' && props.progress === 0) {
+      takeReceiptPhoto();
+    }
     initUseStates();
   };
 
@@ -131,11 +138,12 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
-  receiptsReducer: { receipts: Receipt[] };
+  receiptsReducer: { receipts: Receipt[], progress: number; };
   sellersReducer: { sellerOptions: Sellers };
 }) => {
   return {
     receipts: state.receiptsReducer.receipts,
+    progress: state.receiptsReducer.progress,
     sellerOptions: state.sellersReducer.sellerOptions,
   };
 };

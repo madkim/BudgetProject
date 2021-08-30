@@ -36,13 +36,14 @@ const YearlySpending: React.FC<Props> = (props: Props) => {
         dataSource: {
             // Chart Configuration
             chart: {
+                theme: "fusion",     //Set the theme for your chart
                 caption: `Spending Per Month (${moment().format('yyyy')})`,    //Set the chart caption
-                captionAlignment: "left",
-                subCaption: "",     //Set the chart subcaption
                 xAxisName: "Month", //Set the x-axis name
                 yAxisName: "Spent", //Set the y-axis name
                 numberPrefix: "$",
-                theme: "fusion"     //Set the theme for your chart
+                tooltipPosition: "top",
+                captionAlignment: "left",
+                formatNumberScale: 0,
             },
             data: chartData
         }

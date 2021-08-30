@@ -33,9 +33,9 @@ const SpendPath: React.FC<Props> = (props: Props) => {
             const dataset: any = [];
             const categories: any = [];
 
-            Object.keys(props.range).forEach(month => {
+            Object.keys(props.range).forEach((month, index) => {
                 let total = 0;
-                let series = { seriesname: month, data: [{}]};
+                let series = { seriesname: month, data: [{}], color: index === 0 ? "#000000" : "#2dd36f"};
 
                 props.range[month].forEach((spent, day) => {
                     total += spent;
@@ -57,17 +57,17 @@ const SpendPath: React.FC<Props> = (props: Props) => {
                 dataFormat: "json", // Data type
                 dataSource : {
                     chart: {
-                        drawAnchors: 0,
+                        theme: "fusion",
                         caption: "Spend Path (current v. last month)",
-                        captionPosition: "left",
                         yaxisname: "Spent",
                         xaxisname: "Day",
-                        subcaption: "",
+                        drawAnchors: 0,
                         numberprefix: "$",
-                        drawcrossline: "1",
                         plottooltext: `$label - <b>$dataValue</b>`,
+                        drawcrossline: "1",
+                        captionPosition: "left",
                         tooltipPosition: "top",
-                        theme: "fusion"
+                        formatNumberScale: 0,
                     },
                     dataset: dataset,
                     categories: [{category: categories}],
