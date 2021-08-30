@@ -153,6 +153,8 @@ function deleteReceipt(receipt: Receipt, goBack: any) {
         dispatch(success(receiptId));
         if (goBack !== "") {
           goBack("/");
+        } else {
+          window.location.reload();
         }
       })
       .catch((error: Error) => {

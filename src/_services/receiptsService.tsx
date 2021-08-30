@@ -64,10 +64,8 @@ function getAll(month: string) {
       const sellers = await Promise.all(sellerPromises);
       const photos = await Promise.all(photoPromises);
 
-      let data: Receipt[] = [];
-
-      receipts.docs.map((receipt, index) => {
-        data[index] = {
+      const data = receipts.docs.map((receipt, index) => {
+        return {
           id: receipt.id,
           date: receipt.data().date.toDate(),
           photo: photos[index] !== undefined ? photos[index] : "",
