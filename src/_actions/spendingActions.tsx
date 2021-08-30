@@ -1,12 +1,14 @@
 import { Dispatch } from "react";
 import { spendingService } from "../_services/spendingService";
 import { spendingConstants } from "../_constants/spendingConstants";
-import { Action, Receipt, Days } from "../_helpers/types";
+import { Action, Receipt, Year, Days, Range } from "../_helpers/types";
 
 export const spendingActions = {
+  getSpentThisYear,
   getMonthsSpent,
   getTotalSpent,
   getSpentByDay,
+  getSpentRange,
   getDaysSpent,
 };
 
@@ -29,6 +31,52 @@ function getTotalSpent(month: string | null = null) {
     return {
       type: spendingConstants.GET_TOTAL_SPENT,
       payload: total,
+    };
+  }
+}
+
+function getSpentRange(start: string | null = null, end: string | null = null ) {
+  return (dispatch: Dispatch<Action>) => {
+    spendingService
+      .getRange(start, end)
+      .then((range: Range) => {
+        dispatch(success(range));
+      })
+      .catch(() => {
+        dispatch({
+          type: spendingConstants.SPENDING_REQUEST_FAILURE,
+          payload: false,
+        });
+        alert("Could not retrieve total spent at this time. Please try again.");
+      });
+  };
+  function success(range: Range) {
+    return {
+      type: spendingConstants.GET_RANGE_SPENT,
+      payload: range,
+    };
+  }
+}
+
+function getSpentThisYear(year: string | null = null) {
+  return (dispatch: Dispatch<Action>) => {
+    spendingService
+      .getYear(year)
+      .then((year: Days) => {
+        dispatch(success(year));
+      })
+      .catch(() => {
+        dispatch({
+          type: spendingConstants.SPENDING_REQUEST_FAILURE,
+          payload: false,
+        });
+        alert("Could not retrieve total spent at this time. Please try again.");
+      });
+  };
+  function success(year: Days) {
+    return {
+      type: spendingConstants.GET_YEAR_SPENT,
+      payload: year,
     };
   }
 }

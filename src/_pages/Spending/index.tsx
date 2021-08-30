@@ -22,6 +22,7 @@ import moment from "moment";
 import FadeIn from "react-fade-in";
 import SpentPerDay from "./SpentPerDay";
 import LoadingSpent from "./LoadingSpent";
+import numFormatter from '../../_helpers/numformat';
 
 import { useHistory } from "react-router-dom";
 import { budgetActions } from "../../_actions/budgetActions";
@@ -231,7 +232,9 @@ const Spending: React.FC<Props> = (props: Props) => {
                 <IonCol size="4">
                   <IonCardSubtitle>Saved</IonCardSubtitle>
                   <IonCardTitle style={{ fontWeight: "300" }}>
-                    ${saved().toFixed(0)}
+                  { props.budget.savings.amount === 0 ? 
+                    <small>$0</small> : <small>${ saved().toFixed(0)}/{numFormatter(props.budget.savings.amount, 2) }</small>
+                  }
                   </IonCardTitle>
                 </IonCol>
               </IonRow>

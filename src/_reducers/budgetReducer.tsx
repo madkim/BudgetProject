@@ -6,6 +6,7 @@ export const initState: {
   loading: boolean;
 } = {
   budget: {
+    month: "",
     income: [],
     expenses: [],
     savings: { id: "", type: "", amount: 0 },
