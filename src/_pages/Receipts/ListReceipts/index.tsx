@@ -25,20 +25,20 @@ import { useHistory } from "react-router-dom";
 import { PhotoViewer } from "@ionic-native/photo-viewer";
 import { budgetActions } from "../../../_actions/budgetActions";
 import { receiptActions } from "../../../_actions/receiptActions";
-import { spendingActions } from "../../../_actions/spendingActions";
 import { useDispatch, connect } from "react-redux";
 import { useEffect, useState, useRef } from "react";
+import { Receipt, Receipts, DynObject } from "../../../_helpers/types";
 import { imageOutline, chevronForwardOutline } from "ionicons/icons";
-import { Receipt, Receipts, DynObject, Budget } from "../../../_helpers/types";
 
 interface Props {
   day: string;
   xref: React.Ref<HTMLIonContentElement>;
-  budget: Budget;
   loading: boolean;
   receipts: Receipt[];
   showByDay: boolean;
   allLoaded: boolean;
+  totalSpent: {[date: string]: number};
+  currentBudget: DynObject;
   loadMore: ((e: any) => void) | null;
 }
 
@@ -46,10 +46,8 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const dispatch = useDispatch();
   
-  const [totals, setTotals] = useState<DynObject>({});
   const [clicked, setClicked] = useState("");
   const [receipts, setReceipts] = useState<Receipts>({});
-  const [currentBudget, setCurrentBudget] = useState<DynObject>({});
 
   const getBadgeColor = (price: number | null) => {
     if (price !== null) {
@@ -66,20 +64,16 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   };
 
   const addMonthAsKey = () => {
-    const totals: DynObject = {};
     const receipts: Receipts = {};
     if (props.receipts) {
       props.receipts.map((receipt) => {
         const date = moment(receipt.date).format("YYYY-MM");
         if (receipts[date]) {
-          totals[date] += receipt.price;
           receipts[date].push(receipt);
         } else {
-          totals[date] = receipt.price;
           receipts[date] = [receipt];
         }
       });
-      setTotals(totals);
       setReceipts(receipts);
     }
   };
@@ -111,30 +105,6 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
     dispatch(receiptActions.getReceiptByID(id, history));
   };
 
-  const totalIncome = () => {
-    if (Object.keys(props.budget).length > 0) {
-      const total = props.budget.income.reduce((total, current) => {
-        return total + current.amount;
-      }, 0);
-      return total.toFixed(0);
-    }
-  };
-
-  const totalExpense = () => {
-    if (Object.keys(props.budget).length > 0) {
-      const total = props.budget.expenses.reduce((total, expense) => {
-        return expense.type === "yearly"
-          ? total + expense.amount / 12
-          : total + expense.amount;
-      }, 0);
-      return total.toFixed(2);
-    }
-  };
-
-  const budget = () => {
-    return +totalIncome()! - +totalExpense()!;
-  };
-
   const onRouteChange = () => {
     // Reset to current month spending
     dispatch(budgetActions.getCurrentBudget(moment().format("YYYY-MM")));
@@ -148,26 +118,8 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    dispatch(spendingActions.getTotalSpent());
     addMonthAsKey();
-  }, [props.receipts]);
-
-  useEffect(() => {
-    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
-    if (!(currentMonth in currentBudget)) {
-      dispatch(budgetActions.getCurrentBudget(currentMonth));
-    }
   }, [props.receipts])
-
-  useEffect(() => {
-    const currentMonth = moment(props.receipts.pop()?.date).format("YYYY-MM");
-    
-    if (currentMonth === props.budget.month) {
-      const updatedBudget = {...currentBudget};
-      updatedBudget[currentMonth] = budget()?.toFixed(2);
-      setCurrentBudget(updatedBudget);
-    }
-  }, [props.budget])
 
   return (
     <IonContent ref={props.xref} scrollEvents={true}>
@@ -185,7 +137,7 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                         <h2>{moment(props.day).format("dddd")}</h2>
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
-                        <small>${totals && totals[month].toFixed(2)}</small>
+                        <small>${props.totalSpent && props.totalSpent[date.format("YYYY-MM")].toFixed(2)}</small>
                       </IonLabel>
                     </>
                   ) : (
@@ -194,8 +146,8 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                         <h2>{date.format("MMMM YYYY")}</h2>
                       </IonLabel>
                       <IonLabel slot="end" className="ion-padding-horizontal">
-                        <small>{totals && currentBudget[date.format("YYYY-MM")] ? 
-                          `$${(currentBudget[date.format("YYYY-MM")] - totals[month]).toFixed(2)}` : <IonSpinner name="dots" />}
+                        <small>{props.totalSpent && props.currentBudget[date.format("YYYY-MM")] ? 
+                          `$${(props.currentBudget[date.format("YYYY-MM")] - props.totalSpent[date.format("YYYY-MM")]).toFixed(2)}` : <IonSpinner name="dots" />}
                         </small>
                       </IonLabel>
                     </>
@@ -306,14 +258,10 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
   );
 };
 const mapStateToProps = (state: {
-  budgetReducer: { budget: Budget };
   receiptsReducer: { loading: boolean };
-  spendingReducer: { totalSpent: number };
 }) => {
   return {
-    budget: state.budgetReducer.budget,
     loading: state.receiptsReducer.loading,
-    totalSpent: state.spendingReducer.totalSpent,
   };
 };
 
