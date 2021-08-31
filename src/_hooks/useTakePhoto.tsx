@@ -62,6 +62,7 @@ export const uploadPhoto = async (
       });
       db.collection("receipts").doc(fileName).update({ hasPhoto: true });
       console.log("photo uploaded :)");
+      window.location.reload();
     }
   );
 
