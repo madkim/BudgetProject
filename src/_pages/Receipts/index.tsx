@@ -85,7 +85,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
     if (Object.keys(total).length > 0) {
       setTotal({ ...total, [moment(receiptMonth).format("YYYY-MM")]: props.totalSpent });
     }
-  }, [props.receipts])
+  }, [receiptMonth])
 
   useEffect(() => {
     dispatch(budgetActions.getCurrentBudget(moment(receiptMonth).format("YYYY-MM")));
