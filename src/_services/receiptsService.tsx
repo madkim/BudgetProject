@@ -11,6 +11,8 @@ export const receiptsService = {
   addNew,
   update,
   remove,
+  refund,
+  pay
 };
 
 function getByID(id: string) {
@@ -36,6 +38,7 @@ function getByID(id: string) {
           favorite: seller.data().favorite,
         },
         hasPhoto: photoUrl !== "" ? true : false,
+        wasRefunded: receipt.data()?.wasRefunded
       };
     });
 }
@@ -76,6 +79,7 @@ function getAll(month: string) {
             favorite: sellers[index].data().favorite,
           },
           hasPhoto: photos[index] !== undefined ? true : false,
+          wasRefunded: receipt.data()?.wasRefunded,
         };
       });
       return data;
@@ -99,6 +103,7 @@ function addNew(
       hasPhoto: false,
       createdAt: new Date(),
       updatedAt: new Date(),
+      wasRefunded: false,
     })
     .then(async (receiptRef) => {
       const newReceipt = {
@@ -108,6 +113,7 @@ function addNew(
         price: price,
         seller: { id: seller.id, name: seller.name, favorite: seller.favorite },
         hasPhoto: false,
+        wasRefunded: false,
       };
 
       let photoUrl = "";
@@ -162,6 +168,26 @@ function remove(receipt: Receipt) {
       if (hasPhoto) {
         await fireStorage.child("receipts/" + receipt.id).delete();
       }
+      return receipt.id;
+    });
+}
+
+function refund(receipt: Receipt) {
+  return db
+    .collection("receipts")
+    .doc(receipt.id)
+    .update({wasRefunded: true})
+    .then(() => {
+      return receipt.id;
+    });
+}
+
+function pay(receipt: Receipt) {
+  return db
+    .collection("receipts")
+    .doc(receipt.id)
+    .update({wasRefunded: false})
+    .then(() => {
       return receipt.id;
     });
 }

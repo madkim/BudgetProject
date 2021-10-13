@@ -125,5 +125,45 @@ export function receiptsReducer(state = initState, action: Action) {
       ),
     });
   }
+
+  if (action.type === receiptConstants.REFUND_RECEIPT) {
+    const receiptId = action.payload;
+    let current = {}
+    let receipts = []
+
+    receipts = state.receipts.map((receipt) => {
+      if (receipt.id === receiptId) {
+        receipt.wasRefunded = true
+        current = receipt
+      }
+      return receipt
+    })
+
+    return (state = {
+      ...state,
+      receipts: receipts,
+      receipt: current
+    });
+  }
+
+  if (action.type === receiptConstants.PAY_RECEIPT) {
+    const receiptId = action.payload;
+    let current = {}
+    let receipts = []
+
+    receipts = state.receipts.map((receipt) => {
+      if (receipt.id === receiptId) {
+        receipt.wasRefunded = false
+        current = receipt
+      }
+      return receipt
+    })
+
+    return (state = {
+      ...state,
+      receipts: receipts,
+      receipt: current
+    });
+  }
   return state;
 }

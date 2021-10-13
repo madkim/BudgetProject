@@ -28,6 +28,7 @@ import {
   chevronBackOutline,
   alertCircleOutline,
   ellipsisHorizontalOutline,
+  swapHorizontalOutline,
 } from "ionicons/icons";
 
 import React, { useEffect, useState, useContext } from "react";
@@ -104,6 +105,16 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
     dismissPopover();
   };
 
+  const markAsRefunded = (receipt: Receipt) => {
+    dispatch(receiptActions.refundReceipt(receipt));
+    dismissPopover();
+  }
+
+  const markAsPaid = (receipt: Receipt) => {
+    dispatch(receiptActions.payReceipt(receipt));
+    dismissPopover();
+  }
+
   const { receipt } = props;
 
   return (
@@ -142,16 +153,25 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
               >
                 <IonText color="danger">Delete</IonText>
               </IonItem>
-              <IonItem
-                lines="none"
-                detail={false}
-                button
-                onClick={() =>
-                  setShowPopover({ showPopover: false, event: undefined })
-                }
-              >
-                Close
-              </IonItem>
+              { receipt.wasRefunded ?
+                  <IonItem
+                    button
+                    lines="none"
+                    detailIcon={swapHorizontalOutline}
+                    onClick={() => markAsPaid(receipt)}
+                  >
+                    <IonText>Mark Paid</IonText>
+                  </IonItem>
+                  :
+                  <IonItem
+                  button
+                  lines="none"
+                  detailIcon={swapHorizontalOutline}
+                  onClick={() => markAsRefunded(receipt)}
+                >
+                  <IonText>Mark Refunded</IonText>
+                </IonItem>
+              }
             </IonList>
           </IonPopover>
           <IonButton
@@ -220,7 +240,17 @@ const ViewReceipt: React.FC<Props> = (props: Props) => {
                       color={getBadgeColor(receipt.price)}
                       className="ion-margin-bottom"
                     >
-                      <h2>${receipt.price?.toFixed(2)}</h2>
+                      <h2 style={{ textDecoration: receipt.wasRefunded ? 'line-through' : ''}}>${receipt.price?.toFixed(2)}</h2>
+                    </IonBadge>
+                  )}
+                  &nbsp;
+                  {receipt && receipt.wasRefunded && (
+                    <IonBadge
+                      color='danger'
+                      className="ion-margin-bottom"
+                      style={{float: 'right'}}
+                    >
+                      <h2>Refunded</h2>
                     </IonBadge>
                   )}
                 </IonLabel>

@@ -12,6 +12,8 @@ export const receiptActions = {
   addNewReceipt,
   deleteReceipt,
   updateReceipt,
+  refundReceipt,
+  payReceipt
 };
 
 function getReceiptByID(id: string, history: any = "") {
@@ -164,6 +166,46 @@ function deleteReceipt(receipt: Receipt, goBack: any) {
     function success(receiptId: string) {
       return {
         type: receiptConstants.DELETE_RECEIPT,
+        payload: receiptId,
+      };
+    }
+  };
+}
+
+function refundReceipt(receipt: Receipt) {
+  return (dispatch: Dispatch<Action>) => {
+    receiptsService
+      .refund(receipt)
+      .then((receiptId) => {
+        dispatch(success(receiptId));
+      })
+      .catch((error: Error) => {
+        alert("Could not refund receipt. Please try again.");
+        console.error("Error refunding receipt: ", error);
+      });
+    function success(receiptId: string) {
+      return {
+        type: receiptConstants.REFUND_RECEIPT,
+        payload: receiptId,
+      };
+    }
+  };
+}
+
+function payReceipt(receipt: Receipt) {
+  return (dispatch: Dispatch<Action>) => {
+    receiptsService
+      .pay(receipt)
+      .then((receiptId) => {
+        dispatch(success(receiptId));
+      })
+      .catch((error: Error) => {
+        alert("Could not mark receipt as paid. Please try again.");
+        console.error("Error marking receipt as paied: ", error);
+      });
+    function success(receiptId: string) {
+      return {
+        type: receiptConstants.PAY_RECEIPT,
         payload: receiptId,
       };
     }

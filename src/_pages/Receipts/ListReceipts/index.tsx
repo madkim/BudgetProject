@@ -72,10 +72,10 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
       props.receipts.map((receipt) => {
         const date = moment(receipt.date).format("YYYY-MM");
         if (receipts[date]) {
-          totals[date] += receipt.price;
+          totals[date] += receipt.wasRefunded ? 0 : receipt.price;
           receipts[date].push(receipt);
         } else {
-          totals[date] = receipt.price;
+          totals[date] = receipt.wasRefunded ? 0 : receipt.price;
           receipts[date] = [receipt];
         }
       });
@@ -257,7 +257,9 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                             </IonCol>
                             <IonCol className="ion-text-center ion-padding-start">
                               <IonBadge color={getBadgeColor(receipt.price)}>
-                                ${receipt.price?.toFixed(2)}
+                                <span style={{textDecoration: receipt.wasRefunded ? 'line-through' : ''}}>
+                                  ${receipt.price?.toFixed(2)}
+                                </span>
                               </IonBadge>
                             </IonCol>
 

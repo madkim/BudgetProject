@@ -25,7 +25,7 @@ function getTotal(month: string | null) {
     .get()
     .then((receipts) => {
       let totalSpent = receipts.docs.reduce((total, receipt) => {
-        return receipt.data().price + total;
+        return receipt.data().wasRefunded ? total : receipt.data().price + total;
       }, 0);
       return +totalSpent.toFixed(2);
     });
@@ -140,9 +140,9 @@ function getDays(month: string | null) {
         const date = moment(receipt.data().date.toDate()).format("L");
 
         if (date in receiptsByDay) {
-          receiptsByDay[date].push(receipt.data().price);
+          receiptsByDay[date].push(receipt.data().wasRefunded ? 0 : receipt.data().price);
         } else {
-          receiptsByDay[date] = [receipt.data().price];
+          receiptsByDay[date] = [receipt.data().wasRefunded ? 0 : receipt.data().price];
         }
       });
       return dateSortKey(receiptsByDay);
@@ -188,6 +188,7 @@ function getDay(date: string) {
             favorite: sellers[index].data().favorite,
           },
           hasPhoto: photos[index] !== undefined ? true : false,
+          wasRefunded: receipt.data()?.wasRefunded
         };
       });
 
