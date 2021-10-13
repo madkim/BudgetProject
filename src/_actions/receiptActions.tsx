@@ -4,6 +4,7 @@ import { receiptsService } from "../_services/receiptsService";
 import { dateSortValue } from "../_helpers/datesort";
 import { Dispatch } from "react";
 import moment from "moment";
+import { spendingActions } from "./spendingActions";
 
 export const receiptActions = {
   refreshReceipts,
