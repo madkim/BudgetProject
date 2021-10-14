@@ -28,11 +28,24 @@ interface Props {
 const SpentDetails: React.FC<Props> = (props: Props) => {
   const dispatch = useDispatch();
   const topRef = useRef<HTMLIonContentElement>(null);
+  
+  const [totalSpent, setTotalSpent] = useState({});
+  const [currentBudget, setCurrentBudget] = useState({});
+
   const { date, days } = useParams<{ date: string; days: string }>();
 
   useEffect(() => {
     dispatch(spendingActions.getSpentByDay(date));
   }, []);
+
+  useEffect(() => {
+    let total = 0;
+    props.day.map(day => {
+      total += day.price!;
+    })
+    setTotalSpent({[moment(date).format("YYYY-MM")]: total})
+    setCurrentBudget({[moment(date).format("YYYY-MM")]: 0})
+  }, [props.day])
 
   return (
     <IonPage>
@@ -59,7 +72,7 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
       </IonHeader>
 
       <IonContent>
-        {props.loading ? (
+        {props.loading && Object.keys(totalSpent).length === 0 ? (
           <LoadingReceipts count={parseInt(days)} />
         ) : (
           <ListReceipts
@@ -68,7 +81,9 @@ const SpentDetails: React.FC<Props> = (props: Props) => {
             loadMore={null}
             showByDay={true}
             allLoaded={true}
+            totalSpent={totalSpent}
             receipts={props.day}
+            currentBudget={currentBudget}
           />
         )}
 

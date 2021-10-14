@@ -10,6 +10,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 import moment from "moment";
 import SelectSellers from "../../Sellers/SelectSeller";
 import AddReceiptDetails from "./AddReceiptDetails";
+import { spendingActions } from "../../../_actions/spendingActions";
 
 type Props = {
   dispatch: any;

@@ -34,7 +34,7 @@ import sadMoney from "../../_assets/sadMoney.jpeg";
 import ListReceipts from "./ListReceipts";
 import LoadingReceipts from "./LoadingReceipts";
 
-import { Receipt } from "../../_helpers/types";
+import { Budget, DynObject, Receipt } from "../../_helpers/types";
 import { useHaptics } from "../../_hooks/useHaptics";
 import { menuController } from "@ionic/core";
 import { receiptActions } from "../../_actions/receiptActions";
@@ -42,20 +42,25 @@ import { spendingActions } from "../../_actions/spendingActions";
 import { receiptsService } from "../../_services/receiptsService";
 import { receiptConstants } from "../../_constants/receiptConstants";
 import { connect, useDispatch } from "react-redux";
+import { budgetActions } from "../../_actions/budgetActions";
 
 interface Props {
+  budget: Budget;
   upload: string;
   months: string[];
   request: string;
   loading: boolean;
   progress: number;
   receipts: Receipt[];
+  totalSpent: number;
 }
 
 const Receipts: React.FC<Props> = (props: Props) => {
   const topRef = useRef<HTMLIonContentElement>(null);
+  const [total, setTotal] = useState({});
   const [scrollTop, setScrollTop] = useState(0);
-  const [receiptMonths, setReceiptMonths] = useState(moment().format());
+  const [receiptMonth, setReceiptMonth] = useState(moment().format());
+  const [currentBudget, setCurrentBudget] = useState<DynObject>({});
   const [allReceiptsLoaded, setAllReceiptsLoaded] = useState(false);
 
   const dispatch = useDispatch();
@@ -63,10 +68,61 @@ const Receipts: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     if (receiptsNotRetrieved()) {
+      dispatch(spendingActions.getTotalSpent());
       dispatch(spendingActions.getMonthsSpent());
       dispatch(receiptActions.getAllReceipts(moment().format()));
+      dispatch(budgetActions.getCurrentBudget(moment(receiptMonth).format("YYYY-MM")));
     }
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(total).length === 0 && props.totalSpent > 0) {
+      setTotal({[moment(receiptMonth).format("YYYY-MM")]: props.totalSpent});
+    }
+  }, [props.totalSpent])
+
+  useEffect(() => {
+    if (Object.keys(total).length > 0) {
+      setTotal({ ...total, [moment(receiptMonth).format("YYYY-MM")]: props.totalSpent });
+    }
+  }, [receiptMonth])
+
+  useEffect(() => {
+    dispatch(budgetActions.getCurrentBudget(moment(receiptMonth).format("YYYY-MM")));
+  }, [receiptMonth])
+
+  useEffect(() => {    
+    const date = moment(receiptMonth).format("YYYY-MM")
+    if ( date === props.budget.month) {
+      const updatedBudget = {...currentBudget};
+      updatedBudget[date] = budget()?.toFixed(2);
+      setCurrentBudget(updatedBudget);
+    }
+  }, [props.budget])
+
+  const totalIncome = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.income.reduce((total, current) => {
+        return total + current.amount;
+      }, 0);
+      return total.toFixed(0);
+    }
+  };
+
+  const totalExpense = () => {
+    if (Object.keys(props.budget).length > 0) {
+      const total = props.budget.expenses.reduce((total, expense) => {
+        return expense.type === "yearly"
+          ? total + expense.amount / 12
+          : total + expense.amount;
+      }, 0);
+      return total.toFixed(2);
+    }
+  };
+
+  const budget = () => {
+    return +totalIncome()! - +totalExpense()!;
+  };
 
   const receiptsNotRetrieved = () => {
     return Object.keys(props.receipts).length === 0;
@@ -75,9 +131,11 @@ const Receipts: React.FC<Props> = (props: Props) => {
   const loadMoreReceipts = (e: any) => {
     const { months } = props;
     const last = moment(months[0]).format("YYYY-MM");
-    const month = moment(receiptMonths).subtract(1, "months").format("YYYY-MM");
+    const month = moment(receiptMonth).subtract(1, "months").format("YYYY-MM");
 
     if (allReceiptsLoaded === false) {
+      dispatch(spendingActions.getTotalSpent(month));
+
       receiptsService.getAll(month).then((receipts) => {
         dispatch({
           type: receiptConstants.GET_ALL_RECEIPTS,
@@ -86,7 +144,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
         if (month === last) {
           setAllReceiptsLoaded(true);
         }
-        setReceiptMonths(month);
+        setReceiptMonth(month);
         e.target.complete();
       });
     }
@@ -95,7 +153,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
   const refreshReceipts = (e: any) => {
     impactMedium();
     setAllReceiptsLoaded(false);
-    setReceiptMonths(moment().format());
+    setReceiptMonth(moment().format());
     dispatch(receiptActions.refreshReceipts(e));
   };
 
@@ -181,6 +239,8 @@ const Receipts: React.FC<Props> = (props: Props) => {
             receipts={props.receipts}
             loadMore={loadMoreReceipts}
             allLoaded={allReceiptsLoaded}
+            totalSpent={total}
+            currentBudget={currentBudget}
           />
         )}
 
@@ -206,8 +266,12 @@ const Receipts: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
+  budgetReducer: { 
+    budget: Budget 
+  };
   spendingReducer: {
     months: string[];
+    totalSpent: number;
   };
   receiptsReducer: {
     request: string;
@@ -217,11 +281,13 @@ const mapStateToProps = (state: {
   };
 }) => {
   return {
+    budget: state.budgetReducer.budget,
     months: state.spendingReducer.months,
     request: state.receiptsReducer.request,
     loading: state.receiptsReducer.loading,
     progress: state.receiptsReducer.progress,
     receipts: state.receiptsReducer.receipts,
+    totalSpent: state.spendingReducer.totalSpent,
   };
 };
 
