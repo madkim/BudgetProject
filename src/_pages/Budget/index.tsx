@@ -65,12 +65,6 @@ const Budget: React.FC<Props> = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    if (props.user === '') {
-      history.push('/user')
-    }
-  }, []);
-
-  useEffect(() => {
     if (viewPastBudget === false) {
       budgetActions.checkBudgetExists().then((exists) => {
         if (exists) {
