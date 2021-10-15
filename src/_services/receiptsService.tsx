@@ -1,9 +1,11 @@
-import { Receipt, Seller, Photo, Action, DynObject } from "../_helpers/types";
-import { uploadPhoto } from "../_hooks/useTakePhoto";
-import { fireStorage } from "../_helpers/firebase";
-import { Dispatch } from "react";
-import { db } from "../_helpers/firebase";
+import store from "../_helpers/store";
 import moment from "moment";
+
+import { db } from "../_helpers/firebase";
+import { Dispatch } from "react";
+import { fireStorage } from "../_helpers/firebase";
+import { uploadPhoto } from "../_hooks/useTakePhoto";
+import { Receipt, Seller, Photo, Action, DynObject } from "../_helpers/types";
 
 export const receiptsService = {
   getByID,
@@ -37,6 +39,7 @@ function getByID(id: string) {
           name: seller.data().name,
           favorite: seller.data().favorite,
         },
+        user: receipt.data()?.user ? receipt.data()!.user : 'M',
         hasPhoto: photoUrl !== "" ? true : false,
         wasRefunded: receipt.data()?.wasRefunded
       };
@@ -78,6 +81,7 @@ function getAll(month: string) {
             name: sellers[index].data().name,
             favorite: sellers[index].data().favorite,
           },
+          user: receipt.data()?.user ? receipt.data()!.user : 'M',
           hasPhoto: photos[index] !== undefined ? true : false,
           wasRefunded: receipt.data()?.wasRefunded,
         };
@@ -97,6 +101,8 @@ function addNew(
   return db
     .collection("receipts")
     .add({
+      user: store.getState().userReducer.currentUser,
+      userId: store.getState().userReducer.userId,
       date: new Date(date),
       price: price,
       seller: db.collection("sellers").doc(seller.id),
@@ -108,6 +114,7 @@ function addNew(
     .then(async (receiptRef) => {
       const newReceipt = {
         id: receiptRef.id,
+        user: store.getState().userReducer.currentUser,
         date: date,
         photo: "",
         price: price,

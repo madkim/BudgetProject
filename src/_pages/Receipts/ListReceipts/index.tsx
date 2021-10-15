@@ -207,16 +207,18 @@ const ListReceipts: React.FC<Props> = (props: Props) => {
                                 </IonLabel>
                               )}
                             </IonCol>
-                            <IonCol className="ion-text-center ion-padding-start">
+                            <IonCol size="4" className="ion-text-center ion-padding-start">
                               <IonBadge color={getBadgeColor(receipt.price)}>
                                 <span style={{textDecoration: receipt.wasRefunded ? 'line-through' : ''}}>
-                                  ${receipt.price?.toFixed(2)}
+                                  ${receipt.price?.toFixed(2)} {receipt.user}
                                 </span>
                               </IonBadge>
                             </IonCol>
 
                             {props.loading && clicked === receipt.id ? (
-                              <IonSpinner name="lines-small" />
+                              <IonCol size="1">
+                                <IonSpinner name="lines-small" />
+                              </IonCol>
                             ) : (
                               <IonCol size="1">
                                 <IonIcon

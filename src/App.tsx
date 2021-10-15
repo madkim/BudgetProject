@@ -14,6 +14,7 @@ import { Redirect, Route } from "react-router-dom";
 import { cardOutline, receiptOutline, barChartOutline } from "ionicons/icons";
 
 import Menu from "./_pages/Menu";
+import User from './_pages/User';
 
 import Receipts from "./_pages/Receipts";
 import AddReceipt from "./_pages/Receipts/AddReceipt";
@@ -64,6 +65,8 @@ const App: React.FC = () => {
               <Route path="/view/:id" component={ViewReceipt} />
               <Route path="/edit/:id" component={EditReceipt} />
               <Route path="/receipts" component={Receipts} />
+
+              <Route path="/user" component={User} />
 
               <Route path="/overview" component={Overview} />
 

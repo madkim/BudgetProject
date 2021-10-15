@@ -45,6 +45,7 @@ import { connect, useDispatch } from "react-redux";
 import { budgetActions } from "../../_actions/budgetActions";
 
 interface Props {
+  user: string;
   budget: Budget;
   upload: string;
   months: string[];
@@ -224,7 +225,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
         </IonFab>
 
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
-          <IonFabButton color="success" routerLink="/add">
+          <IonFabButton color="success" routerLink={props.user === '' ? '/user' :  '/add'}>
             <IonIcon icon={add} />
           </IonFabButton>
         </IonFab>
@@ -266,6 +267,9 @@ const Receipts: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
+  userReducer: {
+    currentUser: string
+  }
   budgetReducer: { 
     budget: Budget 
   };
@@ -281,6 +285,7 @@ const mapStateToProps = (state: {
   };
 }) => {
   return {
+    user: state.userReducer.currentUser,
     budget: state.budgetReducer.budget,
     months: state.spendingReducer.months,
     request: state.receiptsReducer.request,

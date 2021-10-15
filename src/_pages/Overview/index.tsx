@@ -49,8 +49,8 @@ const Overview: React.FC<Props> = (props: Props) => {
     return (
         <IonPage>
         <IonHeader>
-            <IonToolbar color="success" className="ion-padding-top">
-            <IonButtons slot="start">
+          <IonToolbar color="success">
+            <IonButtons slot="start" className='ion-padding'>
                 <IonButton
                 slot="start"
                 fill="clear"
@@ -63,7 +63,7 @@ const Overview: React.FC<Props> = (props: Props) => {
             <IonTitle className="ion-text-center">
                 <h2>My Overview</h2>
             </IonTitle>
-            </IonToolbar>
+          </IonToolbar>
         </IonHeader>
 
         <IonContent>

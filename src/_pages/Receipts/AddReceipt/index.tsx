@@ -13,6 +13,7 @@ import AddReceiptDetails from "./AddReceiptDetails";
 import { spendingActions } from "../../../_actions/spendingActions";
 
 type Props = {
+  user: string;
   dispatch: any;
   location: any;
   progress: number;

@@ -169,8 +169,8 @@ const ManageSellers: React.FC<Props> = (props: Props) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="success" className="ion-padding-top">
-          <IonButtons slot="start">
+        <IonToolbar color="success">
+          <IonButtons slot="start" className='ion-padding'>
             <IonButton
               slot="start"
               fill="clear"

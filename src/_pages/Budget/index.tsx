@@ -39,6 +39,7 @@ import { useDispatch, connect } from "react-redux";
 import { Budget as BudgetType, Expense } from "../../_helpers/types";
 
 interface Props {
+  user: string;
   budget: BudgetType;
   months: string[];
   loading: boolean;
@@ -61,6 +62,12 @@ const Budget: React.FC<Props> = (props: Props) => {
     return () => {
       unlisten();
     };
+  }, []);
+
+  useEffect(() => {
+    if (props.user === '') {
+      history.push('/user')
+    }
   }, []);
 
   useEffect(() => {
@@ -375,10 +382,12 @@ const Budget: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
+  userReducer: { currentUser: string }
   budgetReducer: { budget: BudgetType; loading: boolean };
   spendingReducer: { months: string[] };
 }) => {
   return {
+    user: state.userReducer.currentUser,
     budget: state.budgetReducer.budget,
     months: state.spendingReducer.months,
     loading: state.budgetReducer.loading,

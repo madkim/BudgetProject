@@ -34,6 +34,7 @@ import { menuSharp, timeOutline } from "ionicons/icons";
 
 interface Props {
   days: Days;
+  user: string;
   months: string[];
   budget: Budget;
   receipts: Receipt[];
@@ -248,6 +249,9 @@ const Spending: React.FC<Props> = (props: Props) => {
 };
 
 const mapStateToProps = (state: {
+  userReducer: {
+    currentUser: string;
+  };
   budgetReducer: {
     budget: Budget;
     loading: boolean;
@@ -260,6 +264,8 @@ const mapStateToProps = (state: {
   };
 }) => {
   return {
+    user: state.userReducer.currentUser,
+
     budget: state.budgetReducer.budget,
     budgetLoading: state.budgetReducer.loading,
 

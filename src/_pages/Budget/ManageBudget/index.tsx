@@ -148,8 +148,8 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="success" className="ion-padding-top">
-          <IonButtons slot="start">
+        <IonToolbar color="success">
+          <IonButtons slot="start" className='ion-padding'>
             <IonButton
               slot="start"
               fill="clear"
@@ -160,7 +160,7 @@ const ManageBudget: React.FC<Props> = (props: Props) => {
             </IonButton>
           </IonButtons>
           <IonTitle className="ion-text-center">
-            <h4>Manage {moment(new Date()).format("MMMM")} Budget</h4>
+            <h4>{moment(new Date()).format("MMMM")}</h4>
           </IonTitle>
         </IonToolbar>
       </IonHeader>

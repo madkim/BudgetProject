@@ -188,6 +188,7 @@ function getDay(date: string) {
             favorite: sellers[index].data().favorite,
           },
           hasPhoto: photos[index] !== undefined ? true : false,
+          user: receipt.data()?.user ? receipt.data()!.user : 'M',
           wasRefunded: receipt.data()?.wasRefunded
         };
       });

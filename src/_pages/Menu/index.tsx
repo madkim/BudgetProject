@@ -1,11 +1,14 @@
 import React from "react";
 import { withRouter } from "react-router";
+import { IRootState } from "../../_reducers/rootReducer";
+import { useSelector } from "react-redux";
 
 import {
   IonIcon,
   IonItem,
   IonList,
   IonMenu,
+  IonChip,
   IonLabel,
   IonBadge,
   IonHeader,
@@ -22,6 +25,8 @@ import {
 } from "ionicons/icons";
 
 const Menu: React.FC = () => {
+  const currentUser = useSelector((state: IRootState) => state.userReducer.currentUser);
+
   return (
     <IonMenu type="overlay" content-id="main">
       <IonHeader>
@@ -37,6 +42,18 @@ const Menu: React.FC = () => {
       </IonHeader>
       <IonContent>
         <IonList>
+          <IonMenuToggle auto-hide="false">
+            <IonItem button routerLink="/user" routerDirection="root">
+              <IonIcon slot="start" icon={personOutline}></IonIcon>
+              <h3 style={{ padding: "10px" }}>
+                <IonLabel>
+                  {currentUser === 'C' && 'Carmen Chen'}
+                  {currentUser === 'M' && 'Matthew Kim'}
+                  {currentUser === '' && 'No User Selected'}
+                </IonLabel>
+              </h3>
+            </IonItem>
+          </IonMenuToggle>
           <IonMenuToggle auto-hide="false">
             <IonItem button routerLink="/overview" routerDirection="root">
               <IonIcon slot="start" icon={telescopeOutline}></IonIcon>
