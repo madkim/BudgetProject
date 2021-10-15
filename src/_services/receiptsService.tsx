@@ -1,4 +1,3 @@
-import store from "../_helpers/store";
 import moment from "moment";
 
 import { db } from "../_helpers/firebase";
@@ -101,8 +100,8 @@ function addNew(
   return db
     .collection("receipts")
     .add({
-      user: store.getState().userReducer.currentUser,
-      userId: store.getState().userReducer.userId,
+      user: localStorage.getItem('user'),
+      userId: localStorage.getItem('userId'),
       date: new Date(date),
       price: price,
       seller: db.collection("sellers").doc(seller.id),
@@ -114,7 +113,7 @@ function addNew(
     .then(async (receiptRef) => {
       const newReceipt = {
         id: receiptRef.id,
-        user: store.getState().userReducer.currentUser,
+        user: localStorage.getItem('user'),
         date: date,
         photo: "",
         price: price,

@@ -25,7 +25,7 @@ import {
 } from "ionicons/icons";
 
 const Menu: React.FC = () => {
-  const currentUser = useSelector((state: IRootState) => state.userReducer.currentUser);
+  const currentUser = localStorage.getItem('user')
 
   return (
     <IonMenu type="overlay" content-id="main">
@@ -49,7 +49,7 @@ const Menu: React.FC = () => {
                 <IonLabel>
                   {currentUser === 'C' && 'Carmen Chen'}
                   {currentUser === 'M' && 'Matthew Kim'}
-                  {currentUser === '' && 'No User Selected'}
+                  {currentUser === null && 'No User Selected'}
                 </IonLabel>
               </h3>
             </IonItem>

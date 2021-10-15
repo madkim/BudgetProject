@@ -30,8 +30,8 @@ const User: React.FC<Props> = (props: Props) => {
 
   const selectUser = (id: number, user: string) => {
     console.log(user)
-    dispatch({type: userConstants.SET_CURRENT_USER_ID, payload: id})
-    dispatch({type: userConstants.SET_CURRENT_USER, payload: user})
+    localStorage.setItem('userId', id.toString());
+    localStorage.setItem('user', user);
     history.goBack()
   }
 

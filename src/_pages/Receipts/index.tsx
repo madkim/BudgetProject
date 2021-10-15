@@ -164,6 +164,15 @@ const Receipts: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const getRoute = () => {
+    const currentUser = localStorage.getItem('user')
+    
+    if (currentUser === null) {
+      return '/user'
+    }
+    else return '/add'
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -225,7 +234,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
         </IonFab>
 
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
-          <IonFabButton color="success" routerLink={props.user === '' ? '/user' :  '/add'}>
+          <IonFabButton color="success" routerLink={getRoute()}>
             <IonIcon icon={add} />
           </IonFabButton>
         </IonFab>
