@@ -78,17 +78,26 @@ const AddReceipts: React.FC<Props> = (props: Props) => {
   };
 
   const addReceipt = () => {
-    if (seller !== undefined && price !== null) {
-      dispatch(
-        receiptActions.addNewReceipt(
-          moment(date).toDate(),
-          receiptPhoto,
-          price,
-          seller,
-          props.receipts
-        )
-      );
-      history.push("/receipts");
+    const userId = localStorage.getItem('userId')
+    const currentUser = localStorage.getItem('user')
+
+    if (seller !== undefined && 
+        price !== null && 
+        userId !== null && 
+        currentUser !== null) 
+      {
+        dispatch(
+          receiptActions.addNewReceipt(
+            userId,
+            currentUser,
+            moment(date).toDate(),
+            receiptPhoto,
+            price,
+            seller,
+            props.receipts
+          )
+        );
+        history.push("/receipts");
     }
   };
 

@@ -3,11 +3,9 @@ import {
   IonCol,
   IonPage,
   IonGrid,
-  IonIcon,
   IonTitle,
   IonHeader,
   IonButton,
-  IonButtons,
   IonContent,
   IonToolbar,
 } from "@ionic/react";
@@ -16,8 +14,6 @@ import React from "react";
 import FadeIn from "react-fade-in";
 
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { userConstants } from "../../_constants/userConstants";
 
 interface Props {
   months: string[];
@@ -25,11 +21,9 @@ interface Props {
 }
 
 const User: React.FC<Props> = (props: Props) => {
-  const dispatch = useDispatch();
   const history = useHistory();
 
   const selectUser = (id: number, user: string) => {
-    console.log(user)
     localStorage.setItem('userId', id.toString());
     localStorage.setItem('user', user);
     history.goBack()

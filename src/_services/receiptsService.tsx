@@ -90,6 +90,8 @@ function getAll(month: string) {
 }
 
 function addNew(
+  userId: string, 
+  currentUser: string,
   date: Date,
   photo: Photo | undefined,
   price: number | null,
@@ -100,8 +102,8 @@ function addNew(
   return db
     .collection("receipts")
     .add({
-      user: localStorage.getItem('user'),
-      userId: localStorage.getItem('userId'),
+      user: currentUser,
+      userId: userId,
       date: new Date(date),
       price: price,
       seller: db.collection("sellers").doc(seller.id),
@@ -113,7 +115,7 @@ function addNew(
     .then(async (receiptRef) => {
       const newReceipt = {
         id: receiptRef.id,
-        user: localStorage.getItem('user'),
+        user: currentUser,
         date: date,
         photo: "",
         price: price,

@@ -166,11 +166,7 @@ const Receipts: React.FC<Props> = (props: Props) => {
 
   const getRoute = () => {
     const currentUser = localStorage.getItem('user')
-    
-    if (currentUser === null) {
-      return '/user'
-    }
-    else return '/add'
+    return currentUser === null ? '/user' : '/add';
   }
 
   return (

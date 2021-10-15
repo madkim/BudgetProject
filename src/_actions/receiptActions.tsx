@@ -87,6 +87,8 @@ function refreshReceipts(e: any) {
 }
 
 function addNewReceipt(
+  userId: string, 
+  currentUser: string,
   date: Date,
   photo: Photo | undefined,
   price: number | null,
@@ -96,7 +98,7 @@ function addNewReceipt(
   return (dispatch: Dispatch<Action>) => {
     dispatch({ type: receiptConstants.GET_RECEIPT_REQUEST, payload: "" });
     receiptsService
-      .addNew(date, photo, price, seller, receipts, dispatch)
+      .addNew(userId, currentUser, date, photo, price, seller, receipts, dispatch)
       .then((updatedReceipts) => {
         dispatch(success(updatedReceipts.sort(dateSortValue)));
       })
